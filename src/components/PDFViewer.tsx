@@ -1,44 +1,53 @@
-import React, { useState } from 'react';
+import React, { useEffect } from "react";
+
+declare global {
+  interface Window {
+    AdobeDC: any;
+  }
+}
 
 interface PDFViewerProps {
   url: string;
   className?: string;
 }
 
-export function PDFViewer({ url, className = '' }: PDFViewerProps) {
-  const [scale, setScale] = useState(1);
+export function PDFViewer({ url, className = "" }: PDFViewerProps) {
+  useEffect(() => {
+    const loadAdobePDFViewer = async () => {
+      if (document.getElementById("adobe-dc-sdk")) {
+        initPDFViewer();
+        return;
+      }
 
-  const zoomIn = () => setScale(prev => Math.min(prev + 0.2, 3));
-  const zoomOut = () => setScale(prev => Math.max(prev - 0.2, 0.5));
+      const script = document.createElement("script");
+      script.id = "adobe-dc-sdk";
+      script.src = "https://documentcloud.adobe.com/view-sdk/main.js";
+      script.onload = initPDFViewer;
+      document.head.appendChild(script);
+    };
+
+    const initPDFViewer = () => {
+      if (window.AdobeDC) {
+        const adobeDCView = new window.AdobeDC.View({
+          clientId: import.meta.env.VITE_ADOBE_CLIENT_ID,
+          divId: "pdf-viewer",
+        });
+
+        adobeDCView.previewFile({
+          content: { location: { url } },
+          metaData: { fileName: url.split("/").pop() },
+        });
+      }
+    };
+
+    loadAdobePDFViewer();
+  }, [url]);
 
   return (
-    <div className={`pdf-container ${className}`}>
-      <div className="bg-gray-100 p-4 rounded-lg flex items-center justify-between">
-        <div className="flex items-center space-x-2">
-          <button
-            onClick={zoomOut}
-            className="px-3 py-1 bg-white rounded border hover:bg-gray-50"
-            title="Zoom Out"
-          >
-            Zoom Out
-          </button>
-          <span>{Math.round(scale * 100)}%</span>
-          <button
-            onClick={zoomIn}
-            className="px-3 py-1 bg-white rounded border hover:bg-gray-50"
-            title="Zoom In"
-          >
-            Zoom In
-          </button>
-        </div>
-      </div>
-      <div className="mt-4 overflow-auto bg-white rounded-lg shadow-sm">
-        <iframe
-          src={`${url}`}
-          className="w-full min-h-[600px] border-0"
-          title="PDF Viewer"
-        />
-      </div>
+    <div
+      className={`bg-white rounded-lg shadow-sm overflow-hidden ${className}`}
+    >
+      <div id="pdf-viewer" className="h-[800px]" />
     </div>
   );
 }
