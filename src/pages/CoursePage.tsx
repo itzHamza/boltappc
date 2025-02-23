@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
-import { useParams } from 'react-router-dom';
-import { Video, FileText, ChevronRight } from 'lucide-react';
-import { cn } from '../lib/utils';
-import { PDFViewer } from '../components/PDFViewer';
+import React, { useState } from "react";
+import { useParams } from "react-router-dom";
+import { Video, FileText, ChevronRight } from "lucide-react";
+import { cn } from "../lib/utils";
+import { PDFViewer } from "../components/PDFViewer";
 
 // Mock data for courses
 const COURSE_DATA = {
@@ -174,10 +174,10 @@ export function CoursePage() {
         <p className="mt-2 text-gray-600">{courseData.description}</p>
       </div>
 
-      {/* Main content with reordered sections for mobile */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Video Section */}
-        <div className="lg:col-span-2 space-y-8">
+      {/* Main content with full width on mobile */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mx-[-1rem] px-4 lg:mx-0 lg:px-0">
+        {/* Video Section - full width on mobile */}
+        <div className="lg:col-span-2 space-y-8 w-full">
           {/* Video Controls */}
           <div className="bg-white rounded-lg shadow-sm p-4">
             <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
@@ -196,10 +196,14 @@ export function CoursePage() {
                       : "hover:bg-gray-50 text-gray-700"
                   )}
                 >
-                  <ChevronRight className={cn(
-                    "w-4 h-4 mr-2 flex-shrink-0",
-                    selectedVideo === index ? "text-blue-600" : "text-gray-400"
-                  )} />
+                  <ChevronRight
+                    className={cn(
+                      "w-4 h-4 mr-2 flex-shrink-0",
+                      selectedVideo === index
+                        ? "text-blue-600"
+                        : "text-gray-400"
+                    )}
+                  />
                   <span className="line-clamp-1">{video.title}</span>
                 </button>
               ))}
@@ -235,10 +239,12 @@ export function CoursePage() {
                       : "hover:bg-gray-50 text-gray-700"
                   )}
                 >
-                  <ChevronRight className={cn(
-                    "w-4 h-4 mr-2 flex-shrink-0",
-                    selectedPdf === index ? "text-red-600" : "text-gray-400"
-                  )} />
+                  <ChevronRight
+                    className={cn(
+                      "w-4 h-4 mr-2 flex-shrink-0",
+                      selectedPdf === index ? "text-red-600" : "text-gray-400"
+                    )}
+                  />
                   <span className="line-clamp-1">{pdf.title}</span>
                 </button>
               ))}
@@ -246,7 +252,7 @@ export function CoursePage() {
           </div>
 
           {/* PDF Viewer */}
-          <PDFViewer 
+          <PDFViewer
             url={courseData.pdfs[selectedPdf].url}
             className="w-full"
           />
@@ -255,13 +261,18 @@ export function CoursePage() {
         {/* Sidebar for larger screens */}
         <div className="hidden lg:block space-y-6">
           <div className="bg-white rounded-lg shadow-sm p-4">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Course Content</h3>
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">
+              Course Content
+            </h3>
             <div className="space-y-4">
               <div>
                 <h4 className="font-medium text-gray-700 mb-2">Videos</h4>
                 <div className="space-y-1 text-sm">
                   {courseData.videos.map((video, index) => (
-                    <div key={video.id} className="flex items-center text-gray-600">
+                    <div
+                      key={video.id}
+                      className="flex items-center text-gray-600"
+                    >
                       <span className="w-6 text-right mr-2">{index + 1}.</span>
                       <span className="line-clamp-1">{video.title}</span>
                     </div>
@@ -272,7 +283,10 @@ export function CoursePage() {
                 <h4 className="font-medium text-gray-700 mb-2">PDFs</h4>
                 <div className="space-y-1 text-sm">
                   {courseData.pdfs.map((pdf, index) => (
-                    <div key={pdf.id} className="flex items-center text-gray-600">
+                    <div
+                      key={pdf.id}
+                      className="flex items-center text-gray-600"
+                    >
                       <span className="w-6 text-right mr-2">{index + 1}.</span>
                       <span className="line-clamp-1">{pdf.title}</span>
                     </div>
