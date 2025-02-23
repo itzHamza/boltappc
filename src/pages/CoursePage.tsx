@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
-import { useParams } from 'react-router-dom';
-import { Video, FileText, ChevronRight } from 'lucide-react';
-import { cn } from '../lib/utils';
-import { PDFViewer } from '../components/PDFViewer';
+import React, { useState } from "react";
+import { useParams } from "react-router-dom";
+import { Video, FileText, ChevronRight } from "lucide-react";
+import { cn } from "../lib/utils";
+import { PDFViewer } from "../components/PDFViewer";
 
 // Mock data for courses
 const COURSE_DATA = {
@@ -157,6 +157,7 @@ export function CoursePage() {
   const { courseId } = useParams();
   const [selectedVideo, setSelectedVideo] = useState(0);
   const [selectedPdf, setSelectedPdf] = useState(0);
+  const [isPdfLoading, setIsPdfLoading] = useState(true);
   const courseData = courseId ? COURSE_DATA[courseId] : null;
 
   if (!courseData) {
@@ -196,10 +197,14 @@ export function CoursePage() {
                       : "hover:bg-gray-50 text-gray-700"
                   )}
                 >
-                  <ChevronRight className={cn(
-                    "w-4 h-4 mr-2 flex-shrink-0",
-                    selectedVideo === index ? "text-blue-600" : "text-gray-400"
-                  )} />
+                  <ChevronRight
+                    className={cn(
+                      "w-4 h-4 mr-2 flex-shrink-0",
+                      selectedVideo === index
+                        ? "text-blue-600"
+                        : "text-gray-400"
+                    )}
+                  />
                   <span className="line-clamp-1">{video.title}</span>
                 </button>
               ))}
@@ -235,10 +240,12 @@ export function CoursePage() {
                       : "hover:bg-gray-50 text-gray-700"
                   )}
                 >
-                  <ChevronRight className={cn(
-                    "w-4 h-4 mr-2 flex-shrink-0",
-                    selectedPdf === index ? "text-red-600" : "text-gray-400"
-                  )} />
+                  <ChevronRight
+                    className={cn(
+                      "w-4 h-4 mr-2 flex-shrink-0",
+                      selectedPdf === index ? "text-red-600" : "text-gray-400"
+                    )}
+                  />
                   <span className="line-clamp-1">{pdf.title}</span>
                 </button>
               ))}
@@ -246,22 +253,36 @@ export function CoursePage() {
           </div>
 
           {/* PDF Viewer */}
-          <PDFViewer 
-            url={courseData.pdfs[selectedPdf].url}
-            className="w-full"
-          />
+          {courseData.pdfs.length > 0 && (
+            <div className="relative">
+              <PDFViewer
+                url={courseData.pdfs[selectedPdf].url}
+                className="w-full"
+              />
+              {isPdfLoading && (
+                <div className="absolute inset-0 flex items-center justify-center bg-white bg-opacity-75">
+                  <div className="animate-spin rounded-full h-12 w-12 border-4 border-blue-500 border-t-transparent"></div>
+                </div>
+              )}
+            </div>
+          )}
         </div>
 
         {/* Sidebar for larger screens */}
         <div className="hidden lg:block space-y-6">
           <div className="bg-white rounded-lg shadow-sm p-4">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Course Content</h3>
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">
+              Course Content
+            </h3>
             <div className="space-y-4">
               <div>
                 <h4 className="font-medium text-gray-700 mb-2">Videos</h4>
                 <div className="space-y-1 text-sm">
                   {courseData.videos.map((video, index) => (
-                    <div key={video.id} className="flex items-center text-gray-600">
+                    <div
+                      key={video.id}
+                      className="flex items-center text-gray-600"
+                    >
                       <span className="w-6 text-right mr-2">{index + 1}.</span>
                       <span className="line-clamp-1">{video.title}</span>
                     </div>
@@ -272,7 +293,10 @@ export function CoursePage() {
                 <h4 className="font-medium text-gray-700 mb-2">PDFs</h4>
                 <div className="space-y-1 text-sm">
                   {courseData.pdfs.map((pdf, index) => (
-                    <div key={pdf.id} className="flex items-center text-gray-600">
+                    <div
+                      key={pdf.id}
+                      className="flex items-center text-gray-600"
+                    >
                       <span className="w-6 text-right mr-2">{index + 1}.</span>
                       <span className="line-clamp-1">{pdf.title}</span>
                     </div>
