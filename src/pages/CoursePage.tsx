@@ -316,7 +316,8 @@ export function CoursePage() {
           {/* PDF Viewer */}
           <div className="mx-4 lg:mx-0"></div>
         </div>
-        <Flashcards lessonId={1} />
+        <PDFViewer url={courseData.pdfs[selectedPdf].url} className="w-full" />
+        <Flashcards lessonId={courseData.title} />
         {/* Sidebar for larger screens */}
         <div className="lg:block space-y-6 mx-4 lg:mx-0">
           <div className="bg-white rounded-lg shadow-sm p-4">
