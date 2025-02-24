@@ -1,11 +1,11 @@
-import React from 'react';
-import { useParams, Link } from 'react-router-dom';
-import { BookOpen, Video, FileText, ChevronRight } from 'lucide-react';
-import { cn } from '../lib/utils';
+import React from "react";
+import { useParams, Link } from "react-router-dom";
+import { BookOpen, Video, FileText, ChevronRight } from "lucide-react";
+import { cn } from "../lib/utils";
 
 // Mock data for modules
 const MODULE_DATA = {
-  "anatomy": {
+  anatomy: {
     title: "Anatomie",
     description: "Étude de la structure du corps humain",
     courses: [
@@ -14,25 +14,25 @@ const MODULE_DATA = {
         title: "Anatomie rénale",
         description: "Introduction à l'anatomie rénale",
         videoCount: 2,
-        pdfCount: 2
+        pdfCount: 2,
       },
       {
         id: "anatomy-cardiac",
         title: "Anatomie cardiaque",
         description: "Structure du cœur et vaisseaux",
         videoCount: 3,
-        pdfCount: 2
+        pdfCount: 2,
       },
       {
         id: "anatomy-digestive",
         title: "Système digestif",
         description: "Anatomie du système digestif",
         videoCount: 4,
-        pdfCount: 3
-      }
-    ]
+        pdfCount: 3,
+      },
+    ],
   },
-  "physiology": {
+  physiology: {
     title: "Physiologie",
     description: "Étude des fonctions du corps humain",
     courses: [
@@ -41,17 +41,17 @@ const MODULE_DATA = {
         title: "Physiologie rénale",
         description: "Fonction rénale et filtration",
         videoCount: 3,
-        pdfCount: 2
+        pdfCount: 2,
       },
       {
         id: "physiology-cardiac",
         title: "Physiologie cardiaque",
         description: "Fonction cardiaque et circulation",
         videoCount: 4,
-        pdfCount: 3
-      }
-    ]
-  }
+        pdfCount: 3,
+      },
+    ],
+  },
 };
 
 export function ModulePage() {
@@ -68,9 +68,11 @@ export function ModulePage() {
 
   return (
     <div>
-      <h1 className="text-3xl font-bold text-gray-900 mb-2">{moduleData.title}</h1>
+      <h1 className="text-3xl font-bold text-gray-900 mb-2">
+        {moduleData.title}
+      </h1>
       <p className="text-gray-600 mb-8">{moduleData.description}</p>
-      
+
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {moduleData.courses.map((course) => (
           <Link
@@ -84,10 +86,14 @@ export function ModulePage() {
               </div>
               <div className="flex-1">
                 <div className="flex items-center justify-between">
-                  <h3 className="text-lg font-semibold text-gray-900">{course.title}</h3>
+                  <h3 className="text-lg font-semibold text-gray-900">
+                    {course.title}
+                  </h3>
                   <ChevronRight className="w-5 h-5 text-gray-400 group-hover:text-blue-500 transition-colors" />
                 </div>
-                <p className="mt-1 text-sm text-gray-600">{course.description}</p>
+                <p className="mt-1 text-sm text-gray-600">
+                  {course.description}
+                </p>
                 <div className="mt-4 flex items-center space-x-4">
                   <div className="flex items-center text-sm text-gray-500">
                     <Video className="w-4 h-4 mr-1" />

@@ -1,39 +1,48 @@
 import React, { useState } from "react";
-import { useParams } from "react-router-dom";
-import { Video, FileText, ChevronRight } from "lucide-react";
+import { useParams, useNavigate } from "react-router-dom";
+import {
+  Video,
+  FileText,
+  ChevronRight,
+  ArrowLeft,
+  ArrowRight,
+} from "lucide-react";
 import { cn } from "../lib/utils";
 import { PDFViewer } from "../components/PDFViewer";
+import Flashcards from "../components/Flashcards";
+
+// Mock data for modules and their courses
+const MODULE_COURSES = {
+  anatomy: ["anatomy-renal", "anatomy-cardiac", "anatomy-digestive"],
+  physiology: ["physiology-renal", "physiology-cardiac"],
+};
 
 // Mock data for courses
 const COURSE_DATA = {
   "anatomy-renal": {
     title: "Anatomie rénale",
-    description: "",
+    description: "Introduction à l'anatomie rénale",
+    moduleId: "anatomy",
     videos: [
       {
         id: 1,
         title: "Anatomie des uretères",
-        url: "https://www.youtube-nocookie.com/embed/jTQBx15l6m8",
+        url: "https://www.youtube.com/embed/jKWtF27b6io?si=uCYxWpQ6JQavHKgd",
       },
       {
         id: 2,
         title: "Anatomie de la vessie",
-        url: "https://www.youtube-nocookie.com/embed/5ToeaQu-4IU",
+        url: "https://www.youtube.com/embed/PSna_fZmzZM",
       },
     ],
     pdfs: [
       {
         id: 1,
         title: "Anatomie des uretères",
-        url: "https://tbiibe.netlify.app/qcm%20digestive.pdf",
-      },
-      {
-        id: 2,
-        title: "Anatomie de la vessie",
         url: "/Ostéologie.pdf",
       },
       {
-        id: 3,
+        id: 2,
         title: "Anatomie de la vessie",
         url: "/Ostéologie.pdf",
       },
@@ -42,6 +51,7 @@ const COURSE_DATA = {
   "anatomy-cardiac": {
     title: "Anatomie cardiaque",
     description: "Structure du cœur et vaisseaux",
+    moduleId: "anatomy",
     videos: [
       {
         id: 1,
@@ -70,6 +80,7 @@ const COURSE_DATA = {
   "anatomy-digestive": {
     title: "Système digestif",
     description: "Anatomie du système digestif",
+    moduleId: "anatomy",
     videos: [
       {
         id: 1,
@@ -98,6 +109,7 @@ const COURSE_DATA = {
   "physiology-renal": {
     title: "Physiologie rénale",
     description: "Fonction rénale et filtration",
+    moduleId: "physiology",
     videos: [
       {
         id: 1,
@@ -126,6 +138,7 @@ const COURSE_DATA = {
   "physiology-cardiac": {
     title: "Physiologie cardiaque",
     description: "Fonction cardiaque et circulation",
+    moduleId: "physiology",
     videos: [
       {
         id: 1,
@@ -155,22 +168,68 @@ const COURSE_DATA = {
 
 export function CoursePage() {
   const { courseId } = useParams();
+  const navigate = useNavigate();
   const [selectedVideo, setSelectedVideo] = useState(0);
   const [selectedPdf, setSelectedPdf] = useState(0);
-  const [isPdfLoading, setIsPdfLoading] = useState(true);
   const courseData = courseId ? COURSE_DATA[courseId] : null;
 
   if (!courseData) {
     return (
       <div className="text-center py-12">
-        <h1 className="text-2xl font-bold text-gray-900">Coming Soon...</h1>
+        <h1 className="text-2xl font-bold text-gray-900">Course not found</h1>
       </div>
     );
   }
 
+  // Get the module's course list
+  const moduleCourses = MODULE_COURSES[courseData.moduleId] || [];
+  const currentIndex = moduleCourses.indexOf(courseId);
+  const previousCourse =
+    currentIndex > 0 ? moduleCourses[currentIndex - 1] : null;
+  const nextCourse =
+    currentIndex < moduleCourses.length - 1
+      ? moduleCourses[currentIndex + 1]
+      : null;
+
+  const navigateToCourse = (courseId: string) => {
+    navigate(`/course/${courseId}`);
+    setSelectedVideo(0);
+    setSelectedPdf(0);
+  };
+
   return (
-    <div className="space-y-8">
-      <div>
+    <div className="space-y-8 lg:px-8">
+      <div className="px-4 lg:px-0">
+        {/* Course Navigation */}
+        <div className="flex items-center justify-between mb-6">
+          <button
+            onClick={() => previousCourse && navigateToCourse(previousCourse)}
+            className={cn(
+              "flex items-center space-x-2 px-4 py-2 rounded-lg transition-colors",
+              previousCourse
+                ? "text-blue-600 hover:bg-blue-50"
+                : "text-gray-300 cursor-not-allowed"
+            )}
+            disabled={!previousCourse}
+          >
+            <ArrowLeft className="w-5 h-5" />
+            <span className="hidden sm:inline">Previous Course</span>
+          </button>
+          <button
+            onClick={() => nextCourse && navigateToCourse(nextCourse)}
+            className={cn(
+              "flex items-center space-x-2 px-4 py-2 rounded-lg transition-colors",
+              nextCourse
+                ? "text-blue-600 hover:bg-blue-50"
+                : "text-gray-300 cursor-not-allowed"
+            )}
+            disabled={!nextCourse}
+          >
+            <span className="hidden sm:inline">Next Course</span>
+            <ArrowRight className="w-5 h-5" />
+          </button>
+        </div>
+
         <h1 className="text-3xl font-bold text-gray-900">{courseData.title}</h1>
         <p className="mt-2 text-gray-600">{courseData.description}</p>
       </div>
@@ -180,7 +239,7 @@ export function CoursePage() {
         {/* Video Section */}
         <div className="lg:col-span-2 space-y-8">
           {/* Video Controls */}
-          <div className="bg-white rounded-lg shadow-sm p-4">
+          <div className="bg-white shadow-sm p-4 mx-4 lg:mx-0 rounded-lg">
             <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
               <Video className="w-5 h-5 mr-2 text-blue-600" />
               Videos
@@ -212,18 +271,20 @@ export function CoursePage() {
           </div>
 
           {/* Video Player */}
-          <div className="bg-white rounded-lg shadow-sm overflow-hidden">
+          <div className="bg-white shadow-sm overflow-hidden">
             <iframe
               src={courseData.videos[selectedVideo].url}
+              frameBorder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              referrerpolicy="strict-origin-when-cross-origin"
+              allowfullscreen
               className="w-full aspect-video"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
               title="Course Video"
             />
           </div>
 
           {/* PDF Controls */}
-          <div className="bg-white rounded-lg shadow-sm p-4">
+          <div className="bg-white shadow-sm p-4 mx-4 lg:mx-0 rounded-lg">
             <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
               <FileText className="w-5 h-5 mr-2 text-red-600" />
               PDF Resources
@@ -253,23 +314,11 @@ export function CoursePage() {
           </div>
 
           {/* PDF Viewer */}
-          {courseData.pdfs.length > 0 && (
-            <div className="relative">
-              <PDFViewer
-                url={courseData.pdfs[selectedPdf].url}
-                className="w-full"
-              />
-              {isPdfLoading && (
-                <div className="absolute inset-0 flex items-center justify-center bg-white bg-opacity-75">
-                  <div className="animate-spin rounded-full h-12 w-12 border-4 border-blue-500 border-t-transparent"></div>
-                </div>
-              )}
-            </div>
-          )}
+          <div className="mx-4 lg:mx-0"></div>
         </div>
-
+        <Flashcards lessonId={1} />
         {/* Sidebar for larger screens */}
-        <div className="hidden lg:block space-y-6">
+        <div className="lg:block space-y-6 mx-4 lg:mx-0">
           <div className="bg-white rounded-lg shadow-sm p-4">
             <h3 className="text-lg font-semibold text-gray-900 mb-4">
               Course Content
