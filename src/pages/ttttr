@@ -1,0 +1,25 @@
+I am building an educational platform for medical students in Algeria. The platform will provide structured access to medical lessons, organized by year and subject. The key features of the platform include:
+Navigation Structure:
+
+Users select their academic year.
+Upon selection, relevant modules are displayed.
+Clicking a module reveals lessons
+Clicking a lesson reveals lesson details, including:
+A YouTube video (or many videos) embeded. with full screen width in mobile
+A button that open a pdf viewer popup full screen size (allow copy and highlight text) to show lesson notes.
+A section to show flashcards related to the lesson with progress bar under them.
+
+
+User Experience:
+The website will be fully responsive across all devices.
+The design will be simple, visually comfortable, and highly interactive.
+
+
+Content Management:
+I will upload all content (videos, PDFs, and flashcards) with an admin panel (use supabase for database).
+User Authentication & Features:
+Users can create accounts to:
+Save favorite lessons.
+Add comments on lessons.
+Share lesson links.
+A search functionality will allow users to quickly find topics of interest

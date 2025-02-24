@@ -1,44 +1,89 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { Header } from './components/layout/Header';
-import { AdminHeader } from './components/layout/AdminHeader';
-import { HomePage } from './pages/HomePage';
-import { AdminLoginPage } from './pages/admin/AdminLoginPage';
-import { AdminDashboard } from './pages/admin/AdminDashboard';
-import { YearPage } from './pages/YearPage';
-import { ModulePage } from './pages/ModulePage';
-import { CoursePage } from './pages/CoursePage';
+import React, { useState, useEffect } from "react";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
+import { supabase } from "./lib/supabaseClient";
+import { Header } from "./components/layout/Header";
+import { AdminHeader } from "./components/layout/AdminHeader";
+import { HomePage } from "./pages/HomePage";
+import {AdminDashboard} from "./pages/admin/AdminDashboard";
+import AdminLessons from "./pages/admin/AdminLessons";
+import EditCourse from "./pages/admin/EditCourse";
+import FlashcardsManager from "./pages/admin/AdminFlashcards";
+import { YearPage } from "./pages/YearPage";
+import { ModulePage } from "./pages/ModulePage";
+import { CoursePage } from "./pages/CoursePage";
+import {AdminLoginPage} from "./pages/admin/AdminLoginPage"; // ✅ Correct Import
 
 function App() {
+  const [adminUser, setAdminUser] = useState(null);
+
+  useEffect(() => {
+    const checkAdminSession = async () => {
+      const { data } = await supabase.auth.getSession();
+      if (data?.session) {
+        setAdminUser(data.session.user);
+      } else {
+        setAdminUser(null);
+      }
+    };
+
+    checkAdminSession();
+
+    const { data: authListener } = supabase.auth.onAuthStateChange(
+      (_event, session) => {
+        setAdminUser(session?.user || null);
+      }
+    );
+
+    return () => {
+      authListener.subscription.unsubscribe();
+    };
+  }, []);
+
   return (
     <Router>
       <Routes>
-        {/* Admin Routes */}
+        {/* 🔹 Fix: Pass `onLogin` to AdminLoginPage */}
+        <Route
+          path="/admin/login"
+          element={<AdminLoginPage onLogin={setAdminUser} />}
+        />
+
         <Route
           path="/admin/*"
           element={
-            <div className="min-h-screen bg-gray-100">
-              <AdminHeader />
-              <main className="lg:ml-64">
-                <div className="container mx-auto">
-                  <Routes>
-                    <Route path="/" element={<AdminDashboard />} />
-                    <Route path="/login" element={<AdminLoginPage />} />
-                  </Routes>
-                </div>
-              </main>
-            </div>
+            adminUser ? (
+              <div className="min-h-screen bg-gray-100">
+                <AdminHeader />
+                <main className="lg:ml-64">
+                  <div className="container mx-auto">
+                    <Routes>
+                      <Route path="/" element={<AdminDashboard />} />
+                      <Route path="/lessons" element={<AdminLessons />} />
+                      <Route path="/edit" element={<EditCourse />} />
+                      <Route path="/flashcards" element={<FlashcardsManager />} />
+                    </Routes>
+                  </div>
+                </main>
+              </div>
+            ) : (
+              <Navigate to="/admin/login" />
+            )
           }
         />
 
-        {/* Public Routes */}
+        {/* 🔹 Public Routes */}
         <Route
           path="/*"
           element={
             <div className="min-h-screen bg-gray-50">
               <Header />
-              <main className="lg:ml-64 w-full sm:p-1">
-                <div className="container mx-auto sm:w-full">
+              <main className="lg:ml-64 p-8">
+                <div className="container mx-auto">
                   <Routes>
                     <Route path="/" element={<HomePage />} />
                     <Route path="/year/:yearId" element={<YearPage />} />
@@ -55,4 +100,4 @@ function App() {
   );
 }
 
-export default App
+export default App;

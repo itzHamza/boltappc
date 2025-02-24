@@ -1,22 +1,7 @@
-import { createClient } from '@supabase/supabase-js';
+import { createClient } from "@supabase/supabase-js";
 
-// Ensure environment variables are defined
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
-
-if (!supabaseUrl || !supabaseAnonKey) {
-  throw new Error(
-    'Please set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY environment variables. Click the "Connect to Supabase" button in the top right to set up your project.'
-  );
-}
-
-// Validate URL format
-try {
-  new URL(supabaseUrl);
-} catch (error) {
-  throw new Error(
-    'Invalid VITE_SUPABASE_URL format. Please ensure the URL is complete and properly formatted.'
-  );
-}
+const supabaseUrl = "https://qjqfaywhgbwwvusananj.supabase.co"; // استبدله بعنوان مشروعك
+const supabaseAnonKey =
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFqcWZheXdoZ2J3d3Z1c2FuYW5qIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mzk4MDA0NzEsImV4cCI6MjA1NTM3NjQ3MX0.yGpwF53SX6GcQdj6ijRE08KeQz8sieOM-YPSiw6jNyo"; // استبدله بالمفتاح الخاص بك
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);
