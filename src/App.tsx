@@ -19,7 +19,7 @@ function App() {
           element={
             <div className="min-h-screen bg-gray-100">
               <AdminHeader />
-              <main className="lg:ml-64 p-8">
+              <main className="lg:ml-64">
                 <div className="container mx-auto">
                   <Routes>
                     <Route path="/" element={<AdminDashboard />} />
@@ -37,8 +37,8 @@ function App() {
           element={
             <div className="min-h-screen bg-gray-50">
               <Header />
-              <main className="lg:ml-64 p-8">
-                <div className="container mx-auto">
+              <main className="lg:ml-64 w-full sm:p-1">
+                <div className="container mx-auto sm:w-full">
                   <Routes>
                     <Route path="/" element={<HomePage />} />
                     <Route path="/year/:yearId" element={<YearPage />} />

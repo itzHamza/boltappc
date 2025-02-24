@@ -235,7 +235,7 @@ export function CoursePage() {
       </div>
 
       {/* Main content with reordered sections for mobile */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 w-full">
         {/* Video Section */}
         <div className="lg:col-span-2 space-y-8">
           {/* Video Controls */}
