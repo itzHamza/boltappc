@@ -314,10 +314,17 @@ export function CoursePage() {
           </div>
 
           {/* PDF Viewer */}
-          <div className="mx-4 lg:mx-0"></div>
+          <div className="mx-4 lg:mx-0">
+            <PDFViewer
+              url={courseData.pdfs[selectedPdf].url}
+              className="w-full"
+            />
+          </div>
+          <div className="mx-4 lg:mx-0">
+            <Flashcards lessonId={courseData.title} />
+          </div>
         </div>
-        <PDFViewer url={courseData.pdfs[selectedPdf].url} className="w-full" />
-        <Flashcards lessonId={courseData.title} />
+
         {/* Sidebar for larger screens */}
         <div className="lg:block space-y-6 mx-4 lg:mx-0">
           <div className="bg-white rounded-lg shadow-sm p-4">
