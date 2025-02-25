@@ -32,7 +32,6 @@ export default function Flashcards({ lessonId }) {
 
   return (
     <div className="flashcards-container">
-      <h2>Flash Cards</h2>
       <div className="flashcard-container" onClick={() => setFlipped(!flipped)}>
         <div className={`flashcard ${flipped ? "flip" : ""}`}>
           <div className="side front">{flashcards[currentIndex]?.question}</div>

@@ -7,6 +7,7 @@ import {
   ChevronRight,
   ArrowLeft,
   ArrowRight,
+  ClipboardX,
 } from "lucide-react";
 import { PDFViewer } from "../components/PDFViewer";
 import Flashcards from "../components/Flashcards";
@@ -164,7 +165,7 @@ export function CoursePage() {
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
           referrerPolicy="strict-origin-when-cross-origin"
           allowFullScreen
-          className="w-full aspect-video w-screen sm:h-auto px-1 rounded-2xl"
+          className="w-full aspect-video sm:h-auto px-1 rounded-2xl"
           title="Course Video"
         />
       </div>
@@ -203,6 +204,12 @@ export function CoursePage() {
       </div>
 
       {/* Flashcards */}
+      <div className="bg-white shadow-sm p-4 lg:mx-0 rounded-lg">
+        <h3 className="text-lg font-semibold text-gray-900 flex items-center">
+          <ClipboardX className="w-5 h-5 mr-2 text-black" />
+          Flashcards
+        </h3>
+      </div>
       <div className="flex justify-center">
         <div className="w-full sm:w-2/3">
           <Flashcards lessonId={courseData.id} />
