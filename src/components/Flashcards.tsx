@@ -40,15 +40,19 @@ export default function Flashcards({ lessonId }) {
         </div>
       </div>
       <div className="buttons">
-        <button onClick={() => setCurrentIndex((i) => (i > 0 ? i - 1 : i))}>
-          السابق
+        <button
+          className="prev-next-button buttons"
+          onClick={() => setCurrentIndex((i) => (i > 0 ? i - 1 : i))}
+        >
+          Previous
         </button>
         <button
+          className="prev-next-button buttons"
           onClick={() =>
             setCurrentIndex((i) => (i < flashcards.length - 1 ? i + 1 : i))
           }
         >
-          التالي
+          Next
         </button>
       </div>
       <div className="progress-container">

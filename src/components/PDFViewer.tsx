@@ -13,7 +13,7 @@ export function PDFViewer({ url, className = "" }: PDFViewerProps) {
 
   return (
     <div className={`pdf-container ${className}`}>
-      <div className="bg-gray-100 p-4 rounded-lg flex items-center justify-between">
+      <div className="bg-gray-100 p-4 rounded-lg flex items-center justify-center">
         <div className="flex items-center space-x-2">
           <button
             onClick={zoomOut}

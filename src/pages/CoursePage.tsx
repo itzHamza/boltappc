@@ -87,7 +87,7 @@ export function CoursePage() {
   };
 
   return (
-    <div className="space-y-8 lg:px-8">
+    <div className="w-screen sm:w-full space-y-8 lg:px-8">
       <div className="px-4 lg:px-0">
         {/* Course Navigation (only within the same module) */}
         <div className="flex items-center justify-between mb-6">
@@ -157,14 +157,14 @@ export function CoursePage() {
       </div>
 
       {/* Video Player */}
-      <div className="bg-white shadow-sm overflow-hidden">
+      <div className="w-screen sm:w-full bg-white shadow-sm overflow-hidden">
         <iframe
           src={courseData.videos[selectedVideo]?.url}
           frameBorder="0"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
           referrerPolicy="strict-origin-when-cross-origin"
           allowFullScreen
-          className="w-full aspect-video"
+          className="w-full aspect-video w-screen sm:h-auto"
           title="Course Video"
         />
       </div>
@@ -203,8 +203,10 @@ export function CoursePage() {
       </div>
 
       {/* Flashcards */}
-      <div className="mx-4 lg:mx-0">
-        <Flashcards lessonId={courseData.id} />
+      <div className="flex justify-center">
+        <div className="w-full sm:w-2/3">
+          <Flashcards lessonId={courseData.id} />
+        </div>
       </div>
     </div>
   );

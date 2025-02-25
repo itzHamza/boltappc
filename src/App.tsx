@@ -65,7 +65,10 @@ function App() {
                       <Route path="/" element={<AdminDashboard />} />
                       <Route path="/lessons" element={<AdminLessons />} />
                       <Route path="/edit" element={<EditCourse />} />
-                      <Route path="/flashcards" element={<FlashcardsManager />} />
+                      <Route
+                        path="/flashcards"
+                        element={<FlashcardsManager />}
+                      />
                     </Routes>
                   </div>
                 </main>
@@ -82,8 +85,8 @@ function App() {
           element={
             <div className="min-h-screen bg-gray-50">
               <Header />
-              <main className="lg:ml-64 p-8">
-                <div className="container mx-auto">
+              <main className="lg:ml-64 p-0 sm:p-8 sm:pt-20">
+                <div className="container mx-auto max-w-full sm:max-w-screen-lg sm:p-0">
                   <Routes>
                     <Route path="/" element={<HomePage />} />
                     <Route path="/year/:yearId" element={<YearPage />} />
