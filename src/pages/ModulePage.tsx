@@ -33,7 +33,7 @@ export function ModulePage() {
         .from("courses")
         .select("id, title, description, videos, pdfs")
         .eq("module_id", moduleId)
-        .order("id", { ascending: true });
+        .order("created_at", { ascending: true }); 
 
       if (coursesError) {
         console.error("Error fetching courses:", coursesError);
