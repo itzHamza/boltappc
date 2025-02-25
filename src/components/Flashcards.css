@@ -62,7 +62,7 @@
 /* ✅ تحسين أزرار التنقل */
 .buttons { 
   display: flex; 
-  justify-content: space-between; 
+  justify-content: space-around; 
   margin-top: 15px; 
   width: 100%;
   max-width: 400px;

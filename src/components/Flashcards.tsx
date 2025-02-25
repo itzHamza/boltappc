@@ -54,7 +54,7 @@ export default function Flashcards({ lessonId }) {
             setCurrentIndex((i) => (i > 0 ? i - 1 : i));
           }}
         >
-          السابق
+          Previous
         </button>
         <button
           className="prev-next-button"
@@ -63,7 +63,7 @@ export default function Flashcards({ lessonId }) {
             setCurrentIndex((i) => (i < flashcards.length - 1 ? i + 1 : i));
           }}
         >
-          التالي
+          Next
         </button>
       </div>
 
