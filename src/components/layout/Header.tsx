@@ -100,17 +100,13 @@ export function Header() {
         )}
       >
         {/* الشعار */}
-        <div className="p-6 border-b border-gray-200">
-          <Link to="/" className="flex items-center space-x-2">
+        <div className="flex justify-center items-center py-4">
+          <Link className="w-full flex justify-center" to="/">
             <img
-              src="https://qcm-configue.netlify.app/logo.jpg"
+              src="lgo.svg"
               alt="TBIB"
-              className="w-8 h-8"
+              className="w-40 md:w-56 lg:w-72 h-auto"
             />
-            <span className="text-xl font-bold text-gray-900">
-              <b>TBIB</b>
-              <sub> Cours</sub>
-            </span>
           </Link>
         </div>
 
