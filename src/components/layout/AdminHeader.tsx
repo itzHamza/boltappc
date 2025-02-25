@@ -47,8 +47,14 @@ export function AdminHeader() {
       color: "text-amber-600",
       bgColor: "bg-amber-50",
     },
+    {
+      name: "Edit Flashcards",
+      icon: Brain,
+      href: "/admin/editflashcards",
+      color: "text-amber-600",
+      bgColor: "bg-amber-50",
+    },
   ];
-
   const handleLogout = async () => {
     const { error } = await supabase.auth.signOut();
     if (!error) {

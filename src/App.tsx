@@ -13,6 +13,7 @@ import {AdminDashboard} from "./pages/admin/AdminDashboard";
 import AdminLessons from "./pages/admin/AdminLessons";
 import EditCourse from "./pages/admin/EditCourse";
 import FlashcardsManager from "./pages/admin/AdminFlashcards";
+import EditDeleteFlashcards from "./pages/admin/EditDeleteFlashcards";
 import { YearPage } from "./pages/YearPage";
 import { ModulePage } from "./pages/ModulePage";
 import { CoursePage } from "./pages/CoursePage";
@@ -65,10 +66,8 @@ function App() {
                       <Route path="/" element={<AdminDashboard />} />
                       <Route path="/lessons" element={<AdminLessons />} />
                       <Route path="/edit" element={<EditCourse />} />
-                      <Route
-                        path="/flashcards"
-                        element={<FlashcardsManager />}
-                      />
+                      <Route path="/flashcards" element={<FlashcardsManager />} />
+                      <Route path="/editflashcards" element={<EditDeleteFlashcards />} />
                     </Routes>
                   </div>
                 </main>

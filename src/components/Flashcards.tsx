@@ -44,26 +44,30 @@ export default function Flashcards({ lessonId }) {
           <div className="side back">{flashcards[currentIndex]?.answer}</div>
         </div>
       </div>
+
+      {/* ✅ تحسين أزرار التنقل */}
       <div className="buttons">
         <button
-          className="prev-next-button buttons"
+          className="prev-next-button"
           onClick={() => {
+            setFlipped(false); // ✅ إعادة ضبط الحالة عند تغيير الكارد
             setCurrentIndex((i) => (i > 0 ? i - 1 : i));
-            setFlipped(false); // ✅ Reset flip state when changing card
           }}
         >
-          Previous
+          السابق
         </button>
         <button
-          className="prev-next-button buttons"
+          className="prev-next-button"
           onClick={() => {
+            setFlipped(false); // ✅ إعادة ضبط الحالة عند تغيير الكارد
             setCurrentIndex((i) => (i < flashcards.length - 1 ? i + 1 : i));
-            setFlipped(false); // ✅ Reset flip state when changing card
           }}
         >
-          Next
+          التالي
         </button>
       </div>
+
+      {/* ✅ تحسين شريط التقدم */}
       <div className="progress-container">
         <div
           className="progress-bar"
@@ -72,7 +76,9 @@ export default function Flashcards({ lessonId }) {
           }}
         ></div>
       </div>
-      <p>
+
+      {/* ✅ تحسين مؤشر عدد الكاردز */}
+      <p className="mt-3 text-lg font-semibold text-gray-700">
         {currentIndex + 1} / {flashcards.length}
       </p>
     </div>

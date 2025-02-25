@@ -1,17 +1,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Lexend+Deca&display=swap');
+@import "loaders.css/loaders.min.css";
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-@import "loaders.css/loaders.min.css";
 *{font-family: "Lexend Deca", serif;}  
-.marginleftandright{margin: 0 15px;min-width: 335px;}
-
-
-
-
-
-
-
+.marginleftandright{margin: 0 15px; min-width: 335px;}
 
 .loader {
     justify-self: anchor-center;
