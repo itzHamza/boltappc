@@ -27,7 +27,13 @@ export default function Flashcards({ lessonId }) {
   }, [lessonId]);
 
   if (flashcards.length === 0) {
-    return <p>لا توجد فلاش كارد لهذا الدرس</p>;
+    return (
+      <div className="bg-white shadow-sm p-4 lg:mx-0 rounded-lg mb-3">
+        <h3 className="text-lg font-semibold text-gray-900 flex items-center">
+          No Flashcards For This Lesson :(
+        </h3>
+      </div>
+    );
   }
 
   return (
