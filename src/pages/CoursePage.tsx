@@ -164,7 +164,7 @@ export function CoursePage() {
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
           referrerPolicy="strict-origin-when-cross-origin"
           allowFullScreen
-          className="w-full aspect-video w-screen sm:h-auto"
+          className="w-full aspect-video w-screen sm:h-auto px-1 rounded-2xl"
           title="Course Video"
         />
       </div>

@@ -85,8 +85,8 @@ function App() {
           element={
             <div className="min-h-screen bg-gray-50">
               <Header />
-              <main className="lg:ml-64 p-0 sm:p-8 sm:pt-20">
-                <div className="container mx-auto max-w-full sm:max-w-screen-lg sm:p-0">
+              <main className="lg:ml-64 pt-14 p-0 m:p-8 ">
+                <div className="w-full mx-auto max-w-full sm:max-w-screen-lg sm:px-0">
                   <Routes>
                     <Route path="/" element={<HomePage />} />
                     <Route path="/year/:yearId" element={<YearPage />} />
