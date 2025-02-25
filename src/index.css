@@ -3,3 +3,4 @@
 @tailwind components;
 @tailwind utilities;
 *{font-family: "Lexend Deca", serif;}  
+.marginleftandright{margin: 0 15px;min-width: 335px;}

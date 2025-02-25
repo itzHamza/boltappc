@@ -69,8 +69,12 @@ export function YearPage() {
 
   return (
     <div>
-      <h1 className="text-3xl font-bold text-gray-900 mb-2">{yearTitle}</h1>
-      <p className="text-gray-600 mb-8">Select a module to view its courses</p>
+      <h1 className="text-3xl font-bold text-gray-900 mb-2 justify-self-center ">
+        {yearTitle}
+      </h1>
+      <p className="text-gray-600 mb-8 justify-self-center">
+        Select a module to view its courses
+      </p>
 
       {modules.length === 0 ? (
         <p className="text-center text-gray-600">
@@ -82,7 +86,7 @@ export function YearPage() {
             <Link
               key={module.id}
               to={`/module/${module.id}`}
-              className="group block p-6 bg-white rounded-lg shadow-sm hover:shadow-md transition-all"
+              className="group block p-6 bg-white rounded-lg shadow-sm hover:shadow-md transition-all marginleftandright"
             >
               <div className="flex items-start space-x-4">
                 <div className="p-3 bg-blue-50 rounded-lg group-hover:bg-blue-100 transition-colors">

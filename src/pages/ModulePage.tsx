@@ -74,8 +74,12 @@ export function ModulePage() {
 
   return (
     <div>
-      <h1 className="text-3xl font-bold text-gray-900 mb-2">{moduleTitle}</h1>
-      <p className="text-gray-600 mb-8">{moduleDescription}</p>
+      <h1 className="text-3xl font-bold text-gray-900 mb-2 justify-self-center">
+        {moduleTitle}
+      </h1>
+      <p className="text-gray-600 mb-8 justify-self-center">
+        {moduleDescription}
+      </p>
 
       {courses.length === 0 ? (
         <p className="text-center text-gray-600">
@@ -87,7 +91,7 @@ export function ModulePage() {
             <Link
               key={course.id}
               to={`/course/${course.id}`}
-              className="group block p-6 bg-white rounded-lg shadow-sm hover:shadow-md transition-all"
+              className="group block p-6 bg-white rounded-lg shadow-sm hover:shadow-md transition-all marginleftandright"
             >
               <div className="flex items-start space-x-4">
                 <div className="p-3 bg-blue-50 rounded-lg group-hover:bg-blue-100 transition-colors">

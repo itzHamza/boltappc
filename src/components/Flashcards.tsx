@@ -41,15 +41,19 @@ export default function Flashcards({ lessonId }) {
       <div className="buttons">
         <button
           className="prev-next-button buttons"
-          onClick={() => setCurrentIndex((i) => (i > 0 ? i - 1 : i))}
+          onClick={() => {
+            setCurrentIndex((i) => (i > 0 ? i - 1 : i));
+            setFlipped(false); // ✅ Reset flip state when changing card
+          }}
         >
           Previous
         </button>
         <button
           className="prev-next-button buttons"
-          onClick={() =>
-            setCurrentIndex((i) => (i < flashcards.length - 1 ? i + 1 : i))
-          }
+          onClick={() => {
+            setCurrentIndex((i) => (i < flashcards.length - 1 ? i + 1 : i));
+            setFlipped(false); // ✅ Reset flip state when changing card
+          }}
         >
           Next
         </button>

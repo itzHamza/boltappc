@@ -5,7 +5,7 @@ import { supabase } from "../../lib/supabaseClient";
 import { cn } from "../../lib/utils";
 
 export function Header() {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const location = useLocation();
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState([]);
@@ -165,17 +165,6 @@ export function Header() {
               </Link>
             ))}
           </div>
-
-          {/* زر تسجيل الدخول */}
-          <Link
-            to="/login"
-            className="flex items-center space-x-2 px-4 py-3 mt-8 w-full rounded-lg text-gray-600 hover:bg-gray-50 transition-colors"
-          >
-            <div className="p-2 rounded-lg bg-gray-50">
-              <User className="w-5 h-5 text-gray-600" />
-            </div>
-            <span>Login</span>
-          </Link>
         </nav>
       </div>
 

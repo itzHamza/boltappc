@@ -1,4 +1,12 @@
-import React, { useState } from "react";
+import React from "react";
+import { Worker, Viewer } from "@react-pdf-viewer/core";
+import { defaultLayoutPlugin } from "@react-pdf-viewer/default-layout";
+import * as pdfjs from "pdfjs-dist"; // ✅ استيراد pdfjs-dist
+import "@react-pdf-viewer/core/lib/styles/index.css";
+import "@react-pdf-viewer/default-layout/lib/styles/index.css";
+
+// ✅ ضبط مسار الـ Worker تلقائيًا بناءً على الإصدار المثبت
+pdfjs.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
 
 interface PDFViewerProps {
   url: string;
@@ -6,39 +14,13 @@ interface PDFViewerProps {
 }
 
 export function PDFViewer({ url, className = "" }: PDFViewerProps) {
-  const [scale, setScale] = useState(1);
-
-  const zoomIn = () => setScale((prev) => Math.min(prev + 0.2, 3));
-  const zoomOut = () => setScale((prev) => Math.max(prev - 0.2, 0.5));
+  const defaultLayoutPluginInstance = defaultLayoutPlugin();
 
   return (
-    <div className={`pdf-container ${className}`}>
-      <div className="bg-gray-100 p-4 rounded-lg flex items-center justify-center">
-        <div className="flex items-center space-x-2">
-          <button
-            onClick={zoomOut}
-            className="px-3 py-1 bg-white rounded border hover:bg-gray-50"
-            title="Zoom Out"
-          >
-            Zoom Out
-          </button>
-          <span>{Math.round(scale * 100)}%</span>
-          <button
-            onClick={zoomIn}
-            className="px-3 py-1 bg-white rounded border hover:bg-gray-50"
-            title="Zoom In"
-          >
-            Zoom In
-          </button>
-        </div>
-      </div>
-      <div className="mt-4 overflow-auto bg-white rounded-lg shadow-sm">
-        <iframe
-          src={`${url}#view=FitH&zoom=${scale}`}
-          className="w-full min-h-[600px] border-0"
-          title="PDF Viewer"
-        />
-      </div>
+    <div className={`bg-white rounded-lg shadow-sm p-4 ${className}`}>
+      <Worker workerUrl={pdfjs.GlobalWorkerOptions.workerSrc}>
+        <Viewer fileUrl={url} plugins={[defaultLayoutPluginInstance]} />
+      </Worker>
     </div>
   );
 }

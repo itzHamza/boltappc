@@ -200,7 +200,10 @@ export function CoursePage() {
 
       {/* PDF Viewer */}
       <div className="mx-4 lg:mx-0">
-        <PDFViewer url={courseData.pdfs[selectedPdf]?.url} className="w-full" />
+        <PDFViewer
+          url={courseData.pdfs[selectedPdf]?.url}
+          className="h-[80vh]"
+        />
       </div>
 
       {/* Flashcards */}
