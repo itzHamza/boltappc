@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { supabase } from "../lib/supabaseClient";
 import { BookOpen, Video, FileText, ChevronRight } from "lucide-react";
+import Loader from "../components/Loader";
 
 export function ModulePage() {
   const { moduleId } = useParams();
@@ -58,8 +59,8 @@ export function ModulePage() {
 
   if (loading) {
     return (
-      <div className="text-center py-12">
-        <h1 className="text-2xl font-bold text-gray-900">Loading...</h1>
+      <div className="text-center py-12 h-80 flex items-center justify-center">
+        <Loader />
       </div>
     );
   }

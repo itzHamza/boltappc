@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { PDFViewer } from "../components/PDFViewer";
 import Flashcards from "../components/Flashcards";
+import Loader from "../components/Loader";
 
 export function CoursePage() {
   const { courseId } = useParams();
@@ -19,9 +20,11 @@ export function CoursePage() {
   const [moduleCourses, setModuleCourses] = useState([]);
   const [selectedVideo, setSelectedVideo] = useState(0);
   const [selectedPdf, setSelectedPdf] = useState(0);
+    const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function fetchCourse() {
+      setLoading(true);
       const { data, error } = await supabase
         .from("courses")
         .select("*")
@@ -55,17 +58,25 @@ export function CoursePage() {
       } else {
         setModuleCourses(data);
       }
+      setLoading(false);
     }
-
     if (courseData) {
       fetchModuleCourses();
     }
   }, [courseData]);
 
+  if (loading) {
+    return (
+      <div className="text-center py-12 h-80 flex items-center justify-center">
+        <Loader />
+      </div>
+    );
+  }
+
   if (!courseData) {
     return (
       <div className="text-center py-12">
-        <h1 className="text-2xl font-bold text-gray-900">Loading...</h1>
+        <h1 className="text-2xl font-bold text-gray-900">Course Not Found</h1>
       </div>
     );
   }
