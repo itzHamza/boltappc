@@ -17,7 +17,8 @@ import EditDeleteFlashcards from "./pages/admin/EditDeleteFlashcards";
 import { YearPage } from "./pages/YearPage";
 import { ModulePage } from "./pages/ModulePage";
 import { CoursePage } from "./pages/CoursePage";
-import {AdminLoginPage} from "./pages/admin/AdminLoginPage"; // ✅ Correct Import
+import { AdminLoginPage } from "./pages/admin/AdminLoginPage"; // ✅ Correct Import
+import PDFViewerPage from "./pages/PDFViewerPage"; 
 
 function App() {
   const [adminUser, setAdminUser] = useState(null);
@@ -91,6 +92,7 @@ function App() {
                     <Route path="/year/:yearId" element={<YearPage />} />
                     <Route path="/module/:moduleId" element={<ModulePage />} />
                     <Route path="/course/:courseId" element={<CoursePage />} />
+                    <Route path="/pdf-viewer/:pdfUrl" element={<PDFViewerPage />} />
                   </Routes>
                 </div>
               </main>

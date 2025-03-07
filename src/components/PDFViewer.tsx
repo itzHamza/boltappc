@@ -1,66 +1,26 @@
-import { useEffect, useRef } from "react";
+import React from "react";
+import { Worker, Viewer } from "@react-pdf-viewer/core";
+import { defaultLayoutPlugin } from "@react-pdf-viewer/default-layout";
+import * as pdfjs from "pdfjs-dist"; // ✅ استيراد pdfjs-dist
+import "@react-pdf-viewer/core/lib/styles/index.css";
+import "@react-pdf-viewer/default-layout/lib/styles/index.css";
+
+// ✅ ضبط مسار الـ Worker تلقائيًا بناءً على الإصدار المثبت
+pdfjs.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
 
 interface PDFViewerProps {
   url: string;
+  className?: string;
 }
 
-const PDFViewer: React.FC<PDFViewerProps> = ({ url }) => {
-  const viewerRef = useRef<HTMLDivElement>(null);
-  const clientId = "b8572109d2534e31a259590e606b20e8"; // ضع Client ID الخاص بك
-
-  useEffect(() => {
-    const loadAdobeSDK = () => {
-      if (!(window as any).AdobeDC) {
-        const script = document.createElement("script");
-        script.src = "https://documentservices.adobe.com/view-sdk/viewer.js";
-        script.async = true;
-        script.onload = () =>
-          document.dispatchEvent(new Event("adobe_dc_view_sdk.ready"));
-        document.body.appendChild(script);
-      } else {
-        document.dispatchEvent(new Event("adobe_dc_view_sdk.ready"));
-      }
-    };
-
-    const initAdobeViewer = () => {
-      if (!viewerRef.current || !(window as any).AdobeDC) return;
-
-      const adobeDCView = new (window as any).AdobeDC.View({
-        clientId,
-        divId: viewerRef.current.id,
-      });
-
-      adobeDCView.previewFile(
-        {
-          content: { location: { url } },
-          metaData: { fileName: "document.pdf" },
-        },
-        {
-          embedMode: "SIZED_CONTAINER",
-          showAnnotationTools: true, // ✅ السماح بإضافة التعليقات
-          enableAnnotationAPIs: true, // ✅ تفعيل APIs الخاصة بالتعليقات
-          showDownloadPDF: true, // ✅ تفعيل خيار التحميل
-          showPrintPDF: true, // ✅ تفعيل خيار الطباعة
-          defaultViewMode: "FIT_WIDTH", // ✅ عرض الملف بحجم متناسب
-        }
-      );
-    };
-
-    document.addEventListener("adobe_dc_view_sdk.ready", initAdobeViewer);
-    loadAdobeSDK();
-
-    return () => {
-      document.removeEventListener("adobe_dc_view_sdk.ready", initAdobeViewer);
-    };
-  }, [url]);
+export function PDFViewer({ url, className = "" }: PDFViewerProps) {
+  const defaultLayoutPluginInstance = defaultLayoutPlugin();
 
   return (
-    <div
-      id="pdf-viewer"
-      ref={viewerRef}
-      style={{ width: "100%", height: "600px" }}
-    />
+    <div className={`bg-white rounded-lg shadow-sm p-4 ${className}`}>
+      <Worker workerUrl={pdfjs.GlobalWorkerOptions.workerSrc}>
+        <Viewer fileUrl={url} plugins={[defaultLayoutPluginInstance]} />
+      </Worker>
+    </div>
   );
-};
-
-export default PDFViewer;
+}

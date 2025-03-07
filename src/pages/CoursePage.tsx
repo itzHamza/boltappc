@@ -9,7 +9,7 @@ import {
   ArrowRight,
   ClipboardX,
 } from "lucide-react";
-import PDFViewer from "../components/PDFViewer";
+import {PDFViewer} from "../components/PDFViewer";
 import Flashcards from "../components/Flashcards";
 import Loader from "../components/Loader";
 
@@ -212,8 +212,21 @@ export function CoursePage() {
       {/* PDF Viewer */}
       <div className="mx-4 lg:mx-0">
         <PDFViewer
-          url="https://qjqfaywhgbwwvusananj.supabase.co/storage/v1/object/sign/tbibapp/l'os%20coxal%20.pdf?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1cmwiOiJ0YmliYXBwL2wnb3MgY294YWwgLnBkZiIsImlhdCI6MTc0MTM2NDg3NiwiZXhwIjoxNzQxOTY5Njc2fQ.YECcVEcRyx-QvyB9gh9Wf4uRatOeSd1NFfJNF3dT9As"
+          url={courseData.pdfs[selectedPdf]?.url}
+          className="h-[80vh]"
         />
+        <button
+          onClick={() =>
+            navigate(
+              `/pdf-viewer/${encodeURIComponent(
+                courseData.pdfs[selectedPdf]?.url
+              )}`
+            )
+          }
+          className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+        >
+          عرض الـ PDF بملء الشاشة
+        </button>
       </div>
 
       {/* Flashcards */}
