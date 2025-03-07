@@ -215,12 +215,14 @@ export function CoursePage() {
           url={courseData.pdfs[selectedPdf]?.url}
           className="h-[80vh]"
         />
+        {/* زر فتح الـ PDF في نافذة جديدة */}
         <button
           onClick={() =>
-            navigate(
+            window.open(
               `/pdf-viewer/${encodeURIComponent(
                 courseData.pdfs[selectedPdf]?.url
-              )}`
+              )}`,
+              "_blank"
             )
           }
           className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"

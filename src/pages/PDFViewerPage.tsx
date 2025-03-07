@@ -49,5 +49,5 @@ export default function PDFViewerPage() {
     }
   }, [decodedUrl]);
 
-  return <div id="adobe-dc-view" style={{ height: "100vh", width: "100vw" }} />;
+  return <div id="adobe-dc-view" style={{ height: "100vh", width: "100%" }} />;
 }
