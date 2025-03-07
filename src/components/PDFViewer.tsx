@@ -1,26 +1,31 @@
-import React from "react";
-import { Worker, Viewer } from "@react-pdf-viewer/core";
-import { defaultLayoutPlugin } from "@react-pdf-viewer/default-layout";
-import * as pdfjs from "pdfjs-dist"; // ✅ استيراد pdfjs-dist
-import "@react-pdf-viewer/core/lib/styles/index.css";
-import "@react-pdf-viewer/default-layout/lib/styles/index.css";
+import { useEffect, useRef } from "react";
 
-// ✅ ضبط مسار الـ Worker تلقائيًا بناءً على الإصدار المثبت
-pdfjs.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
+const PDFViewer = ({ url }: { url: string }) => {
+  const viewerRef = useRef<HTMLDivElement>(null);
 
-interface PDFViewerProps {
-  url: string;
-  className?: string;
-}
+  useEffect(() => {
+    if (!window.AdobeDC) return;
 
-export function PDFViewer({ url, className = "" }: PDFViewerProps) {
-  const defaultLayoutPluginInstance = defaultLayoutPlugin();
+    const adobeDCView = new window.AdobeDC.View({
+      clientId: "b8572109d2534e31a259590e606b20e8",
+      divId: "adobe-dc-view",
+    });
 
-  return (
-    <div className={`bg-white rounded-lg shadow-sm p-4 ${className}`}>
-      <Worker workerUrl={pdfjs.GlobalWorkerOptions.workerSrc}>
-        <Viewer fileUrl={url} plugins={[defaultLayoutPluginInstance]} />
-      </Worker>
-    </div>
-  );
-}
+    adobeDCView.previewFile(
+      {
+        content: { location: { url } },
+        metaData: { fileName: "sample.pdf" },
+      },
+      {
+        embedMode: "FULL_WINDOW", // Allows fullscreen mode
+        defaultViewMode: "FIT_WIDTH", // Enables zooming
+        showAnnotationTools: true, // Enables annotation toolbar
+        enableAnnotationAPIs: true, // Allows users to add annotations
+      }
+    );
+  }, [url]);
+
+  return <div id="adobe-dc-view" ref={viewerRef} style={{ height: "80vh" }} />;
+};
+
+export default PDFViewer;

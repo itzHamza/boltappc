@@ -12,6 +12,7 @@ export default function AddCourse() {
     videos: [],
     pdfs: [],
   });
+  const [uploading, setUploading] = useState(false); // حالة الرفع
 
   useEffect(() => {
     fetchYears();
@@ -38,6 +39,57 @@ export default function AddCourse() {
       .eq("year_id", yearId);
     if (error) console.error("Error fetching modules:", error);
     else setModules(data);
+  }
+
+  // ✅ رفع ملف PDF إلى Supabase Storage
+  async function uploadPdf(file) {
+    if (!file) return null;
+
+    setUploading(true);
+    const fileExt = file.name.split(".").pop();
+    const fileName = `${Math.random()}.${fileExt}`;
+    const filePath = `${fileName}`;
+
+    const { data, error } = await supabase.storage
+      .from("tbibapp") // اسم الـ Bucket
+      .upload(filePath, file);
+
+    if (error) {
+      console.error("Error uploading PDF:", error.message);
+      alert(`Error uploading PDF: ${error.message}`);
+      setUploading(false);
+      return null;
+    }
+
+    setUploading(false);
+    return data.path; // إرجاع مسار الملف
+  }
+
+  // ✅ إضافة PDF جديد
+  async function addPdf() {
+    const fileInput = document.createElement("input");
+    fileInput.type = "file";
+    fileInput.accept = "application/pdf";
+    fileInput.onchange = async (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      const filePath = await uploadPdf(file);
+      if (!filePath) return;
+
+      setNewCourse({
+        ...newCourse,
+        pdfs: [
+          ...newCourse.pdfs,
+          {
+            id: newCourse.pdfs.length + 1,
+            url: `${supabase.storage.url}/object/public/pdfs/${filePath}`,
+            title: file.name,
+          },
+        ],
+      });
+    };
+    fileInput.click();
   }
 
   // ✅ إضافة درس جديد إلى Supabase
@@ -80,17 +132,6 @@ export default function AddCourse() {
       videos: [
         ...newCourse.videos,
         { id: newCourse.videos.length + 1, url: "", title: "" },
-      ],
-    });
-  }
-
-  // ✅ إضافة PDF جديد
-  function addPdf() {
-    setNewCourse({
-      ...newCourse,
-      pdfs: [
-        ...newCourse.pdfs,
-        { id: newCourse.pdfs.length + 1, url: "", title: "" },
       ],
     });
   }
@@ -203,20 +244,17 @@ export default function AddCourse() {
             type="text"
             placeholder="رابط الملف"
             value={pdf.url}
-            onChange={(e) => {
-              const pdfs = [...newCourse.pdfs];
-              pdfs[index].url = e.target.value;
-              setNewCourse({ ...newCourse, pdfs });
-            }}
-            className="p-2 border flex-1"
+            disabled
+            className="p-2 border flex-1 bg-gray-100"
           />
         </div>
       ))}
       <button
         onClick={addPdf}
+        disabled={uploading}
         className="px-4 py-2 bg-green-500 text-white rounded-lg m-2"
       >
-        + أضف PDF
+        {uploading ? "جاري الرفع..." : "+ أضف PDF"}
       </button>
 
       {/* زر الإضافة */}

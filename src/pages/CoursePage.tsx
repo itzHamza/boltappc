@@ -9,7 +9,7 @@ import {
   ArrowRight,
   ClipboardX,
 } from "lucide-react";
-import { PDFViewer } from "../components/PDFViewer";
+import PDFViewer from "../components/PDFViewer";
 import Flashcards from "../components/Flashcards";
 import Loader from "../components/Loader";
 
@@ -212,7 +212,7 @@ export function CoursePage() {
       {/* PDF Viewer */}
       <div className="mx-4 lg:mx-0">
         <PDFViewer
-          url={courseData.pdfs[selectedPdf]?.url}
+          url="https://qjqfaywhgbwwvusananj.supabase.co/storage/v1/object/sign/tbibapp/qcm_digestive.pdf?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1cmwiOiJ0YmliYXBwL3FjbV9kaWdlc3RpdmUucGRmIiwiaWF0IjoxNzQwNjY5NTc1LCJleHAiOjE3NzIyMDU1NzV9.27uh4XxleRB1LqYKEoQMPUHcWor7hM0MHZNlkmQWig0"
           className="h-[80vh]"
         />
       </div>
