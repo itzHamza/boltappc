@@ -1,26 +1,60 @@
-import React from "react";
-import { Worker, Viewer } from "@react-pdf-viewer/core";
-import { defaultLayoutPlugin } from "@react-pdf-viewer/default-layout";
-import * as pdfjs from "pdfjs-dist"; // ✅ استيراد pdfjs-dist
-import "@react-pdf-viewer/core/lib/styles/index.css";
-import "@react-pdf-viewer/default-layout/lib/styles/index.css";
-
-// ✅ ضبط مسار الـ Worker تلقائيًا بناءً على الإصدار المثبت
-pdfjs.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
+import React, { useEffect, useRef } from "react";
 
 interface PDFViewerProps {
   url: string;
   className?: string;
 }
 
-export function PDFViewer({ url, className = "" }: PDFViewerProps) {
-  const defaultLayoutPluginInstance = defaultLayoutPlugin();
+const PDFViewer: React.FC<PDFViewerProps> = ({ url, className }) => {
+  const viewerRef = useRef<HTMLDivElement | null>(null);
 
-  return (
-    <div className={`bg-white rounded-lg shadow-sm p-4 ${className}`}>
-      <Worker workerUrl={pdfjs.GlobalWorkerOptions.workerSrc}>
-        <Viewer fileUrl={url} plugins={[defaultLayoutPluginInstance]} />
-      </Worker>
-    </div>
-  );
-}
+  useEffect(() => {
+    const initAdobeViewer = () => {
+      if (!window.AdobeDC) {
+        console.error("AdobeDC غير متاح، سيتم إعادة المحاولة...");
+        setTimeout(initAdobeViewer, 500);
+        return;
+      }
+
+      if (viewerRef.current) {
+        const adobeDCView = new window.AdobeDC.View({
+          clientId: "a12ef57159d442318d90f46cd8f90189",
+          divId: viewerRef.current.id,
+        });
+
+        adobeDCView.previewFile(
+          {
+            content: { location: { url } },
+            metaData: { fileName: "Document.pdf" },
+          },
+          { embedMode: "SIZED_CONTAINER" } // ✅ لاستخدامه داخل `div` بدلاً من `FULL_WINDOW`
+        );
+
+        console.log("✅ Adobe PDF Viewer جاهز داخل المكون!");
+      }
+    };
+
+    if (!window.AdobeDC) {
+      const scriptId = "adobe-sdk-script";
+      if (!document.getElementById(scriptId)) {
+        const script = document.createElement("script");
+        script.src = "https://documentservices.adobe.com/view-sdk/viewer.js";
+        script.id = scriptId;
+        script.onload = () => {
+          console.log("✅ Adobe View SDK Loaded. جاري التحقق من AdobeDC...");
+          requestAnimationFrame(initAdobeViewer);
+        };
+        document.body.appendChild(script);
+      } else {
+        console.log("📌 Adobe View SDK موجود بالفعل، جاري التحقق...");
+        requestAnimationFrame(initAdobeViewer);
+      }
+    } else {
+      requestAnimationFrame(initAdobeViewer);
+    }
+  }, [url]);
+
+  return <div ref={viewerRef} className={`w-full ${className}`} />;
+};
+
+export default PDFViewer;

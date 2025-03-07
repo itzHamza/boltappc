@@ -9,7 +9,7 @@ import {
   ArrowRight,
   ClipboardX,
 } from "lucide-react";
-import {PDFViewer} from "../components/PDFViewer";
+import PDFViewer from "../components/PDFViewer";
 import Flashcards from "../components/Flashcards";
 import Loader from "../components/Loader";
 
@@ -219,15 +219,9 @@ export function CoursePage() {
         <div className="flex justify-center items-center h-40">
           <button
             onClick={() =>
-              window.open(
-                `/pdf-viewer/${encodeURIComponent(
-                  courseData.pdfs[selectedPdf]?.url
-                )}`,
-                "_blank"
-              )
+              window.open(`/pdf-viewer/${encodeURIComponent(courseData.pdfs[selectedPdf]?.url)}`,"_blank")
             }
-            className="px-6 py-3 bg-blue-600 text-white rounded-lg text-lg font-semibold shadow-md hover:bg-blue-700 transition"
-          >
+            className="px-6 py-3 bg-blue-600 text-white rounded-lg text-lg font-semibold shadow-md hover:bg-blue-700 transition">
             عرض الـ PDF بملء الشاشة
           </button>
         </div>
