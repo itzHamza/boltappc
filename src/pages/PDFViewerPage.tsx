@@ -8,7 +8,8 @@ export default function PDFViewerPage() {
   useEffect(() => {
     const initAdobeViewer = () => {
       if (!window.AdobeDC) {
-        console.error("AdobeDC غير متاح، تأكد من تحميل السكريبت.");
+        console.error("AdobeDC غير متاح، سيتم إعادة المحاولة...");
+        setTimeout(initAdobeViewer, 500); // إعادة المحاولة بعد 500ms
         return;
       }
 
@@ -24,9 +25,10 @@ export default function PDFViewerPage() {
         },
         { embedMode: "FULL_WINDOW" }
       );
+
+      console.log("✅ AdobeDC جاهز وتم تحميل الـ PDF بنجاح!");
     };
 
-    // التأكد من أن السكريبت لم يتم تحميله مسبقًا
     if (!window.AdobeDC) {
       const scriptId = "adobe-sdk-script";
       if (!document.getElementById(scriptId)) {
@@ -34,16 +36,16 @@ export default function PDFViewerPage() {
         script.src = "https://documentservices.adobe.com/view-sdk/viewer.js";
         script.id = scriptId;
         script.onload = () => {
-          console.log("Adobe View SDK Loaded.");
-          initAdobeViewer();
+          console.log("✅ Adobe View SDK Loaded. جاري التحقق من AdobeDC...");
+          requestAnimationFrame(initAdobeViewer); // انتظار التحميل بالكامل
         };
         document.body.appendChild(script);
       } else {
-        console.log("Adobe View SDK already loaded.");
-        initAdobeViewer();
+        console.log("📌 Adobe View SDK موجود بالفعل، جاري التحقق...");
+        requestAnimationFrame(initAdobeViewer);
       }
     } else {
-      initAdobeViewer();
+      requestAnimationFrame(initAdobeViewer);
     }
   }, [decodedUrl]);
 
