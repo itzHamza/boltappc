@@ -212,8 +212,8 @@ export function CoursePage() {
       {/* PDF Viewer */}
       <div className="mx-4 lg:mx-0">
         <PDFViewer
-          url="https://qjqfaywhgbwwvusananj.supabase.co/storage/v1/object/sign/tbibapp/qcm_digestive.pdf?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1cmwiOiJ0YmliYXBwL3FjbV9kaWdlc3RpdmUucGRmIiwiaWF0IjoxNzQwNjY5NTc1LCJleHAiOjE3NzIyMDU1NzV9.27uh4XxleRB1LqYKEoQMPUHcWor7hM0MHZNlkmQWig0"
-          className="h-[80vh]"
+          fileUrl="https://qjqfaywhgbwwvusananj.supabase.co/storage/v1/object/sign/tbibapp/qcm_digestive.pdf?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1cmwiOiJ0YmliYXBwL3FjbV9kaWdlc3RpdmUucGRmIiwiaWF0IjoxNzQwNjY5NTc1LCJleHAiOjE3NzIyMDU1NzV9.27uh4XxleRB1LqYKEoQMPUHcWor7hM0MHZNlkmQWig0"
+          clientId="b8572109d2534e31a259590e606b20e8"
         />
       </div>
 

@@ -1,49 +1,39 @@
 import { useEffect, useRef } from "react";
 
 interface PDFViewerProps {
-  url: string;
+  fileUrl: string; // رابط ملف PDF
+  clientId: string; // Adobe Client ID
 }
 
-const PDFViewer: React.FC<PDFViewerProps> = ({ url }) => {
+const PDFViewer: React.FC<PDFViewerProps> = ({ fileUrl, clientId }) => {
   const viewerRef = useRef<HTMLDivElement>(null);
-  const clientId = "bd78075227e0410c83400f75a891f5bc"; // استبدل بـ Client ID الخاص بك
 
   useEffect(() => {
-    // تحميل SDK إن لم يكن محمّلاً مسبقًا
-    const script = document.createElement("script");
-    script.src = "https://documentservices.adobe.com/view-sdk/viewer.js";
-    script.async = true;
-    script.onload = () => {
-      if (!(window as any).AdobeDC) return;
+    if (!viewerRef.current) return;
 
-      const adobeDCView = new (window as any).AdobeDC.View({
-        clientId,
-        divId: "adobe-dc-view",
-      });
+    // إنشاء iframe لعرض المستند
+    const iframe = document.createElement("iframe");
+    iframe.style.width = "100%";
+    iframe.style.height = "600px";
+    iframe.style.border = "none";
 
-      adobeDCView.previewFile(
-        {
-          content: { location: { url } },
-          metaData: { fileName: "document.pdf" },
-        },
-        { embedMode: "SIZED_CONTAINER" } // يمكنك تغييره إلى "FULL_WINDOW" أو "INLINE"
-      );
-    };
+    // إنشاء رابط التضمين مع تفعيل التعليقات التوضيحية
+    const embedUrl = `https://acrobatservices.adobe.com/embed-url?client_id=${clientId}&file=${encodeURIComponent(
+      fileUrl
+    )}&enable_annotations=true`;
 
-    document.body.appendChild(script);
+    iframe.src = embedUrl;
+    viewerRef.current.appendChild(iframe);
 
+    // تنظيف عند إلغاء تحميل المكون
     return () => {
-      document.body.removeChild(script); // تنظيف عند الخروج من الصفحة
+      if (viewerRef.current && viewerRef.current.contains(iframe)) {
+        viewerRef.current.removeChild(iframe);
+      }
     };
-  }, [url]);
+  }, [fileUrl, clientId]);
 
-  return (
-    <div
-      id="adobe-dc-view"
-      ref={viewerRef}
-      style={{ width: "100%", height: "600px" }}
-    />
-  );
+  return <div ref={viewerRef} style={{ width: "100%", height: "600px" }} />;
 };
 
 export default PDFViewer;
