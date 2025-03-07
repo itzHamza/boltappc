@@ -10,18 +10,23 @@ const PDFViewer: React.FC<PDFViewerProps> = ({ url, className }) => {
   const divId = "adobe-pdf-viewer";
 
   useEffect(() => {
+    if (!url) {
+      console.error("❌ الرابط غير موجود، لا يمكن تحميل PDF.");
+      return;
+    }
+
     const initAdobeViewer = () => {
       if (!window.AdobeDC) {
-        console.error("AdobeDC غير متاح، سيتم إعادة المحاولة...");
-        setTimeout(initAdobeViewer, 500);
+        console.warn("⏳ AdobeDC غير متاح بعد، سيتم إعادة المحاولة...");
+        setTimeout(initAdobeViewer, 500); // ✅ إعادة المحاولة بعد نصف ثانية
         return;
       }
 
-      if (viewerRef.current && url) {
+      if (viewerRef.current) {
         viewerRef.current.id = divId;
 
         const adobeDCView = new window.AdobeDC.View({
-          clientId: "a12ef57159d442318d90f46cd8f90189",
+          clientId: "a12ef57159d442318d90f46cd8f90189", // ✅ استخدم Client ID الصحيح
           divId: divId,
         });
 
@@ -29,8 +34,8 @@ const PDFViewer: React.FC<PDFViewerProps> = ({ url, className }) => {
           {
             content: { location: { url } },
             metaData: {
-              fileName: "Document.pdf", // ✅ اسم الملف
-              fileId: url, // ✅ يجب أن يكون معرفًا فريدًا، يمكننا استخدام رابط الملف نفسه
+              fileName: url.split("/").pop() || "Document.pdf", // ✅ استخدم اسم الملف من الـ URL
+              fileId: `file-${Date.now()}`, // ✅ إنشاء `fileId` فريد لكل ملف
             },
           },
           {
@@ -41,12 +46,13 @@ const PDFViewer: React.FC<PDFViewerProps> = ({ url, className }) => {
           }
         );
 
-        console.log("✅ Adobe PDF Viewer جاهز مع التظليل والتعليقات!");
+        console.log("✅ Adobe PDF Viewer جاهز مع التعليقات والتظليل!");
       } else {
-        console.error("❌ لم يتم العثور على العنصر أو رابط الـ PDF غير صحيح!");
+        console.error("❌ لم يتم العثور على العنصر!");
       }
     };
 
+    // تحميل Adobe View SDK إذا لم يكن موجودًا
     if (!window.AdobeDC) {
       const scriptId = "adobe-sdk-script";
       if (!document.getElementById(scriptId)) {
@@ -55,15 +61,15 @@ const PDFViewer: React.FC<PDFViewerProps> = ({ url, className }) => {
         script.id = scriptId;
         script.onload = () => {
           console.log("✅ Adobe View SDK Loaded. جاري التحقق من AdobeDC...");
-          requestAnimationFrame(initAdobeViewer);
+          setTimeout(initAdobeViewer, 1000); // ✅ انتظر ثانية لضمان تحميل AdobeDC
         };
         document.body.appendChild(script);
       } else {
         console.log("📌 Adobe View SDK موجود بالفعل، جاري التحقق...");
-        requestAnimationFrame(initAdobeViewer);
+        setTimeout(initAdobeViewer, 1000);
       }
     } else {
-      requestAnimationFrame(initAdobeViewer);
+      initAdobeViewer();
     }
   }, [url]);
 
