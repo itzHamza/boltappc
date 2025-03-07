@@ -7,7 +7,7 @@ interface PDFViewerProps {
 
 const PDFViewer: React.FC<PDFViewerProps> = ({ url, className }) => {
   const viewerRef = useRef<HTMLDivElement | null>(null);
-  const divId = "adobe-pdf-viewer"; // ✅ تعيين ID ثابت لتجنب المشاكل
+  const divId = "adobe-pdf-viewer";
 
   useEffect(() => {
     const initAdobeViewer = () => {
@@ -18,7 +18,7 @@ const PDFViewer: React.FC<PDFViewerProps> = ({ url, className }) => {
       }
 
       if (viewerRef.current) {
-        viewerRef.current.id = divId; // ✅ تعيين ID للعنصر عند تحميله
+        viewerRef.current.id = divId;
 
         const adobeDCView = new window.AdobeDC.View({
           clientId: "a12ef57159d442318d90f46cd8f90189",
@@ -30,10 +30,15 @@ const PDFViewer: React.FC<PDFViewerProps> = ({ url, className }) => {
             content: { location: { url } },
             metaData: { fileName: "Document.pdf" },
           },
-          { embedMode: "SIZED_CONTAINER" }
+          {
+            embedMode: "SIZED_CONTAINER", // ✅ تشغيل الـ Viewer داخل Div
+            showAnnotationTools: true, // ✅ عرض أدوات التعليقات
+            enableAnnotationAPIs: true, // ✅ تفعيل التعليقات عبر الـ API
+            enableSearchAPIs: true, // ✅ تفعيل البحث في المستند
+          }
         );
 
-        console.log("✅ Adobe PDF Viewer جاهز داخل المكون!");
+        console.log("✅ Adobe PDF Viewer جاهز مع التعليقات والتظليل!");
       } else {
         console.error("❌ لم يتم العثور على العنصر!");
       }
