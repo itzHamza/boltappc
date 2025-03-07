@@ -216,19 +216,21 @@ export function CoursePage() {
           className="h-[80vh]"
         />
         {/* زر فتح الـ PDF في نافذة جديدة */}
-        <button
-          onClick={() =>
-            window.open(
-              `/pdf-viewer/${encodeURIComponent(
-                courseData.pdfs[selectedPdf]?.url
-              )}`,
-              "_blank"
-            )
-          }
-          className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
-        >
-          عرض الـ PDF بملء الشاشة
-        </button>
+        <div className="flex justify-center items-center h-40">
+          <button
+            onClick={() =>
+              window.open(
+                `/pdf-viewer/${encodeURIComponent(
+                  courseData.pdfs[selectedPdf]?.url
+                )}`,
+                "_blank"
+              )
+            }
+            className="px-6 py-3 bg-blue-600 text-white rounded-lg text-lg font-semibold shadow-md hover:bg-blue-700 transition"
+          >
+            عرض الـ PDF بملء الشاشة
+          </button>
+        </div>
       </div>
 
       {/* Flashcards */}
