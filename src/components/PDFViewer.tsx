@@ -17,7 +17,7 @@ const PDFViewer: React.FC<PDFViewerProps> = ({ url, className }) => {
         return;
       }
 
-      if (viewerRef.current) {
+      if (viewerRef.current && url) {
         viewerRef.current.id = divId;
 
         const adobeDCView = new window.AdobeDC.View({
@@ -28,19 +28,22 @@ const PDFViewer: React.FC<PDFViewerProps> = ({ url, className }) => {
         adobeDCView.previewFile(
           {
             content: { location: { url } },
-            metaData: { fileName: "Document.pdf" },
+            metaData: {
+              fileName: "Document.pdf", // ✅ اسم الملف
+              fileId: url, // ✅ يجب أن يكون معرفًا فريدًا، يمكننا استخدام رابط الملف نفسه
+            },
           },
           {
-            embedMode: "SIZED_CONTAINER", // ✅ تشغيل الـ Viewer داخل Div
-            showAnnotationTools: true, // ✅ عرض أدوات التعليقات
-            enableAnnotationAPIs: true, // ✅ تفعيل التعليقات عبر الـ API
-            enableSearchAPIs: true, // ✅ تفعيل البحث في المستند
+            embedMode: "SIZED_CONTAINER",
+            showAnnotationTools: true,
+            enableAnnotationAPIs: true,
+            enableSearchAPIs: true,
           }
         );
 
-        console.log("✅ Adobe PDF Viewer جاهز مع التعليقات والتظليل!");
+        console.log("✅ Adobe PDF Viewer جاهز مع التظليل والتعليقات!");
       } else {
-        console.error("❌ لم يتم العثور على العنصر!");
+        console.error("❌ لم يتم العثور على العنصر أو رابط الـ PDF غير صحيح!");
       }
     };
 
