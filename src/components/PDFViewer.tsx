@@ -30,7 +30,7 @@ const PDFViewer: React.FC<PDFViewerProps> = ({ url, className }) => {
             content: { location: { url } },
             metaData: { fileName: "Document.pdf" },
           },
-          { embedMode: "SIZED_CONTAINER" }
+          { embedMode: "FULL_WINDOW" }
         );
 
         console.log("✅ Adobe PDF Viewer جاهز داخل المكون!");
