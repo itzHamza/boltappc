@@ -6,23 +6,15 @@ interface PDFViewerProps {
 
 const PDFViewer: React.FC<PDFViewerProps> = ({ url }) => {
   const viewerRef = useRef<HTMLDivElement>(null);
-  const clientId = "b8572109d2534e31a259590e606b20e8"; // ضع Client ID الخاص بك
+  const clientId = "bd78075227e0410c83400f75a891f5bc"; // استبدل بـ Client ID الخاص بك
 
   useEffect(() => {
-    const loadAdobeSDK = () => {
-      if (!(window as any).AdobeDC) {
-        const script = document.createElement("script");
-        script.src = "https://documentservices.adobe.com/view-sdk/viewer.js";
-        script.async = true;
-        script.onload = () => initAdobeViewer();
-        document.body.appendChild(script);
-      } else {
-        initAdobeViewer();
-      }
-    };
-
-    const initAdobeViewer = () => {
-      if (!viewerRef.current || !(window as any).AdobeDC) return;
+    // تحميل SDK إن لم يكن محمّلاً مسبقًا
+    const script = document.createElement("script");
+    script.src = "https://documentservices.adobe.com/view-sdk/viewer.js";
+    script.async = true;
+    script.onload = () => {
+      if (!(window as any).AdobeDC) return;
 
       const adobeDCView = new (window as any).AdobeDC.View({
         clientId,
@@ -34,19 +26,24 @@ const PDFViewer: React.FC<PDFViewerProps> = ({ url }) => {
           content: { location: { url } },
           metaData: { fileName: "document.pdf" },
         },
-        {
-          embedMode: "SIZED_CONTAINER",
-          defaultViewMode: "FIT_WIDTH",
-          showAnnotationTools: true,
-          enableAnnotationAPIs: true,
-        }
+        { embedMode: "SIZED_CONTAINER" } // يمكنك تغييره إلى "FULL_WINDOW" أو "INLINE"
       );
     };
 
-    loadAdobeSDK();
+    document.body.appendChild(script);
+
+    return () => {
+      document.body.removeChild(script); // تنظيف عند الخروج من الصفحة
+    };
   }, [url]);
 
-  return <div id="adobe-dc-view" ref={viewerRef} style={{ width: "100%", height: "600px" }} />;
+  return (
+    <div
+      id="adobe-dc-view"
+      ref={viewerRef}
+      style={{ width: "100%", height: "600px" }}
+    />
+  );
 };
 
 export default PDFViewer;
