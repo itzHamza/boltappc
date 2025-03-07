@@ -7,6 +7,7 @@ interface PDFViewerProps {
 
 const PDFViewer: React.FC<PDFViewerProps> = ({ url, className }) => {
   const viewerRef = useRef<HTMLDivElement | null>(null);
+  const divId = "adobe-pdf-viewer"; // ✅ تعيين ID ثابت لتجنب المشاكل
 
   useEffect(() => {
     const initAdobeViewer = () => {
@@ -17,9 +18,11 @@ const PDFViewer: React.FC<PDFViewerProps> = ({ url, className }) => {
       }
 
       if (viewerRef.current) {
+        viewerRef.current.id = divId; // ✅ تعيين ID للعنصر عند تحميله
+
         const adobeDCView = new window.AdobeDC.View({
           clientId: "a12ef57159d442318d90f46cd8f90189",
-          divId: viewerRef.current.id,
+          divId: divId,
         });
 
         adobeDCView.previewFile(
@@ -27,10 +30,12 @@ const PDFViewer: React.FC<PDFViewerProps> = ({ url, className }) => {
             content: { location: { url } },
             metaData: { fileName: "Document.pdf" },
           },
-          { embedMode: "SIZED_CONTAINER" } // ✅ لاستخدامه داخل `div` بدلاً من `FULL_WINDOW`
+          { embedMode: "SIZED_CONTAINER" }
         );
 
         console.log("✅ Adobe PDF Viewer جاهز داخل المكون!");
+      } else {
+        console.error("❌ لم يتم العثور على العنصر!");
       }
     };
 
@@ -54,7 +59,7 @@ const PDFViewer: React.FC<PDFViewerProps> = ({ url, className }) => {
     }
   }, [url]);
 
-  return <div ref={viewerRef} className={`w-full ${className}`} />;
+  return <div ref={viewerRef} id={divId} className={`w-full ${className}`} />;
 };
 
 export default PDFViewer;
