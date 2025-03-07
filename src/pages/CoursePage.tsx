@@ -222,7 +222,7 @@ export function CoursePage() {
               window.open(`/pdf-viewer/${encodeURIComponent(courseData.pdfs[selectedPdf]?.url)}`,"_blank")
             }
             className="px-6 py-3 bg-blue-600 text-white rounded-lg text-lg font-semibold shadow-md hover:bg-blue-700 transition">
-            عرض الـ PDF بملء الشاشة
+            Show PDF
           </button>
         </div>
       </div>
