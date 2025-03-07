@@ -1,39 +1,66 @@
 import { useEffect, useRef } from "react";
 
 interface PDFViewerProps {
-  fileUrl: string; // رابط ملف PDF
-  clientId: string; // Adobe Client ID
+  url: string;
 }
 
-const PDFViewer: React.FC<PDFViewerProps> = ({ fileUrl, clientId }) => {
+const PDFViewer: React.FC<PDFViewerProps> = ({ url }) => {
   const viewerRef = useRef<HTMLDivElement>(null);
+  const clientId = "b8572109d2534e31a259590e606b20e8"; // ضع Client ID الخاص بك
 
   useEffect(() => {
-    if (!viewerRef.current) return;
-
-    // إنشاء iframe لعرض المستند
-    const iframe = document.createElement("iframe");
-    iframe.style.width = "100%";
-    iframe.style.height = "600px";
-    iframe.style.border = "none";
-
-    // إنشاء رابط التضمين مع تفعيل التعليقات التوضيحية
-    const embedUrl = `https://acrobatservices.adobe.com/embed-url?client_id=${clientId}&file=${encodeURIComponent(
-      fileUrl
-    )}&enable_annotations=true`;
-
-    iframe.src = embedUrl;
-    viewerRef.current.appendChild(iframe);
-
-    // تنظيف عند إلغاء تحميل المكون
-    return () => {
-      if (viewerRef.current && viewerRef.current.contains(iframe)) {
-        viewerRef.current.removeChild(iframe);
+    const loadAdobeSDK = () => {
+      if (!(window as any).AdobeDC) {
+        const script = document.createElement("script");
+        script.src = "https://documentservices.adobe.com/view-sdk/viewer.js";
+        script.async = true;
+        script.onload = () =>
+          document.dispatchEvent(new Event("adobe_dc_view_sdk.ready"));
+        document.body.appendChild(script);
+      } else {
+        document.dispatchEvent(new Event("adobe_dc_view_sdk.ready"));
       }
     };
-  }, [fileUrl, clientId]);
 
-  return <div ref={viewerRef} style={{ width: "100%", height: "600px" }} />;
+    const initAdobeViewer = () => {
+      if (!viewerRef.current || !(window as any).AdobeDC) return;
+
+      const adobeDCView = new (window as any).AdobeDC.View({
+        clientId,
+        divId: viewerRef.current.id,
+      });
+
+      adobeDCView.previewFile(
+        {
+          content: { location: { url } },
+          metaData: { fileName: "document.pdf" },
+        },
+        {
+          embedMode: "SIZED_CONTAINER",
+          showAnnotationTools: true, // ✅ السماح بإضافة التعليقات
+          enableAnnotationAPIs: true, // ✅ تفعيل APIs الخاصة بالتعليقات
+          showDownloadPDF: true, // ✅ تفعيل خيار التحميل
+          showPrintPDF: true, // ✅ تفعيل خيار الطباعة
+          defaultViewMode: "FIT_WIDTH", // ✅ عرض الملف بحجم متناسب
+        }
+      );
+    };
+
+    document.addEventListener("adobe_dc_view_sdk.ready", initAdobeViewer);
+    loadAdobeSDK();
+
+    return () => {
+      document.removeEventListener("adobe_dc_view_sdk.ready", initAdobeViewer);
+    };
+  }, [url]);
+
+  return (
+    <div
+      id="pdf-viewer"
+      ref={viewerRef}
+      style={{ width: "100%", height: "600px" }}
+    />
+  );
 };
 
 export default PDFViewer;
