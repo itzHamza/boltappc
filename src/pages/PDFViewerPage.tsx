@@ -9,7 +9,7 @@ export default function PDFViewerPage() {
     const initAdobeViewer = () => {
       if (!window.AdobeDC) {
         console.error("AdobeDC غير متاح، سيتم إعادة المحاولة...");
-        setTimeout(initAdobeViewer, 500); // إعادة المحاولة بعد 500ms
+        setTimeout(initAdobeViewer, 500);
         return;
       }
 
@@ -37,7 +37,7 @@ export default function PDFViewerPage() {
         script.id = scriptId;
         script.onload = () => {
           console.log("✅ Adobe View SDK Loaded. جاري التحقق من AdobeDC...");
-          requestAnimationFrame(initAdobeViewer); // انتظار التحميل بالكامل
+          requestAnimationFrame(initAdobeViewer);
         };
         document.body.appendChild(script);
       } else {
@@ -49,5 +49,9 @@ export default function PDFViewerPage() {
     }
   }, [decodedUrl]);
 
-  return <div id="adobe-dc-view" style={{ height: "100vh", width: "100%" }} />;
+  return (
+    <div className="w-screen h-screen fixed top-0 left-0 bg-black">
+      <div id="adobe-dc-view" className="w-full h-full" />
+    </div>
+  );
 }

@@ -10,7 +10,7 @@ import { supabase } from "./lib/supabaseClient";
 import { Header } from "./components/layout/Header";
 import { AdminHeader } from "./components/layout/AdminHeader";
 import { HomePage } from "./pages/HomePage";
-import { AdminDashboard } from "./pages/admin/AdminDashboard";
+import {AdminDashboard} from "./pages/admin/AdminDashboard";
 import AdminLessons from "./pages/admin/AdminLessons";
 import EditCourse from "./pages/admin/EditCourse";
 import FlashcardsManager from "./pages/admin/AdminFlashcards";
@@ -18,8 +18,8 @@ import EditDeleteFlashcards from "./pages/admin/EditDeleteFlashcards";
 import { YearPage } from "./pages/YearPage";
 import { ModulePage } from "./pages/ModulePage";
 import { CoursePage } from "./pages/CoursePage";
-import { AdminLoginPage } from "./pages/admin/AdminLoginPage";
-import PDFViewerPage from "./pages/PDFViewerPage";
+import { AdminLoginPage } from "./pages/admin/AdminLoginPage"; // ✅ Correct Import
+import PDFViewerPage from "./pages/PDFViewerPage"; 
 
 function App() {
   const [adminUser, setAdminUser] = useState(null);
@@ -27,7 +27,11 @@ function App() {
   useEffect(() => {
     const checkAdminSession = async () => {
       const { data } = await supabase.auth.getSession();
-      setAdminUser(data?.session?.user || null);
+      if (data?.session) {
+        setAdminUser(data.session.user);
+      } else {
+        setAdminUser(null);
+      }
     };
 
     checkAdminSession();
@@ -82,38 +86,31 @@ function App() {
         />
 
         {/* 🔹 Public Routes */}
+        <Route path="/pdf-viewer/:pdfUrl" element={<PDFViewerPage />} />
         <Route
           path="/*"
           element={
-            <MainLayout>
-              <Routes>
-                <Route path="/" element={<HomePage />} />
-                <Route path="/year/:yearId" element={<YearPage />} />
-                <Route path="/module/:moduleId" element={<ModulePage />} />
-                <Route path="/course/:courseId" element={<CoursePage />} />
-                <Route path="/pdf-viewer/:pdfUrl" element={<PDFViewerPage />} />
-              </Routes>
-            </MainLayout>
+            <div className="min-h-screen bg-gray-50">
+              <Header />
+              <main className="lg:ml-64 pt-14 p-0 m:p-8 ">
+                <div className="w-full mx-auto max-w-full sm:max-w-screen-lg sm:px-0">
+                  <Routes>
+                    <Route path="/" element={<HomePage />} />
+                    <Route path="/year/:yearId" element={<YearPage />} />
+                    <Route path="/module/:moduleId" element={<ModulePage />} />
+                    <Route path="/course/:courseId" element={<CoursePage />} />
+                    <Route
+                      path="/pdf-viewer/:pdfUrl"
+                      element={<PDFViewerPage />}
+                    />
+                  </Routes>
+                </div>
+              </main>
+            </div>
           }
         />
       </Routes>
     </Router>
-  );
-}
-
-function MainLayout({ children }) {
-  const location = useLocation();
-  const hideNavbar = location.pathname.startsWith("/pdf-viewer");
-
-  return (
-    <div className="min-h-screen bg-gray-50">
-      {!hideNavbar && <Header />} {/* ✅ لن يتم عرض Navbar في صفحة PDF */}
-      <main className="lg:ml-64 pt-14 p-0 m:p-8">
-        <div className="w-full mx-auto max-w-full sm:max-w-screen-lg sm:px-0">
-          {children}
-        </div>
-      </main>
-    </div>
   );
 }
 
