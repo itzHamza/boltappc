@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { supabase } from "../../lib/supabaseClient";
 import Loader from "../../components/Loader";
+import { useDropzone } from "react-dropzone"; // استيراد react-dropzone
+import { v4 as uuidv4 } from "uuid"; // استيراد uuid
 
 export default function EditCourse() {
   const [years, setYears] = useState([]);
@@ -13,6 +15,7 @@ export default function EditCourse() {
   const [selectedCourseId, setSelectedCourseId] = useState("");
   const [courseData, setCourseData] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [uploading, setUploading] = useState(false); // حالة التحميل
 
   useEffect(() => {
     fetchYears();
@@ -200,6 +203,95 @@ export default function EditCourse() {
     setCourseData({ ...courseData, pdfs: updatedPdfs });
   }
 
+  // تحميل ملف PDF إلى Supabase Storage
+  async function uploadPdf(file, index) {
+    setUploading(true);
+
+    // 🔹 جلب اسم المقياس (module name) من Supabase
+    const { data: moduleData, error: moduleError } = await supabase
+      .from("modules")
+      .select("title")
+      .eq("id", courseData.module_id)
+      .single();
+
+    if (moduleError) {
+      console.error("Error fetching module name:", moduleError);
+      alert("حدث خطأ أثناء جلب اسم المقياس!");
+      setUploading(false);
+      return;
+    }
+
+    const moduleName =
+      moduleData?.title?.replace(/\s+/g, "_") || "Unknown_Module";
+
+    // 🔹 إنشاء المسار الجديد
+    const filePath = `${moduleName}/${uuidv4()}-${file.name}`;
+
+    // 🔹 رفع الملف إلى Supabase
+    const { data, error } = await supabase.storage
+      .from("tbibapp")
+      .upload(filePath, file);
+
+    if (error) {
+      console.error("Error uploading file:", error);
+      alert("حدث خطأ أثناء تحميل الملف!");
+      setUploading(false);
+      return;
+    }
+
+    // 🔹 جلب الرابط العام للملف
+    const { data: urlData } = await supabase.storage
+      .from("tbibapp")
+      .getPublicUrl(filePath);
+
+    if (!urlData || !urlData.publicUrl) {
+      console.error("Error getting public URL for:", filePath);
+      alert("حدث خطأ أثناء جلب رابط الملف!");
+      setUploading(false);
+      return;
+    }
+
+    const publicUrl = urlData.publicUrl; // ✅ استخراج الرابط الصحيح
+
+    // 🔹 تحديث قائمة ملفات PDF بالرابط الصحيح
+    setCourseData((prevState) => {
+      const updatedPdfs = [...prevState.pdfs];
+
+      if (index >= updatedPdfs.length) {
+        console.error("Invalid index:", index);
+        alert("حدث خطأ أثناء تحديث الملف!");
+        setUploading(false);
+        return prevState;
+      }
+
+      updatedPdfs[index] = { ...updatedPdfs[index], url: publicUrl };
+
+      return { ...prevState, pdfs: updatedPdfs };
+    });
+
+    setUploading(false);
+  }
+
+  // Dropzone لرفع ملفات PDF
+  const { getRootProps, getInputProps } = useDropzone({
+    accept: "application/pdf", // قبول ملفات PDF فقط
+    onDrop: (acceptedFiles) => {
+      if (acceptedFiles.length > 0) {
+        const file = acceptedFiles[0];
+        const newPdf = {
+          id: courseData.pdfs.length + 1,
+          title: file.name,
+          url: "",
+        };
+        setCourseData((prevState) => ({
+          ...prevState,
+          pdfs: [...prevState.pdfs, newPdf],
+        }));
+        uploadPdf(file, courseData.pdfs.length); // تحميل الملف
+      }
+    },
+  });
+
   return (
     <div className="p-6">
       <h1 className="text-3xl font-bold mb-6">تعديل / حذف درس</h1>
@@ -348,12 +440,8 @@ export default function EditCourse() {
                 type="text"
                 placeholder="رابط الملف"
                 value={pdf.url}
-                onChange={(e) => {
-                  const pdfs = [...courseData.pdfs];
-                  pdfs[index].url = e.target.value;
-                  setCourseData({ ...courseData, pdfs });
-                }}
-                className="p-2 border flex-1"
+                readOnly
+                className="p-2 border flex-1 bg-gray-100"
               />
               <button
                 onClick={() => removePdf(index)}
@@ -369,6 +457,15 @@ export default function EditCourse() {
           >
             + أضف PDF
           </button>
+
+          {/* Dropzone لرفع ملفات PDF */}
+          <div
+            {...getRootProps()}
+            className="p-4 border-2 border-dashed border-gray-300 rounded-lg text-center cursor-pointer"
+          >
+            <input {...getInputProps()} />
+            <p>اسحب وأسقط ملف PDF هنا، أو انقر لتحديد ملف</p>
+          </div>
 
           <div className="flex space-x-4 mt-4">
             <button
