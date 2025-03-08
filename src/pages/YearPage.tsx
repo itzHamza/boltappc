@@ -6,6 +6,7 @@ import Loader from "../components/Loader";
 
 export function YearPage() {
   const { yearId } = useParams();
+  const [unites, setUnites] = useState([]);
   const [modules, setModules] = useState([]);
   const [yearTitle, setYearTitle] = useState("");
   const [loading, setLoading] = useState(true);
@@ -14,7 +15,7 @@ export function YearPage() {
   useEffect(() => {
     if (!yearId) return;
 
-    async function fetchModules() {
+    async function fetchYearData() {
       setLoading(true);
       setError("");
 
@@ -33,11 +34,25 @@ export function YearPage() {
 
       setYearTitle(yearData.title);
 
-      // Fetch modules for this year
+      // Fetch unites for this year
+      const { data: unitesData, error: unitesError } = await supabase
+        .from("unites")
+        .select("id, title, description")
+        .eq("year_id", yearId)
+        .order("title", { ascending: true });
+
+      if (unitesError) {
+        setError("Error fetching unites.");
+      } else {
+        setUnites(unitesData);
+      }
+
+      // Fetch modules for this year (without unite)
       const { data: modulesData, error: modulesError } = await supabase
         .from("modules")
         .select("id, title, description, course_count")
         .eq("year_id", yearId)
+        .is("unite_id", null)
         .order("title", { ascending: true });
 
       if (modulesError) {
@@ -49,7 +64,7 @@ export function YearPage() {
       setLoading(false);
     }
 
-    fetchModules();
+    fetchYearData();
   }, [yearId]);
 
   if (loading) {
@@ -70,48 +85,87 @@ export function YearPage() {
 
   return (
     <div>
-      <h1 className="text-3xl font-bold text-gray-900 mb-2 justify-self-center ">
+      <h1 className="text-3xl font-bold text-gray-900 mb-2 justify-self-center">
         {yearTitle}
       </h1>
       <p className="text-gray-600 mb-8 justify-self-center">
-        Select a module to view its courses
+        Select a unit or module to view its courses
       </p>
 
-      {modules.length === 0 ? (
-        <p className="text-center text-gray-600">
-          No modules available for this year.
-        </p>
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {modules.map((module) => (
-            <Link
-              key={module.id}
-              to={`/module/${module.id}`}
-              className="group block p-6 bg-white rounded-lg shadow-sm hover:shadow-md transition-all marginleftandright"
-            >
-              <div className="flex items-start space-x-4">
-                <div className="p-3 bg-blue-50 rounded-lg group-hover:bg-blue-100 transition-colors">
-                  <BookOpen className="w-6 h-6 text-blue-600" />
-                </div>
-                <div className="flex-1">
-                  <div className="flex items-center justify-between">
-                    <h3 className="text-lg font-semibold text-gray-900">
-                      {module.title}
-                    </h3>
-                    <ChevronRight className="w-5 h-5 text-gray-400 group-hover:text-blue-500 transition-colors" />
+      {/* Display Unites */}
+      {unites.length > 0 && (
+        <div className="mb-8">
+          <h2 className="text-xl font-bold text-gray-900 mb-4">Units</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {unites.map((unite) => (
+              <Link
+                key={unite.id}
+                to={`/unite/${unite.id}`}
+                className="group block p-6 bg-white rounded-lg shadow-sm hover:shadow-md transition-all marginleftandright"
+              >
+                <div className="flex items-start space-x-4">
+                  <div className="p-3 bg-blue-50 rounded-lg group-hover:bg-blue-100 transition-colors">
+                    <BookOpen className="w-6 h-6 text-blue-600" />
                   </div>
-                  <p className="mt-1 text-sm text-gray-600">
-                    {module.description}
-                  </p>
-                  <div className="mt-4 text-sm font-medium text-blue-600">
-                    {module.course_count}{" "}
-                    {module.course_count === 1 ? "course" : "courses"}
+                  <div className="flex-1">
+                    <div className="flex items-center justify-between">
+                      <h3 className="text-lg font-semibold text-gray-900">
+                        {unite.title}
+                      </h3>
+                      <ChevronRight className="w-5 h-5 text-gray-400 group-hover:text-blue-500 transition-colors" />
+                    </div>
+                    <p className="mt-1 text-sm text-gray-600">
+                      {unite.description}
+                    </p>
                   </div>
                 </div>
-              </div>
-            </Link>
-          ))}
+              </Link>
+            ))}
+          </div>
         </div>
+      )}
+
+      {/* Display Modules */}
+      {modules.length > 0 && (
+        <div>
+          <h2 className="text-xl font-bold text-gray-900 mb-4">Modules</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {modules.map((module) => (
+              <Link
+                key={module.id}
+                to={`/module/${module.id}`}
+                className="group block p-6 bg-white rounded-lg shadow-sm hover:shadow-md transition-all marginleftandright"
+              >
+                <div className="flex items-start space-x-4">
+                  <div className="p-3 bg-blue-50 rounded-lg group-hover:bg-blue-100 transition-colors">
+                    <BookOpen className="w-6 h-6 text-blue-600" />
+                  </div>
+                  <div className="flex-1">
+                    <div className="flex items-center justify-between">
+                      <h3 className="text-lg font-semibold text-gray-900">
+                        {module.title}
+                      </h3>
+                      <ChevronRight className="w-5 h-5 text-gray-400 group-hover:text-blue-500 transition-colors" />
+                    </div>
+                    <p className="mt-1 text-sm text-gray-600">
+                      {module.description}
+                    </p>
+                    <div className="mt-4 text-sm font-medium text-blue-600">
+                      {module.course_count}{" "}
+                      {module.course_count === 1 ? "course" : "courses"}
+                    </div>
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {unites.length === 0 && modules.length === 0 && (
+        <p className="text-center text-gray-600">
+          No units or modules available for this year.
+        </p>
       )}
     </div>
   );

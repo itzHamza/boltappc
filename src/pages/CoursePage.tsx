@@ -51,7 +51,7 @@ export function CoursePage() {
         .from("courses")
         .select("id, title")
         .eq("module_id", courseData.module_id)
-        .order("created_at", { ascending: true });
+        .order("order", { ascending: true }); // ✅ ترتيب حسب `order`
 
       if (error) {
         console.error("Error fetching module courses:", error);

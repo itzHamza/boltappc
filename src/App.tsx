@@ -4,19 +4,21 @@ import {
   Routes,
   Route,
   Navigate,
-  useLocation,
 } from "react-router-dom";
 import { supabase } from "./lib/supabaseClient";
 import { Header } from "./components/layout/Header";
 import { AdminHeader } from "./components/layout/AdminHeader";
 import { HomePage } from "./pages/HomePage";
-import {AdminDashboard} from "./pages/admin/AdminDashboard";
+import AdminAddModuleUnite from "./pages/admin/AdminDashboard";
 import AdminLessons from "./pages/admin/AdminLessons";
 import EditCourse from "./pages/admin/EditCourse";
 import FlashcardsManager from "./pages/admin/AdminFlashcards";
 import EditDeleteFlashcards from "./pages/admin/EditDeleteFlashcards";
+import EditCourseOrder from "./pages/admin/EditCourseOrder";
+import ManageUniteModules from "./pages/admin/ManageUniteModules";
 import { YearPage } from "./pages/YearPage";
 import { ModulePage } from "./pages/ModulePage";
+import { UnitePage } from "./pages/UnitePage";
 import { CoursePage } from "./pages/CoursePage";
 import { AdminLoginPage } from "./pages/admin/AdminLoginPage"; // ✅ Correct Import
 import PDFViewerPage from "./pages/PDFViewerPage"; 
@@ -64,7 +66,7 @@ function App() {
                 <main className="lg:ml-64">
                   <div className="container mx-auto">
                     <Routes>
-                      <Route path="/" element={<AdminDashboard />} />
+                      <Route path="/" element={<AdminAddModuleUnite />} />
                       <Route path="/lessons" element={<AdminLessons />} />
                       <Route path="/edit" element={<EditCourse />} />
                       <Route
@@ -74,6 +76,14 @@ function App() {
                       <Route
                         path="/editflashcards"
                         element={<EditDeleteFlashcards />}
+                      />
+                      <Route
+                        path="/editcourseorder"
+                        element={<EditCourseOrder />}
+                      />
+                      <Route
+                        path="/editunitemodules"
+                        element={<ManageUniteModules />}
                       />
                     </Routes>
                   </div>
@@ -95,10 +105,22 @@ function App() {
               <main className="lg:ml-64 pt-14 p-0 m:p-8 ">
                 <div className="w-full mx-auto max-w-full sm:max-w-screen-lg sm:px-0">
                   <Routes>
+                    {/* الصفحة الرئيسية */}
                     <Route path="/" element={<HomePage />} />
+
+                    {/* صفحة السنة الدراسية */}
                     <Route path="/year/:yearId" element={<YearPage />} />
+
+                    {/* صفحة الوحدة */}
+                    <Route path="/unite/:uniteId" element={<UnitePage />} />
+
+                    {/* صفحة المقياس */}
                     <Route path="/module/:moduleId" element={<ModulePage />} />
+
+                    {/* صفحة الدرس */}
                     <Route path="/course/:courseId" element={<CoursePage />} />
+
+                    {/* صفحة عرض PDF */}
                     <Route
                       path="/pdf-viewer/:pdfUrl"
                       element={<PDFViewerPage />}

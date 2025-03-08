@@ -3,13 +3,19 @@ import { supabase } from "../../lib/supabaseClient";
 import Loader from "../../components/Loader";
 
 export default function EditDeleteFlashcards() {
+  const [years, setYears] = useState([]); // قائمة السنوات
+  const [unites, setUnites] = useState([]); // قائمة الوحدات
+  const [modules, setModules] = useState([]); // قائمة المقاييس
   const [lessons, setLessons] = useState([]); // قائمة الدروس
+  const [selectedYear, setSelectedYear] = useState(""); // السنة المختارة
+  const [selectedUniteId, setSelectedUniteId] = useState(""); // الوحدة المختارة
+  const [selectedModuleId, setSelectedModuleId] = useState(""); // المقياس المختار
   const [selectedLesson, setSelectedLesson] = useState(""); // الدرس المختار
   const [flashcards, setFlashcards] = useState([]); // الفلاش كاردز الخاصة بالدرس
   const [loading, setLoading] = useState(false); // حالة التحميل
 
   useEffect(() => {
-    fetchLessons();
+    fetchYears();
   }, []);
 
   useEffect(() => {
@@ -18,9 +24,73 @@ export default function EditDeleteFlashcards() {
     }
   }, [selectedLesson]); // ✅ تحديث الفلاش كاردز عند تغيير الدرس مباشرة
 
-  // ✅ جلب جميع الدروس من Supabase
-  async function fetchLessons() {
-    const { data, error } = await supabase.from("courses").select("id, title");
+  // ✅ جلب السنوات الدراسية من Supabase
+  async function fetchYears() {
+    const { data, error } = await supabase.from("years").select("id, title");
+    if (error) console.error("Error fetching years:", error);
+    else setYears(data);
+  }
+
+  // ✅ جلب الوحدات والمقاييس عند تغيير السنة المختارة
+  async function fetchUnitesAndModules(yearId) {
+    setSelectedYear(yearId);
+    setSelectedUniteId("");
+    setSelectedModuleId("");
+    setSelectedLesson("");
+    setUnites([]);
+    setModules([]);
+    setLessons([]);
+
+    if (!yearId) return;
+
+    // جلب الوحدات الخاصة بالسنة
+    const { data: unites, error: uniteError } = await supabase
+      .from("unites")
+      .select("id, title")
+      .eq("year_id", yearId);
+
+    if (uniteError) console.error("Error fetching unites:", uniteError);
+    else setUnites(unites);
+
+    // جلب المقاييس المرتبطة مباشرة بالسنة (بدون وحدة)
+    const { data: modules, error: moduleError } = await supabase
+      .from("modules")
+      .select("id, title")
+      .eq("year_id", yearId)
+      .is("unite_id", null);
+
+    if (moduleError) console.error("Error fetching modules:", moduleError);
+    else setModules(modules);
+  }
+
+  // ✅ جلب المقاييس المرتبطة بالوحدة المختارة
+  async function fetchModulesByUnite(uniteId) {
+    setSelectedUniteId(uniteId);
+    setSelectedModuleId("");
+    setSelectedLesson("");
+    setModules([]);
+    setLessons([]);
+
+    const { data, error } = await supabase
+      .from("modules")
+      .select("id, title")
+      .eq("unite_id", uniteId);
+
+    if (error) console.error("Error fetching modules:", error);
+    else setModules(data);
+  }
+
+  // ✅ جلب الدروس المرتبطة بالمقياس المختار
+  async function fetchLessonsByModule(moduleId) {
+    setSelectedModuleId(moduleId);
+    setSelectedLesson("");
+    setLessons([]);
+
+    const { data, error } = await supabase
+      .from("courses")
+      .select("id, title")
+      .eq("module_id", moduleId);
+
     if (error) console.error("Error fetching lessons:", error);
     else setLessons(data);
   }
@@ -41,6 +111,10 @@ export default function EditDeleteFlashcards() {
 
   // ✅ تحديث فلاش كارد واحدة
   async function updateFlashcard(id, question, answer) {
+    if (!question.trim() || !answer.trim()) {
+      return alert("يرجى ملء جميع حقول السؤال والإجابة!");
+    }
+
     const { error } = await supabase
       .from("flashcards")
       .update({ question, answer })
@@ -94,19 +168,67 @@ export default function EditDeleteFlashcards() {
     <div className="p-6">
       <h1 className="text-3xl font-bold mb-6">تعديل/حذف الفلاش كاردز</h1>
 
-      {/* اختيار الدرس */}
+      {/* اختيار السنة */}
       <select
-        value={selectedLesson}
-        onChange={(e) => setSelectedLesson(e.target.value)} // ✅ تحديث `selectedLesson` فقط
+        value={selectedYear}
+        onChange={(e) => fetchUnitesAndModules(e.target.value)}
         className="p-2 border w-full mb-4"
       >
-        <option value="">اختر درسًا</option>
-        {lessons.map((lesson) => (
-          <option key={lesson.id} value={lesson.id}>
-            {lesson.title}
+        <option value="">اختر السنة</option>
+        {years.map((year) => (
+          <option key={year.id} value={year.id}>
+            {year.title}
           </option>
         ))}
       </select>
+
+      {/* اختيار الوحدة إن وجدت */}
+      {unites.length > 0 && (
+        <select
+          value={selectedUniteId}
+          onChange={(e) => fetchModulesByUnite(e.target.value)}
+          className="p-2 border w-full mb-4"
+        >
+          <option value="">اختر الوحدة</option>
+          {unites.map((unite) => (
+            <option key={unite.id} value={unite.id}>
+              {unite.title}
+            </option>
+          ))}
+        </select>
+      )}
+
+      {/* اختيار المقياس */}
+      {(selectedUniteId || modules.length > 0) && (
+        <select
+          value={selectedModuleId}
+          onChange={(e) => fetchLessonsByModule(e.target.value)}
+          className="p-2 border w-full mb-4"
+        >
+          <option value="">اختر المقياس</option>
+          {modules.map((module) => (
+            <option key={module.id} value={module.id}>
+              {module.title}
+            </option>
+          ))}
+        </select>
+      )}
+
+      {/* اختيار الدرس */}
+      {selectedModuleId && (
+        <select
+          value={selectedLesson}
+          onChange={(e) => setSelectedLesson(e.target.value)}
+          className="p-2 border w-full mb-4"
+        >
+          <option value="">اختر درسًا</option>
+          {lessons.map((lesson) => (
+            <option key={lesson.id} value={lesson.id}>
+              {lesson.title}
+            </option>
+          ))}
+        </select>
+      )}
 
       {/* زر حذف جميع الفلاش كاردز */}
       {flashcards.length > 0 && (

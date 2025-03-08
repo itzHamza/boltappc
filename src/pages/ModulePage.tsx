@@ -11,51 +11,65 @@ export function ModulePage() {
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    async function fetchModuleData() {
-      setLoading(true);
+useEffect(() => {
+  async function fetchModuleData() {
+    setLoading(true);
 
-      // Fetch module details (title & description)
-      const { data: moduleData, error: moduleError } = await supabase
+    // Fetch module details (title & description)
+    const { data: moduleData, error: moduleError } = await supabase
+      .from("modules")
+      .select("title, description")
+      .eq("id", moduleId)
+      .single();
+
+    if (moduleError) {
+      console.error("Error fetching module:", moduleError);
+    } else {
+      setModuleTitle(moduleData.title);
+      setModuleDescription(moduleData.description);
+    }
+
+    // 🆕 Update course count in modules table
+    const { data: coursesCount, error: countError } = await supabase
+      .from("courses")
+      .select("id", { count: "exact" })
+      .eq("module_id", moduleId);
+
+    if (!countError) {
+      // Update the course_count in modules table
+      await supabase
         .from("modules")
-        .select("title, description")
-        .eq("id", moduleId)
-        .single();
-
-      if (moduleError) {
-        console.error("Error fetching module:", moduleError);
-      } else {
-        setModuleTitle(moduleData.title);
-        setModuleDescription(moduleData.description);
-      }
-
-      // Fetch courses that belong to this module
-      const { data: coursesData, error: coursesError } = await supabase
-        .from("courses")
-        .select("id, title, description, videos, pdfs")
-        .eq("module_id", moduleId)
-        .order("created_at", { ascending: true }); 
-
-      if (coursesError) {
-        console.error("Error fetching courses:", coursesError);
-      } else {
-        // Convert video/pdf count
-        const formattedCourses = coursesData.map((course) => ({
-          ...course,
-          videoCount: course.videos.length,
-          pdfCount: course.pdfs.length,
-        }));
-
-        setCourses(formattedCourses);
-      }
-
-      setLoading(false);
+        .update({ course_count: coursesCount.length })
+        .eq("id", moduleId);
     }
 
-    if (moduleId) {
-      fetchModuleData();
+    // Fetch courses that belong to this module
+    const { data: coursesData, error: coursesError } = await supabase
+      .from("courses")
+      .select("id, title, description, videos, pdfs")
+      .eq("module_id", moduleId)
+      .order("order", { ascending: true });
+
+    if (coursesError) {
+      console.error("Error fetching courses:", coursesError);
+    } else {
+      // Convert video/pdf count
+      const formattedCourses = coursesData.map((course) => ({
+        ...course,
+        videoCount: course.videos.length,
+        pdfCount: course.pdfs.length,
+      }));
+
+      setCourses(formattedCourses);
     }
-  }, [moduleId]);
+
+    setLoading(false);
+  }
+
+  if (moduleId) {
+    fetchModuleData();
+  }
+}, [moduleId]);
 
   if (loading) {
     return (

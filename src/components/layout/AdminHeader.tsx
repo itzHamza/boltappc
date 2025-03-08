@@ -20,9 +20,16 @@ export function AdminHeader() {
 
   const navigationItems = [
     {
-      name: "Dashboard",
+      name: "Add Unites",
       icon: LayoutDashboard,
       href: "/admin",
+      color: "text-blue-600",
+      bgColor: "bg-blue-50",
+    },
+    {
+      name: "Edit Unites",
+      icon: LayoutDashboard,
+      href: "/admin/editunitemodules",
       color: "text-blue-600",
       bgColor: "bg-blue-50",
     },
@@ -34,12 +41,20 @@ export function AdminHeader() {
       bgColor: "bg-purple-50",
     },
     {
-      name: "Edit Content",
+      name: "Edit Courses",
       icon: Video,
       href: "/admin/edit",
       color: "text-green-600",
       bgColor: "bg-green-50",
     },
+    {
+      name: "Edit Order",
+      icon: Video,
+      href: "/admin/editcourseorder",
+      color: "text-green-600",
+      bgColor: "bg-green-50",
+    },
+
     {
       name: "Flashcards",
       icon: Brain,
