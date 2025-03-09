@@ -101,7 +101,7 @@ export function YearPage() {
               <Link
                 key={unite.id}
                 to={`/unite/${unite.id}`}
-                className="group block p-6 bg-white rounded-lg shadow-sm hover:shadow-md transition-all marginleftandright"
+                className="group block p-6 bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-all"
               >
                 <div className="flex items-start space-x-4">
                   <div className="p-3 bg-blue-50 rounded-lg group-hover:bg-blue-100 transition-colors">
@@ -134,7 +134,7 @@ export function YearPage() {
               <Link
                 key={module.id}
                 to={`/module/${module.id}`}
-                className="group block p-6 bg-white rounded-lg shadow-sm hover:shadow-md transition-all marginleftandright"
+                className="group block p-6 bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-all marginleftandright"
               >
                 <div className="flex items-start space-x-4">
                   <div className="p-3 bg-blue-50 rounded-lg group-hover:bg-blue-100 transition-colors">

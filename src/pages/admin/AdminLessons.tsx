@@ -169,8 +169,8 @@ export default function AddCourse() {
     });
   }
 
-  // إضافة PDF جديد
-  function addPdf() {
+  // إضافة PDF يدويًا
+  function addManualPdf() {
     setNewCourse({
       ...newCourse,
       pdfs: [
@@ -193,76 +193,73 @@ export default function AddCourse() {
   }
 
   // تحميل ملف PDF إلى Supabase Storage
-async function uploadPdf(file, index) {
-  setUploading(true);
+  async function uploadPdf(file, index) {
+    setUploading(true);
 
-  // 🔹 جلب اسم المقياس (module name) من Supabase
-  const { data: moduleData, error: moduleError } = await supabase
-    .from("modules")
-    .select("title")
-    .eq("id", newCourse.module_id)
-    .single();
+    // جلب اسم المقياس (module name) من Supabase
+    const { data: moduleData, error: moduleError } = await supabase
+      .from("modules")
+      .select("title")
+      .eq("id", newCourse.module_id)
+      .single();
 
-  if (moduleError) {
-    console.error("Error fetching module name:", moduleError);
-    alert("حدث خطأ أثناء جلب اسم المقياس!");
-    setUploading(false);
-    return;
-  }
-
-  const moduleName =
-    moduleData?.title?.replace(/\s+/g, "_") || "Unknown_Module";
-
-  // 🔹 إنشاء المسار الجديد
-  const filePath = `${moduleName}/${uuidv4()}-${file.name}`;
-
-  // 🔹 رفع الملف إلى Supabase
-  const { data, error } = await supabase.storage
-    .from("tbibapp")
-    .upload(filePath, file);
-
-  if (error) {
-    console.error("Error uploading file:", error);
-    alert("حدث خطأ أثناء تحميل الملف!");
-    setUploading(false);
-    return;
-  }
-
-  // 🔹 **الحل هنا: جلب الرابط الصحيح بعد الرفع**
-  const { data: urlData } = await supabase.storage
-    .from("tbibapp")
-    .getPublicUrl(filePath);
-
-  if (!urlData || !urlData.publicUrl) {
-    console.error("Error getting public URL for:", filePath);
-    alert("حدث خطأ أثناء جلب رابط الملف!");
-    setUploading(false);
-    return;
-  }
-
-  const publicUrl = urlData.publicUrl; // ✅ استخراج الرابط الصحيح
-
-  // 🔹 تحديث قائمة ملفات PDF بالرابط الصحيح
-  setNewCourse((prevState) => {
-    const updatedPdfs = [...prevState.pdfs];
-
-    if (index >= updatedPdfs.length) {
-      console.error("Invalid index:", index);
-      alert("حدث خطأ أثناء تحديث الملف!");
+    if (moduleError) {
+      console.error("Error fetching module name:", moduleError);
+      alert("حدث خطأ أثناء جلب اسم المقياس!");
       setUploading(false);
-      return prevState;
+      return;
     }
 
-    updatedPdfs[index] = { ...updatedPdfs[index], url: publicUrl };
+    const moduleName =
+      moduleData?.title?.replace(/\s+/g, "_") || "Unknown_Module";
 
-    return { ...prevState, pdfs: updatedPdfs };
-  });
+    // إنشاء المسار الجديد
+    const filePath = `${moduleName}/${uuidv4()}-${file.name}`;
 
-  setUploading(false);
-}
+    // رفع الملف إلى Supabase
+    const { data, error } = await supabase.storage
+      .from("tbibapp")
+      .upload(filePath, file);
 
+    if (error) {
+      console.error("Error uploading file:", error);
+      alert("حدث خطأ أثناء تحميل الملف!");
+      setUploading(false);
+      return;
+    }
 
+    // جلب الرابط الصحيح بعد الرفع
+    const { data: urlData } = await supabase.storage
+      .from("tbibapp")
+      .getPublicUrl(filePath);
 
+    if (!urlData || !urlData.publicUrl) {
+      console.error("Error getting public URL for:", filePath);
+      alert("حدث خطأ أثناء جلب رابط الملف!");
+      setUploading(false);
+      return;
+    }
+
+    const publicUrl = urlData.publicUrl; // استخراج الرابط الصحيح
+
+    // تحديث قائمة ملفات PDF بالرابط الصحيح
+    setNewCourse((prevState) => {
+      const updatedPdfs = [...prevState.pdfs];
+
+      if (index >= updatedPdfs.length) {
+        console.error("Invalid index:", index);
+        alert("حدث خطأ أثناء تحديث الملف!");
+        setUploading(false);
+        return prevState;
+      }
+
+      updatedPdfs[index] = { ...updatedPdfs[index], url: publicUrl };
+
+      return { ...prevState, pdfs: updatedPdfs };
+    });
+
+    setUploading(false);
+  }
 
   // Dropzone لرفع الملفات
   const { getRootProps, getInputProps } = useDropzone({
@@ -415,8 +412,12 @@ async function uploadPdf(file, index) {
             type="text"
             placeholder="رابط الملف"
             value={pdf.url}
-            readOnly
-            className="p-2 border flex-1 bg-gray-100"
+            onChange={(e) => {
+              const pdfs = [...newCourse.pdfs];
+              pdfs[index].url = e.target.value;
+              setNewCourse({ ...newCourse, pdfs });
+            }}
+            className="p-2 border flex-1"
           />
           <button
             onClick={() => removePdf(index)}
@@ -426,6 +427,14 @@ async function uploadPdf(file, index) {
           </button>
         </div>
       ))}
+
+      {/* زر إضافة PDF يدويًا */}
+      <button
+        onClick={addManualPdf}
+        className="px-4 py-2 bg-blue-500 text-white rounded-lg m-2"
+      >
+        + أضف PDF يدويًا
+      </button>
 
       {/* Dropzone لرفع ملفات PDF */}
       <div
