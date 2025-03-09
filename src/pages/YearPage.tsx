@@ -95,7 +95,9 @@ export function YearPage() {
       {/* Display Unites */}
       {unites.length > 0 && (
         <div className="mb-8">
-          <h2 className="text-xl font-bold text-gray-900 mb-4">Units</h2>
+          <h2 className="text-xl font-bold text-gray-900 mb-4 justify-self-center">
+            Units
+          </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {unites.map((unite) => (
               <Link
