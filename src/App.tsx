@@ -16,12 +16,12 @@ import FlashcardsManager from "./pages/admin/AdminFlashcards";
 import EditDeleteFlashcards from "./pages/admin/EditDeleteFlashcards";
 import EditCourseOrder from "./pages/admin/EditCourseOrder";
 import ManageUniteModules from "./pages/admin/ManageUniteModules";
+import { AdminLoginPage } from "./pages/admin/AdminLoginPage"; // ✅ Correct Import
 import { YearPage } from "./pages/YearPage";
 import { ModulePage } from "./pages/ModulePage";
 import { UnitePage } from "./pages/UnitePage";
 import { CoursePage } from "./pages/CoursePage";
-import { AdminLoginPage } from "./pages/admin/AdminLoginPage"; // ✅ Correct Import
-import PDFViewerPage from "./pages/PDFViewerPage"; 
+import PDFViewerPage from "./pages/PDFViewerPage";
 
 function App() {
   const [adminUser, setAdminUser] = useState(null);
@@ -69,22 +69,10 @@ function App() {
                       <Route path="/" element={<AdminAddModuleUnite />} />
                       <Route path="/lessons" element={<AdminLessons />} />
                       <Route path="/edit" element={<EditCourse />} />
-                      <Route
-                        path="/flashcards"
-                        element={<FlashcardsManager />}
-                      />
-                      <Route
-                        path="/editflashcards"
-                        element={<EditDeleteFlashcards />}
-                      />
-                      <Route
-                        path="/editcourseorder"
-                        element={<EditCourseOrder />}
-                      />
-                      <Route
-                        path="/editunitemodules"
-                        element={<ManageUniteModules />}
-                      />
+                      <Route path="/flashcards" element={<FlashcardsManager />} />
+                      <Route path="/editflashcards" element={<EditDeleteFlashcards />} />
+                      <Route path="/editcourseorder" element={<EditCourseOrder />} />
+                      <Route path="/editunitemodules" element={<ManageUniteModules />} />
                     </Routes>
                   </div>
                 </main>
