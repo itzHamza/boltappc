@@ -3,6 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import { Search, User, Menu, X, GraduationCap } from "lucide-react";
 import { supabase } from "../../lib/supabaseClient";
 import { cn } from "../../lib/utils";
+import logo from "/lgo.svg"; // ✅ يضمن تحميل الصورة بشكل صحيح
 
 export function Header() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -103,7 +104,7 @@ export function Header() {
         <div className="flex justify-center items-center py-4">
           <Link className="w-full flex justify-center" to="/">
             <img
-              src="lgo.svg"
+              src={logo}
               alt="TBIB"
               className="w-40 md:w-56 lg:w-72 h-auto"
             />
