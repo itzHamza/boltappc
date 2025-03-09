@@ -1,7 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { supabase } from "../lib/supabaseClient";
-import { BookOpen, Video, FileText, ChevronRight } from "lucide-react";
+import {
+  BookOpen,
+  Video,
+  FileText,
+  ChevronRight,
+  FolderClosed,
+  NotebookText,
+} from "lucide-react";
 import Loader from "../components/Loader";
 
 export function ModulePage() {
@@ -92,12 +99,12 @@ useEffect(() => {
       <h1 className="text-3xl font-bold text-gray-900 mb-2 justify-self-center">
         {moduleTitle}
       </h1>
-      <p className="text-gray-600 mb-8 justify-self-center">
+      <p className="text-gray-600 mb-8 justify-self-center text-center">
         {moduleDescription}
       </p>
 
       {courses.length === 0 ? (
-        <p className="text-center text-gray-600">
+        <p className="text-center text-gray-600 text-center justify-self-center">
           No courses available in this module.
         </p>
       ) : (
@@ -106,11 +113,11 @@ useEffect(() => {
             <Link
               key={course.id}
               to={`/course/${course.id}`}
-              className="group block p-6 bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-all"
+              className="group block p-6 bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-all marginleftandright mx-4 "
             >
               <div className="flex items-start space-x-4">
                 <div className="p-3 bg-blue-50 rounded-lg group-hover:bg-blue-100 transition-colors">
-                  <BookOpen className="w-6 h-6 text-blue-600" />
+                  <NotebookText className="w-6 h-6 text-blue-600" />
                 </div>
                 <div className="flex-1">
                   <div className="flex items-center justify-between">

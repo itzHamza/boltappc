@@ -73,12 +73,12 @@ export function UnitePage() {
       <h1 className="text-3xl font-bold text-gray-900 mb-2 justify-self-center">
         {uniteTitle}
       </h1>
-      <p className="text-gray-600 mb-8 justify-self-center">
+      <p className="text-gray-600 mb-8 justify-self-center text-center">
         Select a module to view its courses
       </p>
 
       {modules.length === 0 ? (
-        <p className="text-center text-gray-600">
+        <p className="text-center text-gray-600 justify-self-center text-center">
           No modules available for this unite.
         </p>
       ) : (

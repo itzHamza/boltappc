@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { supabase } from "../lib/supabaseClient";
-import { BookOpen, ChevronRight } from "lucide-react";
+import { BookOpen, ChevronRight, FolderClosed } from "lucide-react";
 import Loader from "../components/Loader";
 
 export function YearPage() {
@@ -88,7 +88,7 @@ export function YearPage() {
       <h1 className="text-3xl font-bold text-gray-900 mb-2 justify-self-center">
         {yearTitle}
       </h1>
-      <p className="text-gray-600 mb-8 justify-self-center">
+      <p className="text-gray-600 mb-8 justify-self-center text-center">
         Select a unit or module to view its courses
       </p>
 
@@ -101,11 +101,11 @@ export function YearPage() {
               <Link
                 key={unite.id}
                 to={`/unite/${unite.id}`}
-                className="group block p-6 bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-all"
+                className="group block p-6 bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-all marginleftandright mx-4"
               >
                 <div className="flex items-start space-x-4">
                   <div className="p-3 bg-blue-50 rounded-lg group-hover:bg-blue-100 transition-colors">
-                    <BookOpen className="w-6 h-6 text-blue-600" />
+                    <FolderClosed className="w-6 h-6 text-blue-600" />
                   </div>
                   <div className="flex-1">
                     <div className="flex items-center justify-between">
@@ -128,17 +128,19 @@ export function YearPage() {
       {/* Display Modules */}
       {modules.length > 0 && (
         <div>
-          <h2 className="text-xl font-bold text-gray-900 mb-4">Modules</h2>
+          <h2 className="text-xl font-bold text-gray-900 mb-4 justify-self-center">
+            Modules
+          </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {modules.map((module) => (
               <Link
                 key={module.id}
                 to={`/module/${module.id}`}
-                className="group block p-6 bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-all marginleftandright"
+                className="group block p-6 bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-all marginleftandright mx-4"
               >
                 <div className="flex items-start space-x-4">
                   <div className="p-3 bg-blue-50 rounded-lg group-hover:bg-blue-100 transition-colors">
-                    <BookOpen className="w-6 h-6 text-blue-600" />
+                    <FolderClosed className="w-6 h-6 text-blue-600" />
                   </div>
                   <div className="flex-1">
                     <div className="flex items-center justify-between">
