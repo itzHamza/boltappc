@@ -1,43 +1,20 @@
 {
+  "cleanUrls": true,
   "rewrites": [
-    { "source": "/(.*)", "destination": "/index.html" }
+    { "source": "/api/(.*)", "destination": "/api/$1" }
   ],
   "headers": [
     {
-      "source": "/_next/static/(.*)",
+      "source": "/assets/(.*).(js|css|png|jpg|jpeg|svg|gif|woff2|webp|pdf|ico)",
       "headers": [
-        {
-          "key": "Cache-Control",
-          "value": "public, max-age=31536000, immutable"
-        }
+        { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
       ]
     },
     {
-      "source": "/(.*).(js|css|png|jpg|jpeg|svg|gif|woff2|webp|pdf|ico)",
+      "source": "/(.*).(js|css|json|svg|woff2)",
       "headers": [
-        {
-          "key": "Cache-Control",
-          "value": "public, max-age=604800, stale-while-revalidate=31536000"
-        }
+        { "key": "Content-Type", "value": "application/javascript; charset=utf-8" }
       ]
-    },
-    {
-      "source": "/api/(.*)",
-      "headers": [
-        {
-          "key": "Cache-Control",
-          "value": "no-store"
-        }
-      ]
-    },
-    {
-      "source": "/(.*).(html|css|js|json|svg|woff2)",
-      "headers": [
-    {
-        "key": "Content-Encoding",
-        "value": "br"
     }
-      ]
-  }
   ]
 }
