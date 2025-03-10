@@ -1,7 +1,18 @@
 /** @type {import('tailwindcss').Config} */
 export default {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
-  safelist: ["hidden", "block", "grid", "flex"], // ✅ لمنع حذف `CSS` المستخدم ديناميكيًا
+  safelist: [
+    "hidden",
+    "block",
+    "grid",
+    "flex",
+    "bg-blue-50",
+    "bg-red-50",
+    "text-blue-600",
+    "text-red-600",
+    "hover:bg-gray-50",
+  ],
+
   theme: {
     extend: {
       container: {

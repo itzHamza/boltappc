@@ -29,6 +29,15 @@
           "value": "no-store"
         }
       ]
+    },
+    {
+      "source": "/(.*).(html|css|js|json|svg|woff2)",
+      "headers": [
+    {
+        "key": "Content-Encoding",
+        "value": "br"
     }
+      ]
+  }
   ]
 }
