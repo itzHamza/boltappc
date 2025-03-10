@@ -1,0 +1,22 @@
+{
+  "short_name": "TBiB Cours",
+  "name": "TBiB Cours - دروس وملخصات طبية",
+  "description": "منصة لمساعدة طلاب الطب الجزائريين على الوصول إلى الدروس والملخصات والاختبارات بسهولة.",
+  "icons": [
+    {
+      "src": "/loogo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ],
+  "start_url": "/?utm_source=web_app_manifest",
+  "background_color": "#2C3E50",
+  "display": "standalone",
+  "display_override": ["window-controls-overlay"],
+  "scope": "/",
+  "theme_color": "#2C3E50",
+  "orientation": "portrait-primary",
+  "lang": "ar",
+  "dir": "rtl"
+}

@@ -210,11 +210,15 @@ export default function AddCourse() {
       return;
     }
 
-    const moduleName =
-      moduleData?.title?.replace(/\s+/g, "_") || "Unknown_Module";
+    const sanitizeModuleName = (name) => name.replace(/[^a-zA-Z0-9_-]/g, "");
+    const moduleName = sanitizeModuleName(
+      moduleData?.title || "Unknown_Module"
+    );
 
     // إنشاء المسار الجديد
-    const filePath = `${moduleName}/${uuidv4()}-${file.name}`;
+    const sanitizeFileName = (name) => name.replace(/[^a-zA-Z0-9._-]/g, "");
+    const fileName = sanitizeFileName(file.name);
+    const filePath = `${moduleName}/${uuidv4()}-${fileName}`;
 
     // رفع الملف إلى Supabase
     const { data, error } = await supabase.storage

@@ -22,6 +22,7 @@ import { ModulePage } from "./pages/ModulePage";
 import { UnitePage } from "./pages/UnitePage";
 import { CoursePage } from "./pages/CoursePage";
 import PDFViewerPage from "./pages/PDFViewerPage";
+import { Analytics } from "@vercel/analytics/react";
 
 function App() {
   const [adminUser, setAdminUser] = useState(null);
