@@ -7,6 +7,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <link rel="preconnect" href="https://tbibcours.vercel.app" crossorigin />
     <link rel="canonical" href="https://tbibcours.vercel.app/">
+    <link rel="preload" href="/loogo.webp" as="image" type="image/webp" fetchpriority="high">
+
 
 
     <!-- تحسين الـ SEO لمحركات البحث -->
@@ -37,8 +39,6 @@
     <!-- أيقونات الموقع -->
     <link rel="icon" type="image/png" sizes="512x512" href="/loogo.png" />
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-    <link rel="preload" href="/loogo.png" as="image" />
-    <link rel="preload" href="/apple-touch-icon.png" as="image" />
 
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-E963J2GL8V"></script>
@@ -63,6 +63,6 @@
   </head>
   <body>
     <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
+    <script type="module" src="/src/main.tsx" defer></script>
   </body>
 </html>
