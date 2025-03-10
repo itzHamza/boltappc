@@ -11,6 +11,7 @@
     }
   ],
   "start_url": "/?utm_source=web_app_manifest",
+  "categories": ["education", "medical", "learning"],
   "background_color": "#2C3E50",
   "display": "standalone",
   "display_override": ["window-controls-overlay"],
