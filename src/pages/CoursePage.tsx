@@ -23,26 +23,34 @@ export function CoursePage() {
   const [selectedPdf, setSelectedPdf] = useState(0);
     const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    async function fetchCourse() {
-      setLoading(true);
-      const { data, error } = await supabase
-        .from("courses")
-        .select("*")
-        .eq("id", courseId)
-        .single();
+useEffect(() => {
+  let isMounted = true; // ✅ منع التحديث إذا تم إلغاء المكون
 
-      if (error) {
-        console.error("Error fetching course:", error);
-      } else {
-        setCourseData(data);
-      }
-    }
+  async function fetchCourse() {
+    setLoading(true);
+    const { data, error } = await supabase
+      .from("courses")
+      .select("*")
+      .eq("id", courseId)
+      .single();
 
-    if (courseId) {
-      fetchCourse();
+    if (error) {
+      console.error("Error fetching course:", error);
+    } else if (isMounted) {
+      setCourseData(data);
     }
-  }, [courseId]);
+    setLoading(false);
+  }
+
+  if (courseId) {
+    fetchCourse();
+  }
+
+  return () => {
+    isMounted = false; // ✅ تنظيف `useEffect` لتجنب تنفيذ غير ضروري
+  };
+}, [courseId]);
+
 
   useEffect(() => {
     async function fetchModuleCourses() {
@@ -173,6 +181,7 @@ export function CoursePage() {
       <div className="w-screen sm:w-full bg-white shadow-sm overflow-hidden">
         <iframe
           src={courseData.videos[selectedVideo]?.url}
+          loading="lazy"
           frameBorder="0"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
           referrerPolicy="strict-origin-when-cross-origin"
@@ -215,7 +224,9 @@ export function CoursePage() {
         <PDFViewer
           url={courseData.pdfs[selectedPdf]?.url}
           className="h-[80vh]"
+          style={{ width: "100%", height: "80vh" }}
         />
+
         {/* زر فتح الـ PDF في نافذة جديدة */}
         <div className="flex justify-center items-center h-40">
           <button
