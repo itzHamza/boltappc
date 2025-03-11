@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 Crawl-delay: 5
-Sitemap: https://tbibcours.vercel.app/sitemap.xml
+Sitemap: https://tbib.space/sitemap.xml
