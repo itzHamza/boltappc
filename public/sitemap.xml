@@ -1,21 +1,109 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-    <url>
-        <loc>https://tbibcours.vercel.app/</loc>
-        <lastmod>2024-03-10</lastmod>
-        <changefreq>daily</changefreq>
-        <priority>1.0</priority>
-    </url>
-    <url>
-        <loc>https://tbibcours.vercel.app/courses</loc>
-        <lastmod>2024-03-10</lastmod>
-        <changefreq>daily</changefreq>
-        <priority>0.8</priority>
-    </url>
-    <url>
-        <loc>https://tbibcours.vercel.app/modules</loc>
-        <lastmod>2024-03-10</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.7</priority>
-    </url>
+		<!--	created with www.mysitemapgenerator.com	-->
+		<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<url>
+	<loc>https://tbibcours.vercel.app/</loc>
+	<lastmod>2025-03-11T01:58:48+01:00</lastmod>
+	<priority>0.8</priority>
+</url>
+<url>
+	<loc>https://tbibcours.vercel.app/year/1</loc>
+	<lastmod>2025-03-11T01:58:48+01:00</lastmod>
+	<priority>0.8</priority>
+</url>
+<url>
+	<loc>https://tbibcours.vercel.app/year/2</loc>
+	<lastmod>2025-03-11T01:58:48+01:00</lastmod>
+	<priority>0.8</priority>
+</url>
+<url>
+	<loc>https://tbibcours.vercel.app/year/3</loc>
+	<lastmod>2025-03-11T01:58:48+01:00</lastmod>
+	<priority>0.8</priority>
+</url>
+<url>
+	<loc>https://tbibcours.vercel.app/year/4</loc>
+	<lastmod>2025-03-11T01:58:48+01:00</lastmod>
+	<priority>0.8</priority>
+</url>
+<url>
+	<loc>https://tbibcours.vercel.app/year/5</loc>
+	<lastmod>2025-03-11T01:58:48+01:00</lastmod>
+	<priority>0.8</priority>
+</url>
+<url>
+	<loc>https://tbibcours.vercel.app/year/6</loc>
+	<lastmod>2025-03-11T01:58:48+01:00</lastmod>
+	<priority>0.8</priority>
+</url>
+<url>
+	<loc>https://tbibcours.vercel.app/admin</loc>
+	<lastmod>2025-03-11T01:58:48+01:00</lastmod>
+	<priority>1.0</priority>
+</url>
+<url>
+	<loc>https://tbibcours.vercel.app/admin/editunitemodules</loc>
+	<lastmod>2025-03-11T01:58:48+01:00</lastmod>
+	<priority>0.8</priority>
+</url>
+<url>
+	<loc>https://tbibcours.vercel.app/admin/lessons</loc>
+	<lastmod>2025-03-11T01:58:48+01:00</lastmod>
+	<priority>0.8</priority>
+</url>
+<url>
+	<loc>https://tbibcours.vercel.app/admin/edit</loc>
+	<lastmod>2025-03-11T01:58:48+01:00</lastmod>
+	<priority>0.8</priority>
+</url>
+<url>
+	<loc>https://tbibcours.vercel.app/admin/editcourseorder</loc>
+	<lastmod>2025-03-11T01:58:48+01:00</lastmod>
+	<priority>0.8</priority>
+</url>
+<url>
+	<loc>https://tbibcours.vercel.app/admin/flashcards</loc>
+	<lastmod>2025-03-11T01:58:48+01:00</lastmod>
+	<priority>0.8</priority>
+</url>
+<url>
+	<loc>https://tbibcours.vercel.app/admin/editflashcards</loc>
+	<lastmod>2025-03-11T01:58:48+01:00</lastmod>
+	<priority>0.8</priority>
+</url>
+<url>
+	<loc>https://tbibcours.vercel.app/admin/login</loc>
+	<lastmod>2025-03-11T01:58:48+01:00</lastmod>
+	<priority>0.8</priority>
+</url>
+<url>
+	<loc>https://tbibcours.vercel.app/lessons</loc>
+	<lastmod>2025-03-11T01:58:48+01:00</lastmod>
+	<priority>1.0</priority>
+</url>
+<url>
+	<loc>https://tbibcours.vercel.app/edit</loc>
+	<lastmod>2025-03-11T01:58:48+01:00</lastmod>
+	<priority>1.0</priority>
+</url>
+<url>
+	<loc>https://tbibcours.vercel.app/flashcards</loc>
+	<lastmod>2025-03-11T01:58:48+01:00</lastmod>
+	<priority>1.0</priority>
+</url>
+<url>
+	<loc>https://tbibcours.vercel.app/editflashcards</loc>
+	<lastmod>2025-03-11T01:58:48+01:00</lastmod>
+	<priority>1.0</priority>
+</url>
+<url>
+	<loc>https://tbibcours.vercel.app/editcourseorder</loc>
+	<lastmod>2025-03-11T01:58:48+01:00</lastmod>
+	<priority>1.0</priority>
+</url>
+<url>
+	<loc>https://tbibcours.vercel.app/editunitemodules</loc>
+	<lastmod>2025-03-11T01:58:48+01:00</lastmod>
+	<priority>1.0</priority>
+</url>
 </urlset>
