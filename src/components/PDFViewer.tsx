@@ -21,7 +21,7 @@ const PDFViewer: React.FC<PDFViewerProps> = ({ url, className }) => {
         viewerRef.current.id = divId; // ✅ تعيين ID للعنصر عند تحميله
 
         const adobeDCView = new window.AdobeDC.View({
-          clientId: "06b9695e8ef44f0b83cd91c06bc79a72",
+          clientId: "ac6d5341fea74102b0a3ea867c0e2114",
           divId: divId,
         });
 
