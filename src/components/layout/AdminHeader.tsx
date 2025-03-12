@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { supabase } from "../../lib/supabaseClient";
-import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Analytics } from "@vercel/analytics/react";
 import {
   BookOpen,
@@ -83,7 +82,6 @@ export function AdminHeader() {
 
   return (
     <>
-      <SpeedInsights />
       <Analytics />
       <button
         onClick={() => setIsSidebarOpen(!isSidebarOpen)}

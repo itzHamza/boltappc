@@ -4,7 +4,6 @@ import { Search, User, Menu, X, GraduationCap } from "lucide-react";
 import { supabase } from "../../lib/supabaseClient";
 import { cn } from "../../lib/utils";
 import logo from "/lgo.svg"; // ✅ يضمن تحميل الصورة بشكل صحيح
-import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Analytics } from "@vercel/analytics/react";
 
 export function Header() {
@@ -83,7 +82,6 @@ export function Header() {
 
   return (
     <>
-            <SpeedInsights />
             <Analytics />
       {/* زر فتح القائمة الجانبية في الجوال */}
       <button
