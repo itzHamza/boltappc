@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { supabase } from "../../lib/supabaseClient";
 import { v4 as uuidv4 } from "uuid";
 import { useDropzone } from "react-dropzone";
+import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 
 export default function AddCourse() {
   const [years, setYears] = useState([]);
@@ -18,16 +19,32 @@ export default function AddCourse() {
   });
   const [uploading, setUploading] = useState(false);
 
+  // تكوين عميل Cloudflare R2
+  const r2Client = new S3Client({
+    region: "auto", // Cloudflare R2 يتطلب region = 'auto'
+    endpoint:
+      "https://06893eb6afdfa9c91367be3c95e2c07b.r2.cloudflarestorage.com", // استبدل بـ endpoint الخاص بك
+    credentials: {
+      accessKeyId: "4b81a819904dda6a2cf386c580557b9b", // استبدل بـ access key الخاص بك
+      secretAccessKey:
+        "2a2bafce1722b2bdb01f0ee763b528d88ffd4c50ae3eeae37cbd25194d484fa1", // استبدل بـ secret key الخاص بك
+    },
+  });
+
   useEffect(() => {
     fetchYears();
   }, []);
 
   // جلب السنوات الدراسية
-  async function fetchYears() {
-    const { data, error } = await supabase.from("years").select("id, title");
-    if (error) console.error("Error fetching years:", error);
-    else setYears(data);
+async function fetchYears() {
+  const { data, error } = await supabase.from("years").select("id, title");
+  if (error) {
+    console.error("Error fetching years:", error);
+  } else {
+    console.log("السنوات التي تم جلبها:", data); // تحقق من البيانات
+    setYears(data);
   }
+}
 
   // جلب الوحدات والمقاييس عند تغيير السنة المختارة
   async function fetchUnitesAndModules(yearId) {
@@ -192,78 +209,120 @@ export default function AddCourse() {
     setNewCourse({ ...newCourse, pdfs: updatedPdfs });
   }
 
-  // تحميل ملف PDF إلى Supabase Storage
-  async function uploadPdf(file, index) {
-    setUploading(true);
+  // تحميل ملف PDF إلى Cloudflare R2
+async function uploadPdf(file, index) {
+  setUploading(true);
 
-    // جلب اسم المقياس (module name) من Supabase
-    const { data: moduleData, error: moduleError } = await supabase
-      .from("modules")
-      .select("title")
-      .eq("id", newCourse.module_id)
-      .single();
-
-    if (moduleError) {
-      console.error("Error fetching module name:", moduleError);
-      alert("حدث خطأ أثناء جلب اسم المقياس!");
+  try {
+    // ✅ التحقق من أن الملف PDF
+    if (file.type !== "application/pdf") {
+      alert("❌ يرجى تحميل ملف PDF فقط!");
       setUploading(false);
       return;
     }
 
-    const sanitizeModuleName = (name) => name.replace(/[^a-zA-Z0-9_-]/g, "");
-    const moduleName = sanitizeModuleName(
-      moduleData?.title || "Unknown_Module"
+    // ✅ التحقق من أن `selectedYear` معينة بشكل صحيح
+    if (!selectedYear) {
+      alert("❌ يرجى اختيار سنة أولاً!");
+      setUploading(false);
+      return;
+    }
+
+    // ✅ تحويل `selectedYear` إلى نفس نوع `id` في `years`
+    const selectedYearId =
+      typeof years[0].id === "number" ? Number(selectedYear) : selectedYear;
+
+    // ✅ البحث عن السنة المختارة
+    const selectedYearData = years.find((year) => year.id === selectedYearId);
+    if (!selectedYearData) {
+      alert("❌ حدث خطأ: لم يتم العثور على السنة!");
+      console.error("السنة المختارة (selectedYear):", selectedYear);
+      console.error("قائمة السنوات (years):", years);
+      setUploading(false);
+      return;
+    }
+
+    // ✅ البحث عن الوحدة المختارة (إذا كانت موجودة)
+    const selectedUniteData = unites.find(
+      (unite) => unite.id === selectedUniteId
     );
 
-    // إنشاء المسار الجديد
-    const sanitizeFileName = (name) => name.replace(/[^a-zA-Z0-9._-]/g, "");
-    const fileName = sanitizeFileName(file.name);
-    const filePath = `${moduleName}/${uuidv4()}-${fileName}`;
-
-    // رفع الملف إلى Supabase
-    const { data, error } = await supabase.storage
-      .from("tbibapp")
-      .upload(filePath, file);
-
-    if (error) {
-      console.error("Error uploading file:", error);
-      alert("حدث خطأ أثناء تحميل الملف!");
+    // ✅ البحث عن الموديل المختار
+    const selectedModuleData = modules.find(
+      (module) => module.id === newCourse.module_id
+    );
+    if (!selectedModuleData) {
+      alert("❌ حدث خطأ: لم يتم العثور على الموديل!");
       setUploading(false);
       return;
     }
 
-    // جلب الرابط الصحيح بعد الرفع
-    const { data: urlData } = await supabase.storage
-      .from("tbibapp")
-      .getPublicUrl(filePath);
+    // ✅ تنظيف الأسماء (إزالة الرموز غير المسموح بها)
+    const sanitizeName = (name) => {
+      return name
+        .normalize("NFD") // تحويل الأحرف المركبة إلى الأساسية
+        .replace(/[\u0300-\u036f]/g, "") // إزالة التشكيل
+        .replace(/\s+/g, "_") // استبدال المسافات بـ "_"
+        .replace(/[^a-zA-Z0-9_-]/g, "") // إزالة الرموز غير المسموح بها
+        .toLowerCase(); // تحويل إلى أحرف صغيرة
+    };
 
-    if (!urlData || !urlData.publicUrl) {
-      console.error("Error getting public URL for:", filePath);
-      alert("حدث خطأ أثناء جلب رابط الملف!");
-      setUploading(false);
-      return;
-    }
+    // ✅ إنشاء المسار بناءً على وجود الوحدة
+    const yearFolder = sanitizeName(selectedYearData.title);
+    const uniteFolder = selectedUniteData
+      ? sanitizeName(selectedUniteData.title)
+      : null;
+    const moduleFolder = sanitizeName(selectedModuleData.title);
 
-    const publicUrl = urlData.publicUrl; // استخراج الرابط الصحيح
+    // ✅ إنشاء المسار الكامل
+    const path = selectedUniteData
+      ? `${yearFolder}/${uniteFolder}/${moduleFolder}`
+      : `${yearFolder}/${moduleFolder}`;
 
-    // تحديث قائمة ملفات PDF بالرابط الصحيح
+    // ✅ تنظيف اسم الملف
+    const sanitizeFileName = (name) => {
+      return name
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/\s+/g, "_")
+        .replace(/[^a-zA-Z0-9_.-]/g, "") // يسمح فقط بالأحرف، الأرقام، `_`، `.` و `-`
+        .toLowerCase();
+    };
+
+    const cleanFileName = sanitizeFileName(file.name);
+    const uniqueFileName = `${path}/${uuidv4()}-${cleanFileName}`;
+
+    // ✅ تحويل ملف PDF إلى ArrayBuffer
+    const arrayBuffer = await file.arrayBuffer();
+
+    // ✅ رفع الملف إلى Cloudflare R2 باستخدام `PutObjectCommand`
+    const command = new PutObjectCommand({
+      Bucket: "tbibcours",
+      Key: uniqueFileName, // 🚀 تخزين الملف داخل المسار المناسب
+      Body: arrayBuffer,
+      ContentType: "application/pdf",
+    });
+
+    await r2Client.send(command);
+
+    // ✅ إنشاء الرابط النهائي للملف
+    const fileUrl = `https://pub-26d82a51e954464d8c48f5d1307898a3.r2.dev/${uniqueFileName}`;
+
+    // ✅ تحديث قائمة ملفات PDF بالرابط الصحيح
     setNewCourse((prevState) => {
       const updatedPdfs = [...prevState.pdfs];
-
-      if (index >= updatedPdfs.length) {
-        console.error("Invalid index:", index);
-        alert("حدث خطأ أثناء تحديث الملف!");
-        setUploading(false);
-        return prevState;
-      }
-
-      updatedPdfs[index] = { ...updatedPdfs[index], url: publicUrl };
-
+      updatedPdfs[index] = { ...updatedPdfs[index], url: fileUrl };
       return { ...prevState, pdfs: updatedPdfs };
     });
 
+    alert("✅ تم تحميل الملف بنجاح!");
+  } catch (error) {
+    console.error("❌ خطأ أثناء رفع الملف إلى R2:", error);
+    alert("❌ حدث خطأ أثناء رفع الملف إلى Cloudflare R2!");
+  } finally {
     setUploading(false);
   }
+}
 
   // Dropzone لرفع الملفات
   const { getRootProps, getInputProps } = useDropzone({
@@ -280,7 +339,7 @@ export default function AddCourse() {
           ...prevState,
           pdfs: [...prevState.pdfs, newPdf],
         }));
-        uploadPdf(file, newCourse.pdfs.length); // تحميل الملف
+        uploadPdf(file, newCourse.pdfs.length); // تحميل الملف إلى Cloudflare R2
       }
     },
   });
