@@ -6,7 +6,7 @@ const SUPABASE_URL = "https://qjqfaywhgbwwvusananj.supabase.co"; // استبدل
 const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFqcWZheXdoZ2J3d3Z1c2FuYW5qIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mzk4MDA0NzEsImV4cCI6MjA1NTM3NjQ3MX0.yGpwF53SX6GcQdj6ijRE08KeQz8sieOM-YPSiw6jNyo"; // استخدم مفتاح Supabase (يُفضل تخزينه في متغير بيئي)
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
-const BASE_URL = "https://tbibcours.vercel.app";
+const BASE_URL = "https://tbib.space";
 
 async function generateSitemap() {
   console.log("⏳ Generating sitemap...");
