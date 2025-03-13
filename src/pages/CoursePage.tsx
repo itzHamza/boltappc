@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { supabase } from "../lib/supabaseClient";
+import Chatbot from "../components/Chatbot";
 import {
   Video,
   FileText,
@@ -111,6 +112,7 @@ useEffect(() => {
     <div className="w-screen sm:w-full space-y-8 lg:px-8">
       <div className="px-4 lg:px-0">
         {/* Course Navigation (only within the same module) */}
+        <Chatbot />
         <div className="flex items-center justify-between mb-6">
           <button
             onClick={() =>
