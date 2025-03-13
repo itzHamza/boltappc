@@ -6,7 +6,12 @@ import ReactMarkdown from "react-markdown";
 
 export default function Chatbot() {
   const [messages, setMessages] = useState<{ role: string; content: string }[]>(
-    [{ role: "assistant", content: "**👋 مرحبًا! كيف يمكنني مساعدتك اليوم؟**" }]
+    [
+      {
+        role: "assistant",
+        content: "**Hello! I'm TBiB GPT How i can help you today ? 👋**",
+      },
+    ]
   );
   const [input, setInput] = useState("");
   const [isOpen, setIsOpen] = useState(false);
@@ -106,7 +111,7 @@ export default function Chatbot() {
             {/* 🔹 عرض الإجابة أثناء الكتابة */}
             {loading && (
               <div className="p-2 max-w-[90%] rounded-lg bg-[#424242] text-white animate-pulse">
-                {currentResponse || "يتم توليد الإجابة..."}
+                {currentResponse || "Answering..."}
               </div>
             )}
           </div>
@@ -118,7 +123,7 @@ export default function Chatbot() {
               value={input}
               onChange={(e) => setInput(e.target.value)}
               className="flex-1 p-2 bg-[#303030] text-white border-none rounded-md focus:ring-0 focus:outline-none"
-              placeholder="اكتب رسالتك..."
+              placeholder="Type a message..."
               onKeyDown={(e) => e.key === "Enter" && sendMessage()}
             />
             <button
