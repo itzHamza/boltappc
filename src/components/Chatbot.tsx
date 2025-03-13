@@ -17,12 +17,19 @@ export default function Chatbot() {
   const [loading, setLoading] = useState(false);
   const [currentResponse, setCurrentResponse] = useState("");
 
-  // ✅ `useRef` لمتابعة آخر رسالة
-  const messagesEndRef = useRef<HTMLDivElement | null>(null);
+  // ✅ مرجع إلى `div` الخاص بالرسائل فقط
+  const messagesContainerRef = useRef<HTMLDivElement | null>(null);
 
-  // ✅ `useEffect` للتمرير تلقائيًا عند تحديث الرسائل
+  // ✅ تحديث التمرير عند كل تحديث للرسائل
+  const scrollToBottom = () => {
+    if (messagesContainerRef.current) {
+      messagesContainerRef.current.scrollTop =
+        messagesContainerRef.current.scrollHeight;
+    }
+  };
+
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    scrollToBottom();
   }, [messages, currentResponse]);
 
   const sendMessage = async () => {
@@ -42,7 +49,8 @@ export default function Chatbot() {
       for (const char of data.reply) {
         responseText += char;
         setCurrentResponse(responseText);
-        await new Promise((resolve) => setTimeout(resolve, 20));
+        scrollToBottom(); // ✅ التمرير للأسفل أثناء الكتابة
+        await new Promise((resolve) => setTimeout(resolve, 10)); // 🔹 تقليل التأخير ليكون متزامنًا أكثر
       }
 
       setMessages([
@@ -94,7 +102,10 @@ export default function Chatbot() {
           </div>
 
           {/* 🔹 الرسائل */}
-          <div className="p-3 h-64 overflow-y-auto space-y-2 bg-[#212121]">
+          <div
+            ref={messagesContainerRef}
+            className="p-3 h-64 overflow-y-auto space-y-2 bg-[#212121]"
+          >
             {messages.map((msg, index) => (
               <div
                 key={index}
@@ -127,9 +138,6 @@ export default function Chatbot() {
                 {currentResponse || "Answering..."}
               </div>
             )}
-
-            {/* ✅ ✅ ✅ `div` الفارغ الذي يجعل `scroll` يحدث تلقائيًا */}
-            <div ref={messagesEndRef} />
           </div>
 
           {/* 🔹 إدخال الرسالة */}
