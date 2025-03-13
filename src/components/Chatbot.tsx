@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import axios from "axios";
-import { X, ArrowUp } from "lucide-react";
+import { X, ArrowUp, Loader } from "lucide-react";
+
 import { motion, AnimatePresence } from "framer-motion"; // ✅ إضافة AnimatePresence
 import ReactMarkdown from "react-markdown";
 
@@ -191,16 +192,27 @@ const sendMessage = async () => {
                 rows={1}
                 style={{ maxHeight: "120px" }}
               />
-              
               <motion.button
                 onClick={sendMessage}
                 className="ml-2 w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-md hover:shadow-lg transition"
                 disabled={loading}
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.9 }}
-                
               >
-                {loading ? "⌛" : <ArrowUp className="w-6 h-6 text-black" />}
+                {loading ? (
+                  <motion.div
+                    animate={{ rotate: 360 }}
+                    transition={{
+                      repeat: Infinity,
+                      duration: 1,
+                      ease: "linear",
+                    }}
+                  >
+                    <Loader className="w-7 h-7 text-black" />
+                  </motion.div>
+                ) : (
+                  <ArrowUp className="w-7 h-7 text-black" />
+                )}
               </motion.button>
             </div>
           </motion.div>
