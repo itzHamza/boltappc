@@ -131,7 +131,7 @@ export default function Chatbot() {
               className="ml-2 bg-[#10A37F] text-white px-4 py-2 rounded-md hover:bg-[#0E8C6C] transition"
               disabled={loading}
             >
-              {loading ? "..." : "إرسال"}
+              {loading ? "..." : "Send"}
             </button>
           </div>
         </div>
