@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import { useParams } from "react-router-dom";
+import Chatbot from "../components/Chatbot";
 
 export default function PDFViewerPage() {
   const { pdfUrl } = useParams();
@@ -51,6 +52,7 @@ export default function PDFViewerPage() {
 
   return (
     <div className="w-screen h-screen fixed top-0 left-0 bg-black">
+      <Chatbot />
       <div id="adobe-dc-view" className="w-full h-full" />
     </div>
   );

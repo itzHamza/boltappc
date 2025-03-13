@@ -196,7 +196,6 @@ const sendMessage = async () => {
                 onClick={sendMessage}
                 className="ml-2 w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-md hover:shadow-lg transition"
                 disabled={loading}
-                whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.9 }}
               >
                 {loading ? (
