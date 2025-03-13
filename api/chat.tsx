@@ -1,7 +1,7 @@
 import { VercelRequest, VercelResponse } from "@vercel/node";
 import OpenAI from "openai";
 
-// ✅ **جلب مفاتيح البيئة من Vercel**
+// ✅ **تأكد من أن مفاتيح البيئة محملة بشكل صحيح**
 const openaiApiKey = process.env.VITE_OPENAI_API_KEY;
 const assistantId = process.env.VITE_ASSISTANT_ID;
 
@@ -26,24 +26,20 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   try {
-    // 🔹 **إنشاء محادثة جديدة (Thread)**
     console.log("📌 إنشاء محادثة جديدة...");
     const thread = await openai.beta.threads.create();
 
-    // 🔹 **إرسال رسالة إلى المحادثة**
     console.log("📌 إرسال الرسالة إلى المحادثة...");
     await openai.beta.threads.messages.create(thread.id, {
       role: "user",
       content: message,
     });
 
-    // 🔹 **تشغيل المساعد للحصول على الرد**
     console.log("📌 تشغيل المساعد...");
     const run = await openai.beta.threads.runs.create(thread.id, {
       assistant_id: assistantId,
     });
 
-    // 🔹 **الانتظار حتى انتهاء المعالجة**
     console.log("📌 انتظار استجابة المساعد...");
     let runStatus;
     do {
@@ -52,7 +48,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       console.log("🔄 حالة التشغيل:", runStatus.status);
     } while (runStatus.status !== "completed");
 
-    // 🔹 **جلب الرد النهائي**
     console.log("📌 جلب الرد النهائي...");
     const messages = await openai.beta.threads.messages.list(thread.id);
 
