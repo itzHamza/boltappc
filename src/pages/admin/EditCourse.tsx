@@ -21,12 +21,10 @@ export default function EditCourse() {
   // تكوين عميل Cloudflare R2
   const r2Client = new S3Client({
     region: "auto", // Cloudflare R2 يتطلب region = 'auto'
-    endpoint:
-      "https://06893eb6afdfa9c91367be3c95e2c07b.r2.cloudflarestorage.com", // استبدل بـ endpoint الخاص بك
+    endpoint: import.meta.env.VITE_CLOUDFLARE_R2_ENDPOINT, // استيراد endpoint من متغيرات البيئة
     credentials: {
-      accessKeyId: "4b81a819904dda6a2cf386c580557b9b", // استبدل بـ access key الخاص بك
-      secretAccessKey:
-        "2a2bafce1722b2bdb01f0ee763b528d88ffd4c50ae3eeae37cbd25194d484fa1", // استبدل بـ secret key الخاص بك
+      accessKeyId: import.meta.env.VITE_CLOUDFLARE_R2_ACCESS_KEY , // استبدل بـ access key الخاص بك
+      secretAccessKey: import.meta.env.VITE_CLOUDFLARE_R2_SECRET_KEY, // استبدل بـ secret key الخاص بك, // استبدل بـ secret key الخاص بك
     },
   });
 
@@ -309,7 +307,7 @@ async function uploadPdf(file, index) {
     await r2Client.send(command);
 
     // ✅ إنشاء الرابط النهائي للملف
-    const fileUrl = `https://pub-26d82a51e954464d8c48f5d1307898a3.r2.dev/${uniqueFileName}`;
+    const fileUrl = `${import.meta.env.VITE_CLOUDFLARE_R2_PUBLIC_URL}/${uniqueFileName}`;
 
     // ✅ تحديث قائمة ملفات PDF بالرابط الصحيح
     setCourseData((prevState) => {

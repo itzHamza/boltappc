@@ -14,7 +14,7 @@ export default function PDFViewerPage() {
       }
 
       const adobeDCView = new window.AdobeDC.View({
-        clientId: "ac6d5341fea74102b0a3ea867c0e2114",
+        clientId: import.meta.env.VITE_ADOBE_CLIENT_ID,
         divId: "adobe-dc-view",
       });
 
