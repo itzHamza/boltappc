@@ -1,15 +1,14 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import axios from "axios";
 import { X } from "lucide-react";
 import ReactMarkdown from "react-markdown";
-
 
 export default function Chatbot() {
   const [messages, setMessages] = useState<{ role: string; content: string }[]>(
     [
       {
         role: "assistant",
-        content: "**Hello! I'm TBiB GPT How i can help you today ? 👋**",
+        content: "Hello! I'm **TBiB GPT** How i can help you today ? 👋",
       },
     ]
   );
@@ -17,6 +16,14 @@ export default function Chatbot() {
   const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [currentResponse, setCurrentResponse] = useState("");
+
+  // ✅ `useRef` لمتابعة آخر رسالة
+  const messagesEndRef = useRef<HTMLDivElement | null>(null);
+
+  // ✅ `useEffect` للتمرير تلقائيًا عند تحديث الرسائل
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages, currentResponse]);
 
   const sendMessage = async () => {
     if (!input.trim()) return;
@@ -28,9 +35,8 @@ export default function Chatbot() {
     setCurrentResponse("");
 
     try {
-      const { data } = await axios.post("/api/chat", {
-        message: input,
-      });
+      // ✅ إرسال الطلب إلى `/api/chat`
+      const { data } = await axios.post("/api/chat", { message: input });
 
       let responseText = "";
       for (const char of data.reply) {
@@ -44,7 +50,14 @@ export default function Chatbot() {
         { role: "assistant", content: responseText },
       ]);
     } catch (error) {
-      console.error("Error:", error);
+      console.error("❌ Error:", error);
+      setMessages([
+        ...newMessages,
+        {
+          role: "assistant",
+          content: "**❌ خطأ في الاتصال بالخادم. حاول مرة أخرى لاحقًا!**",
+        },
+      ]);
     }
 
     setLoading(false);
@@ -114,6 +127,9 @@ export default function Chatbot() {
                 {currentResponse || "Answering..."}
               </div>
             )}
+
+            {/* ✅ ✅ ✅ `div` الفارغ الذي يجعل `scroll` يحدث تلقائيًا */}
+            <div ref={messagesEndRef} />
           </div>
 
           {/* 🔹 إدخال الرسالة */}
