@@ -4,19 +4,16 @@
   <url><loc>https://tbib.space</loc><changefreq>daily</changefreq><priority>1.0</priority></url>
   <url><loc>https://tbib.space/year/1</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
   <url><loc>https://tbib.space/year/2</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://tbib.space/module/dd011617-9533-42af-ad70-22a81cfe138c</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
   <url><loc>https://tbib.space/module/ea2482ae-86c3-43e1-867a-1f6039f886ed</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://tbib.space/module/49626d8c-aa1e-4ef4-9bbf-2aaf128dc9b3</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://tbib.space/module/ab11357c-c2a8-4cf6-b798-d3cb4aab5e39</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
   <url><loc>https://tbib.space/module/2b9a72e8-f06c-4420-a7d9-2c59c2ea4cac</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://tbib.space/module/ad2ecd0a-1dfc-4cf3-acaa-5099cc8e1174</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://tbib.space/module/ebd347b6-1bd2-4dc8-b443-df7e7fc9be91</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
   <url><loc>https://tbib.space/module/7b103606-fe9f-4466-8713-5193d56df1b4</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
   <url><loc>https://tbib.space/module/b3cc1891-3c45-4a5e-bd48-70d8cf3da8a4</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
   <url><loc>https://tbib.space/module/72a7665c-4223-4f57-b429-89cbee4478e4</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
   <url><loc>https://tbib.space/module/22b092e8-29a0-4d74-a646-c8cef1c60cd4</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
   <url><loc>https://tbib.space/module/50255930-94ad-4ffd-8bea-fd3ed5a001ce</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
   <url><loc>https://tbib.space/module/937e3d43-476c-4532-bf59-4254df0fb535</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://tbib.space/module/ab11357c-c2a8-4cf6-b798-d3cb4aab5e39</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://tbib.space/module/ebd347b6-1bd2-4dc8-b443-df7e7fc9be91</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
   <url><loc>https://tbib.space/module/82d5a2cf-c9ff-43f7-93f2-006d43914911</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
   <url><loc>https://tbib.space/module/470c02e1-7695-4080-a241-3ea73b545d6c</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
   <url><loc>https://tbib.space/module/f60e6d63-d4de-4d38-b065-c8fcc0e9b2c8</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
@@ -25,8 +22,9 @@
   <url><loc>https://tbib.space/module/d90c4ecc-8b92-4e17-8005-69992a0520c5</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
   <url><loc>https://tbib.space/module/050681f6-14f4-4024-850a-5fdf2e7fe1e7</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
   <url><loc>https://tbib.space/module/f7a248fc-7efb-497f-a8a5-bd276744f9c8</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://tbib.space/module/2178ede5-c926-44c4-8b39-33ff036bba0b</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
   <url><loc>https://tbib.space/module/eb159c3b-b101-48d2-8236-7fb7e2d950a8</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://tbib.space/module/ad2ecd0a-1dfc-4cf3-acaa-5099cc8e1174</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://tbib.space/module/49626d8c-aa1e-4ef4-9bbf-2aaf128dc9b3</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
   <url><loc>https://tbib.space/module/7bebbefa-540c-41b0-93cf-e9ba31f3665d</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
   <url><loc>https://tbib.space/course/9cf7f021-3411-4673-91b2-2c9f36e0a4b1</loc><changefreq>daily</changefreq><priority>0.6</priority></url>
   <url><loc>https://tbib.space/course/acad0ab1-df7c-49c5-b093-775e9783ea1f</loc><changefreq>daily</changefreq><priority>0.6</priority></url>
@@ -67,4 +65,44 @@
   <url><loc>https://tbib.space/course/a1f4a6b9-1de7-46a6-9bb8-84a05b554762</loc><changefreq>daily</changefreq><priority>0.6</priority></url>
   <url><loc>https://tbib.space/course/822b9d62-7cf0-4f40-9f15-5a10d7268f01</loc><changefreq>daily</changefreq><priority>0.6</priority></url>
   <url><loc>https://tbib.space/course/ddd5078a-6a40-47c2-9340-d95585fd8ddc</loc><changefreq>daily</changefreq><priority>0.6</priority></url>
+  <url><loc>https://tbib.space/course/046ebbe4-cd89-4628-add2-e9a3533afc2d</loc><changefreq>daily</changefreq><priority>0.6</priority></url>
+  <url><loc>https://tbib.space/course/461cda4d-6381-487f-b444-4ab28989bbc4</loc><changefreq>daily</changefreq><priority>0.6</priority></url>
+  <url><loc>https://tbib.space/course/3f0a0c56-ecd4-4b94-9980-fd6f5303c5a8</loc><changefreq>daily</changefreq><priority>0.6</priority></url>
+  <url><loc>https://tbib.space/course/f600c636-80ed-45e5-b5dd-7392ff7b8a32</loc><changefreq>daily</changefreq><priority>0.6</priority></url>
+  <url><loc>https://tbib.space/course/7023df1b-afee-4a0b-84ff-54bcc29e2601</loc><changefreq>daily</changefreq><priority>0.6</priority></url>
+  <url><loc>https://tbib.space/course/5d87c89c-c407-46e2-bc23-65d3ae677309</loc><changefreq>daily</changefreq><priority>0.6</priority></url>
+  <url><loc>https://tbib.space/course/2624c9b3-3dfe-489c-a551-936aa9da3796</loc><changefreq>daily</changefreq><priority>0.6</priority></url>
+  <url><loc>https://tbib.space/course/2972391a-f4e8-4105-960e-c41f6bbe1644</loc><changefreq>daily</changefreq><priority>0.6</priority></url>
+  <url><loc>https://tbib.space/course/17222104-c09a-4355-ba9e-df479173aceb</loc><changefreq>daily</changefreq><priority>0.6</priority></url>
+  <url><loc>https://tbib.space/course/9c354897-63df-49a6-b868-261ab3387346</loc><changefreq>daily</changefreq><priority>0.6</priority></url>
+  <url><loc>https://tbib.space/course/ccf57e3b-4b0a-4d7f-96e4-cf9bdee9d157</loc><changefreq>daily</changefreq><priority>0.6</priority></url>
+  <url><loc>https://tbib.space/course/31207454-0289-478c-80a7-08b68bbd4e21</loc><changefreq>daily</changefreq><priority>0.6</priority></url>
+  <url><loc>https://tbib.space/course/c19cfdf4-168e-46d4-a620-75483af5a331</loc><changefreq>daily</changefreq><priority>0.6</priority></url>
+  <url><loc>https://tbib.space/course/b8e6f54d-c0aa-4db5-94a4-aabcdd5a954f</loc><changefreq>daily</changefreq><priority>0.6</priority></url>
+  <url><loc>https://tbib.space/course/85580e1e-cd0a-40de-a5b8-e8cfa1c53bfa</loc><changefreq>daily</changefreq><priority>0.6</priority></url>
+  <url><loc>https://tbib.space/course/e86cb561-2fed-4194-9be6-c826ac17be71</loc><changefreq>daily</changefreq><priority>0.6</priority></url>
+  <url><loc>https://tbib.space/course/f95d3829-4f5a-47aa-b111-b11155558ad2</loc><changefreq>daily</changefreq><priority>0.6</priority></url>
+  <url><loc>https://tbib.space/course/2c85b43e-28c2-403a-adc1-d41055ec7678</loc><changefreq>daily</changefreq><priority>0.6</priority></url>
+  <url><loc>https://tbib.space/course/0fc4e83f-2c32-4e9e-8d91-157f6626de70</loc><changefreq>daily</changefreq><priority>0.6</priority></url>
+  <url><loc>https://tbib.space/course/33804c2b-c719-4877-8f42-0219839cddde</loc><changefreq>daily</changefreq><priority>0.6</priority></url>
+  <url><loc>https://tbib.space/course/b8c79d79-7e1d-44f5-a010-954a4f6cb9e1</loc><changefreq>daily</changefreq><priority>0.6</priority></url>
+  <url><loc>https://tbib.space/course/0ca1d4d1-e75e-452d-a177-72b343e55d22</loc><changefreq>daily</changefreq><priority>0.6</priority></url>
+  <url><loc>https://tbib.space/course/9ed2c4b0-8586-4bb8-8d1c-450a1472f198</loc><changefreq>daily</changefreq><priority>0.6</priority></url>
+  <url><loc>https://tbib.space/course/497725d7-e8ed-412b-bcf4-9f7f823e546d</loc><changefreq>daily</changefreq><priority>0.6</priority></url>
+  <url><loc>https://tbib.space/course/6b1142ca-d4cc-4030-8731-f569fe9db8ae</loc><changefreq>daily</changefreq><priority>0.6</priority></url>
+  <url><loc>https://tbib.space/course/a8d9f131-30e8-4663-a616-90c83ae777a7</loc><changefreq>daily</changefreq><priority>0.6</priority></url>
+  <url><loc>https://tbib.space/course/997ea65d-92d2-4ca3-b9ef-4f3342ccc93a</loc><changefreq>daily</changefreq><priority>0.6</priority></url>
+  <url><loc>https://tbib.space/course/c3bbc6f0-1aa2-4f66-b254-92c2f1d579ab</loc><changefreq>daily</changefreq><priority>0.6</priority></url>
+  <url><loc>https://tbib.space/course/2827a543-fec7-4743-8db0-2b928d68ed00</loc><changefreq>daily</changefreq><priority>0.6</priority></url>
+  <url><loc>https://tbib.space/course/03232ec4-d747-447b-bf04-6fcb3cae2141</loc><changefreq>daily</changefreq><priority>0.6</priority></url>
+  <url><loc>https://tbib.space/course/c598275e-1a9e-4085-8f1e-bdc58d97fccd</loc><changefreq>daily</changefreq><priority>0.6</priority></url>
+  <url><loc>https://tbib.space/course/061e5812-cbb8-42ef-bcd7-4311d47d22a1</loc><changefreq>daily</changefreq><priority>0.6</priority></url>
+  <url><loc>https://tbib.space/course/8f116213-381f-4694-bb64-fae1bc8b0d83</loc><changefreq>daily</changefreq><priority>0.6</priority></url>
+  <url><loc>https://tbib.space/course/bc6346bb-73c3-44f4-a278-e1b605b498ad</loc><changefreq>daily</changefreq><priority>0.6</priority></url>
+  <url><loc>https://tbib.space/course/c004e692-73e0-418b-bf91-5d9ef73a7f0d</loc><changefreq>daily</changefreq><priority>0.6</priority></url>
+  <url><loc>https://tbib.space/course/50677cff-612c-443a-a292-2834483890b7</loc><changefreq>daily</changefreq><priority>0.6</priority></url>
+  <url><loc>https://tbib.space/course/c61a080f-953a-401d-ae27-c189f9139c2d</loc><changefreq>daily</changefreq><priority>0.6</priority></url>
+  <url><loc>https://tbib.space/course/9f1e1877-55b7-4c44-8452-578048fea5df</loc><changefreq>daily</changefreq><priority>0.6</priority></url>
+  <url><loc>https://tbib.space/course/1001c8a7-707f-4ae4-a290-27430ac601e8</loc><changefreq>daily</changefreq><priority>0.6</priority></url>
+  <url><loc>https://tbib.space/course/018e8bec-5ee1-4108-aa34-bf9ef124c9c1</loc><changefreq>daily</changefreq><priority>0.6</priority></url>
 </urlset>
