@@ -1,19 +1,20 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Suspense, lazy } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { supabase } from "../lib/supabaseClient";
-import Chatbot from "../components/Chatbot";
 import {
   Video,
   FileText,
   ChevronRight,
   ArrowLeft,
   ArrowRight,
-  ClipboardX,
   Dices,
 } from "lucide-react";
-import PDFViewer from "../components/PDFViewer";
-import Flashcards from "../components/Flashcards";
 import Loader from "../components/Loader";
+
+// Lazy load components that aren't needed immediately
+const Chatbot = lazy(() => import("../components/Chatbot"));
+const PDFViewer = lazy(() => import("../components/PDFViewer"));
+const Flashcards = lazy(() => import("../components/Flashcards"));
 
 export function CoursePage() {
   const { courseId } = useParams();
@@ -22,57 +23,77 @@ export function CoursePage() {
   const [moduleCourses, setModuleCourses] = useState([]);
   const [selectedVideo, setSelectedVideo] = useState(0);
   const [selectedPdf, setSelectedPdf] = useState(0);
-    const [loading, setLoading] = useState(true);
-
-useEffect(() => {
-  let isMounted = true; // ✅ منع التحديث إذا تم إلغاء المكون
-
-  async function fetchCourse() {
-    setLoading(true);
-    const { data, error } = await supabase
-      .from("courses")
-      .select("*")
-      .eq("id", courseId)
-      .single();
-
-    if (error) {
-      console.error("Error fetching course:", error);
-    } else if (isMounted) {
-      setCourseData(data);
-    }
-    setLoading(false);
-  }
-
-  if (courseId) {
-    fetchCourse();
-  }
-
-  return () => {
-    isMounted = false; // ✅ تنظيف `useEffect` لتجنب تنفيذ غير ضروري
-  };
-}, [courseId]);
-
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    let isMounted = true;
+
+    async function fetchCourse() {
+      setLoading(true);
+      try {
+        const { data, error } = await supabase
+          .from("courses")
+          .select("*")
+          .eq("id", courseId)
+          .single();
+
+        if (error) {
+          console.error("Error fetching course:", error);
+        } else if (isMounted) {
+          setCourseData(data);
+        }
+      } catch (error) {
+        console.error("Error in fetch operation:", error);
+      } finally {
+        if (isMounted) {
+          setLoading(false);
+        }
+      }
+    }
+
+    if (courseId) {
+      fetchCourse();
+    }
+
+    return () => {
+      isMounted = false;
+    };
+  }, [courseId]);
+
+  useEffect(() => {
+    let isMounted = true;
+
     async function fetchModuleCourses() {
       if (!courseData?.module_id) return;
 
-      const { data, error } = await supabase
-        .from("courses")
-        .select("id, title")
-        .eq("module_id", courseData.module_id)
-        .order("order", { ascending: true }); // ✅ ترتيب حسب `order`
+      try {
+        const { data, error } = await supabase
+          .from("courses")
+          .select("id, title")
+          .eq("module_id", courseData.module_id)
+          .order("order", { ascending: true });
 
-      if (error) {
-        console.error("Error fetching module courses:", error);
-      } else {
-        setModuleCourses(data);
+        if (error) {
+          console.error("Error fetching module courses:", error);
+        } else if (isMounted) {
+          setModuleCourses(data);
+        }
+      } catch (error) {
+        console.error("Error in fetch operation:", error);
+      } finally {
+        if (isMounted) {
+          setLoading(false);
+        }
       }
-      setLoading(false);
     }
+
     if (courseData) {
       fetchModuleCourses();
     }
+
+    return () => {
+      isMounted = false;
+    };
   }, [courseData]);
 
   if (loading) {
@@ -91,7 +112,6 @@ useEffect(() => {
     );
   }
 
-  // Determine previous and next courses within the same module
   const currentIndex = moduleCourses.findIndex(
     (course) => course.id === courseId
   );
@@ -102,17 +122,24 @@ useEffect(() => {
       ? moduleCourses[currentIndex + 1]
       : null;
 
-  const navigateToCourse = (courseId: string) => {
+  const navigateToCourse = (courseId) => {
     navigate(`/course/${courseId}`);
     setSelectedVideo(0);
     setSelectedPdf(0);
   };
 
   return (
-    <div className="w-screen sm:w-full space-y-8 lg:px-8">
+    <div className="w-full space-y-8 lg:px-8">
       <div className="px-4 lg:px-0">
-        {/* Course Navigation (only within the same module) */}
-        <Chatbot />
+        {/* Lazy load Chatbot component */}
+        <Suspense
+          fallback={
+            <div className="h-10 w-full bg-gray-100 animate-pulse rounded-lg"></div>
+          }
+        >
+          <Chatbot />
+        </Suspense>
+
         <div className="flex items-center justify-between mb-6">
           <button
             onClick={() =>
@@ -124,6 +151,11 @@ useEffect(() => {
                 : "text-gray-300 cursor-not-allowed"
             }`}
             disabled={!previousCourse}
+            aria-label={
+              previousCourse
+                ? `Previous course: ${previousCourse.title}`
+                : "No previous course"
+            }
           >
             <ArrowLeft className="w-5 h-5" />
             <span className="hidden sm:inline">
@@ -139,6 +171,9 @@ useEffect(() => {
                 : "text-gray-300 cursor-not-allowed"
             }`}
             disabled={!nextCourse}
+            aria-label={
+              nextCourse ? `Next course: ${nextCourse.title}` : "No next course"
+            }
           >
             <span className="hidden sm:inline">
               {nextCourse ? nextCourse.title : "No Next Course"}
@@ -153,10 +188,10 @@ useEffect(() => {
 
       {/* Video Section */}
       <div className="bg-white shadow-sm p-4 mx-4 lg:mx-0 rounded-lg">
-        <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+        <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
           <Video className="w-5 h-5 mr-2 text-blue-600" />
           Videos
-        </h3>
+        </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
           {courseData.videos.map((video, index) => (
             <button
@@ -167,6 +202,7 @@ useEffect(() => {
                   ? "bg-blue-50 text-blue-600"
                   : "hover:bg-gray-50 text-gray-700"
               }`}
+              aria-label={`Select video: ${video.title}`}
             >
               <ChevronRight
                 className={`w-4 h-4 mr-2 flex-shrink-0 ${
@@ -179,26 +215,30 @@ useEffect(() => {
         </div>
       </div>
 
-      {/* Video Player */}
-      <div className="w-screen sm:w-full bg-white shadow-sm overflow-hidden">
-        <iframe
-          src={courseData.videos[selectedVideo]?.url}
-          loading="lazy"
-          frameBorder="0"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-          referrerPolicy="strict-origin-when-cross-origin"
-          allowFullScreen
-          className="w-full aspect-video sm:h-auto px-1 rounded-2xl"
-          title="Course Video"
-        />
+      {/* Video Player - Lazy loaded with intersection observer */}
+      <div className="w-full bg-white shadow-sm overflow-hidden">
+        {courseData.videos.length > 0 && (
+          <iframe
+            src={courseData.videos[selectedVideo]?.url}
+            loading="lazy"
+            frameBorder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            referrerPolicy="strict-origin-when-cross-origin"
+            allowFullScreen
+            className="w-full aspect-video sm:h-auto px-1 rounded-2xl"
+            title={`Video: ${courseData.videos[selectedVideo]?.title}`}
+            width="100%"
+            height="100%"
+          />
+        )}
       </div>
 
       {/* PDF Section */}
       <div className="bg-white shadow-sm p-4 mx-4 lg:mx-0 rounded-lg">
-        <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+        <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
           <FileText className="w-5 h-5 mr-2 text-red-600" />
           PDF Resources
-        </h3>
+        </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
           {courseData.pdfs.map((pdf, index) => (
             <button
@@ -209,6 +249,7 @@ useEffect(() => {
                   ? "bg-red-50 text-red-600"
                   : "hover:bg-gray-50 text-gray-700"
               }`}
+              aria-label={`Select PDF: ${pdf.title}`}
             >
               <ChevronRight
                 className={`w-4 h-4 mr-2 flex-shrink-0 ${
@@ -221,42 +262,56 @@ useEffect(() => {
         </div>
       </div>
 
-      {/* PDF Viewer */}
-      <div className="mx-4 lg:mx-0">
-        <PDFViewer
-          url={courseData.pdfs[selectedPdf]?.url}
-          className="h-[80vh]"
-          style={{ width: "100%", height: "80vh" }}
-        />
-
-        {/* زر فتح الـ PDF في نافذة جديدة */}
-        <div className="flex justify-center items-center h-40">
-          <button
-            onClick={() =>
-              window.open(
-                `/pdf-viewer/${encodeURIComponent(
-                  courseData.pdfs[selectedPdf]?.url
-                )}`,
-                "_blank"
-              )
+      {/* PDF Viewer - Show directly without waiting for user interaction */}
+      {courseData.pdfs.length > 0 && (
+        <div className="mx-4 lg:mx-0">
+          <Suspense
+            fallback={
+              <div className="h-80vh w-full bg-gray-100 animate-pulse rounded-lg"></div>
             }
-            className="px-6 py-3 bg-blue-600 text-white rounded-lg text-lg font-semibold shadow-md hover:bg-blue-700 transition"
           >
-            Show PDF
-          </button>
-        </div>
-      </div>
+            <PDFViewer
+              url={courseData.pdfs[selectedPdf]?.url}
+              className="h-[80vh]"
+              style={{ width: "100%", height: "80vh" }}
+            />
+          </Suspense>
 
-      {/* Flashcards */}
+          <div className="flex justify-center items-center h-20 mt-4">
+            <button
+              onClick={() =>
+                window.open(
+                  `/pdf-viewer/${encodeURIComponent(
+                    courseData.pdfs[selectedPdf]?.url
+                  )}`,
+                  "_blank"
+                )
+              }
+              className="px-6 py-3 bg-blue-600 text-white rounded-lg text-lg font-semibold shadow-md hover:bg-blue-700 transition"
+              aria-label="Open PDF in new window"
+            >
+              Show PDF
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Flashcards - Lazy loaded */}
       <div className="bg-white shadow-sm p-4 lg:mx-0 rounded-lg">
-        <h3 className="text-lg font-semibold text-gray-900 flex items-center">
+        <h2 className="text-lg font-semibold text-gray-900 flex items-center">
           <Dices className="w-5 h-5 mr-2 text-black" />
           Flashcards
-        </h3>
+        </h2>
       </div>
       <div className="flex justify-center">
         <div className="w-full sm:w-2/3">
-          <Flashcards lessonId={courseData.id} />
+          <Suspense
+            fallback={
+              <div className="h-40 w-full bg-gray-100 animate-pulse rounded-lg"></div>
+            }
+          >
+            <Flashcards lessonId={courseData.id} />
+          </Suspense>
         </div>
       </div>
     </div>
