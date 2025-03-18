@@ -105,7 +105,7 @@ const sendMessage = async () => {
               damping: 10,
               delay: 0.1,
             }}
-            className="fixed bottom-6 right-6 w-80 md:w-[420px] bg-[#212121] text-white shadow-xl flex flex-col rounded-xl"
+            className="fixed bottom-6 right-6 w-80 md:w-[420px] z-20 bg-[#212121] text-white shadow-xl flex flex-col rounded-xl"
           >
             {/* 🔹 الهيدر */}
             <div className="bg-[#303030] p-4 flex justify-between items-center rounded-xl">

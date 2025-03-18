@@ -19,7 +19,6 @@ async function generateSitemap() {
   // 🔹 بناء ملف `sitemap.xml`
   let sitemap = `<?xml version="1.0" encoding="UTF-8"?>\n`;
     sitemap += `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n`;
-    sitemap += `<?xml-stylesheet type="text/xsl" href="/sitemap.xsl"?>\n`;
 
 
   // 🔹 إضافة الروابط الأساسية
