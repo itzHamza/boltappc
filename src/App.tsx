@@ -22,6 +22,7 @@ import { ModulePage } from "./pages/ModulePage";
 import { UnitePage } from "./pages/UnitePage";
 import { CoursePage } from "./pages/CoursePage";
 import PDFViewerPage from "./pages/PDFViewerPage";
+import {GradeCalculatorPage} from "./pages/gradecalc";
 
 
 
@@ -55,7 +56,6 @@ function App() {
   }, []);
 
   return (
-    
     <Router>
       <Routes>
         <Route
@@ -75,10 +75,22 @@ function App() {
                       <Route path="/" element={<AdminAddModuleUnite />} />
                       <Route path="/lessons" element={<AdminLessons />} />
                       <Route path="/edit" element={<EditCourse />} />
-                      <Route path="/flashcards" element={<FlashcardsManager />} />
-                      <Route path="/editflashcards" element={<EditDeleteFlashcards />} />
-                      <Route path="/editcourseorder" element={<EditCourseOrder />} />
-                      <Route path="/editunitemodules" element={<ManageUniteModules />} />
+                      <Route
+                        path="/flashcards"
+                        element={<FlashcardsManager />}
+                      />
+                      <Route
+                        path="/editflashcards"
+                        element={<EditDeleteFlashcards />}
+                      />
+                      <Route
+                        path="/editcourseorder"
+                        element={<EditCourseOrder />}
+                      />
+                      <Route
+                        path="/editunitemodules"
+                        element={<ManageUniteModules />}
+                      />
                     </Routes>
                   </div>
                 </main>
@@ -101,6 +113,7 @@ function App() {
                   <Routes>
                     {/* الصفحة الرئيسية */}
                     <Route path="/" element={<HomePage />} />
+                    <Route path="/calc" element={<GradeCalculatorPage />} />
 
                     {/* صفحة السنة الدراسية */}
                     <Route path="/year/:yearId" element={<YearPage />} />
