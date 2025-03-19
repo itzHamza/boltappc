@@ -347,82 +347,261 @@ export function GradeCalculatorPage() {
     const printWindow = window.open("", "_blank");
     if (!printWindow || !result) return;
 
+    const formatDate = (date) => {
+      return date.toLocaleDateString("fr-FR", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      });
+    };
+
+    const getGradeColor = (grade) => {
+      if (grade < 5) return "#dc2626"; // Red for grades below 5
+      if (grade < 10) return "#333333"; // Normal color for grades between 5-10
+      return "#16a34a"; // Green for grades above 10
+    };
+
+    const getGradeRemark = (grade) => {
+      if (grade < 5) return "Rattrapage";
+      if (grade < 10) return "Doit améliorer";
+      return "Validé";
+    };
+
+    const today = new Date();
+    const academicYear = `${today.getFullYear() - 1}-${today.getFullYear()}`;
+    const studentName = "Étudiant(e)"; // Placeholder
+
+    // Get subjects and grades based on calculation type
+    const subjectsToDisplay =
+      calculationType === "annual"
+        ? Object.entries(result.subjectAverages || {})
+        : (calculationType === "semester1"
+            ? SEMESTER1_SUBJECTS
+            : SEMESTER2_SUBJECTS
+          ).map((subj) => {
+            const grade =
+              grades[subj.name]?.[
+                calculationType === "semester1" ? "sem1" : "sem2"
+              ];
+            return [subj.name, grade];
+          });
+
     const content = `
-      <!DOCTYPE html>
-      <html>
-      <head>
-        <title>Résultats - Calculateur de Notes</title>
-        <style>
-          body { font-family: Arial, sans-serif; padding: 20px; }
-          h1 { color: #333; }
-          .result { font-size: 24px; font-weight: bold; margin: 20px 0; }
-          .warning { color: #c53030; margin-top: 10px; }
-          .subject { margin: 5px 0; }
-          .status { font-size: 18px; font-weight: bold; margin-top: 15px; }
-          .average { font-size: 32px; text-align: center; margin: 30px 0; }
-        </style>
-      </head>
-      <body>
-        <h1>Résultats - ${
-          calculationType === "semester1"
-            ? "Semestre 1"
-            : calculationType === "semester2"
-            ? "Semestre 2"
-            : "Moyenne Annuelle"
-        }</h1>
-        <div class="average">${result.average.toFixed(2)}/20 ${getEmojiForScore(
-      result.average
-    )}</div>
-        <div class="status" style="color: ${
-          result.status === "Passage en deuxième année" ||
-          result.status === "Réussite"
-            ? "green"
-            : "red"
-        }">
-          ${result.status}
-        </div>
-        ${
-          result.subjectAverages
-            ? `<h2>Moyennes par matière:</h2>
-              ${Object.entries(result.subjectAverages)
-                .map(
-                  ([subject, average]) => `
-                <div class="subject">
-                  ${subject}: ${average.toFixed(2)}/20 ${
-                    average < 5 ? "(Rattrapage)" : ""
-                  }
-                </div>
-              `
-                )
-                .join("")}`
-            : ""
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <title>Relevé de Notes - ${studentName}</title>
+      <link href="https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@300;400;700&family=Serif:wght@400;700&display=swap" rel="stylesheet">
+      <style>
+        @page { margin: 2cm; }
+        *{font-family: "Lexend Deca", serif;}  
+        body { 
+          font-family: Arial, sans-serif;
+          line-height: 1.6;
+          color: #333;
+          margin: 0;
+          padding: 0;
         }
+        .container {
+          max-width: 800px;
+          margin: 0 auto;
+          padding: 20px;
+        }
+        .header {
+          text-align: center;
+          margin-bottom: 30px;
+          border-bottom: 2px solid #1e40af;
+          padding-bottom: 20px;
+        }
+        .logo-placeholder {
+          font-size: 24px;
+          font-weight: bold;
+          margin-bottom: 10px;
+        }
+        h1 {
+          font-size: 24px;
+          color: #1e40af;
+          margin: 10px 0;
+        }
+        .student-info {
+          margin: 20px 0;
+          padding: 15px;
+          background-color: #f1f5f9;
+          border-radius: 5px;
+        }
+        .student-info p {
+          margin: 5px 0;
+        }
+        table {
+          width: 100%;
+          border-collapse: collapse;
+          margin: 20px 0;
+        }
+        th, td {
+          padding: 12px 15px;
+          border: 1px solid #ddd;
+          text-align: left;
+        }
+        th {
+          background-color: #1e40af;
+          color: white;
+          font-weight: bold;
+        }
+        tr:nth-child(even) {
+          background-color: #f8fafc;
+        }
+        .results-summary {
+          margin: 30px 0;
+          padding: 15px;
+          background-color: #f1f5f9;
+          border-radius: 5px;
+          text-align: center;
+        }
+        .average {
+          font-size: 24px;
+          font-weight: bold;
+          margin: 10px 0;
+        }
+        .status {
+          font-size: 18px;
+          font-weight: bold;
+          padding: 8px 15px;
+          border-radius: 5px;
+          display: inline-block;
+          margin: 10px 0;
+        }
+        .footer {
+          margin-top: 40px;
+          text-align: center;
+          font-size: 12px;
+          color: #666;
+        }
+        .warning {
+          color: #dc2626;
+          font-weight: bold;
+        }
+      </style>
+    </head>
+    <body>
+      <div class="container">
+        <div class="header">
+          <div class="logo-placeholder"><img src="./public/loogo.png" alt="LOGO" style="width: 120px;"></div>
+          <h1>RELEVÉ DE NOTES</h1>
+          <p>Année universitaire ${academicYear}</p>
+        </div>
+        
+        <div class="student-info">
+          <p><strong>Nom et prénom:</strong> ${studentName}</p>
+          <p><strong>Spécialisation:</strong> Médecine</p>
+          <p><strong>Période:</strong> ${
+            calculationType === "semester1"
+              ? "Premier Semestre"
+              : calculationType === "semester2"
+              ? "Deuxième Semestre"
+              : "Année Complète"
+          }</p>
+          <p><strong>Date d'édition:</strong> ${formatDate(today)}</p>
+        </div>
+        
+        <table>
+          <thead>
+            <tr>
+              <th>Matière</th>
+              <th>Coefficient</th>
+              <th>Note</th>
+              <th>Observation</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${subjectsToDisplay
+              .map(([subject, grade]) => {
+                const displayGrade =
+                  calculationType === "annual" ? grade : grade || 0;
+                const coefficient =
+                  SUBJECTS.find((s) => s.name === subject)?.coefficient || 1;
+                return `
+                <tr>
+                  <td>${subject}</td>
+                  <td>${coefficient}</td>
+                  <td style="color: ${getGradeColor(
+                    displayGrade
+                  )}; font-weight: bold;">
+                    ${
+                      typeof displayGrade === "number"
+                        ? displayGrade.toFixed(2)
+                        : "-"
+                    }/20
+                  </td>
+                  <td style="color: ${getGradeColor(displayGrade)};">
+                    ${
+                      typeof displayGrade === "number"
+                        ? getGradeRemark(displayGrade)
+                        : "-"
+                    }
+                  </td>
+                </tr>
+              `;
+              })
+              .join("")}
+          </tbody>
+        </table>
+        
+        <div class="results-summary">
+          <h2>Résultats Finaux</h2>
+          <div class="average">Moyenne générale: ${result.average.toFixed(
+            2
+          )}/20</div>
+          <div class="status" style="background-color: ${
+            result.status.includes("Réussite") || result.status.includes("Pass")
+              ? "#dcfce7; color: #16a34a;"
+              : "#fee2e2; color: #dc2626;"
+          }">
+            ${result.status}
+          </div>
+        </div>
+        
         ${
           result.warnings.length > 0
-            ? `<h2>Avertissements:</h2>
+            ? `
+          <div class="warnings">
+            <h3>Observations importantes:</h3>
+            <ul>
               ${result.warnings
                 .map(
                   (warning) => `
-                <div class="warning">⚠️ ${warning}</div>
+                <li class="warning">${warning}</li>
               `
                 )
-                .join("")}`
+                .join("")}
+            </ul>
+          </div>
+        `
             : ""
         }
-        <div style="margin-top: 50px; font-size: 12px; color: #666;">
-          Généré le ${new Date().toLocaleDateString(
-            "fr-FR"
-          )} à ${new Date().toLocaleTimeString("fr-FR")}
+        
+        <div class="footer">
+          <p>Ce document est un relevé de notes n'est pas officiel</p>
+          <p>Généré le ${formatDate(today)} à ${today.toLocaleTimeString(
+      "fr-FR"
+    )}</p>
         </div>
-      </body>
-      </html>
-    `;
+      </div>
+    </body>
+    </html>
+  `;
 
     printWindow.document.write(content);
     printWindow.document.close();
     printWindow.focus();
     setTimeout(() => printWindow.print(), 500);
-  }, [result, calculationType, getEmojiForScore]);
+  }, [
+    result,
+    calculationType,
+    grades,
+    SEMESTER1_SUBJECTS,
+    SEMESTER2_SUBJECTS,
+    SUBJECTS,
+  ]);
 
   return (
     <div className="max-w-4xl mx-auto py-8 px-4">
@@ -448,7 +627,7 @@ export function GradeCalculatorPage() {
         </motion.div>
       )}
 
-      <div className="flex flex-wrap gap-4 mb-8">
+      <div className="flex flex-wrap justify-center gap-4 mb-8">
         {(["semester1", "semester2", "annual"] as const).map((type) => (
           <button
             key={type}
@@ -470,7 +649,7 @@ export function GradeCalculatorPage() {
 
         <button
           onClick={resetGrades}
-          className="px-4 py-2 rounded-lg font-medium transition-colors bg-red-100 text-red-600 hover:bg-red-200 ml-auto flex items-center gap-2"
+          className="px-4 py-2 rounded-lg font-medium transition-colors bg-red-100 text-red-600 hover:bg-red-200 ml-auto flex justify-center items-center gap-2"
         >
           <RefreshCw className="w-4 h-4" />
           Réinitialiser
