@@ -199,7 +199,8 @@ export function GradeCalculatorPage() {
       let totalWeightedGrade = 0;
       let totalCoefficients = 0;
       const warnings: string[] = [];
-      let hasGradeBelow5 = false;
+      let hasDirectRattrapage = false;
+      let hasCompensationNeeded = false;
 
       semesterSubjects.forEach((subject) => {
         const grade = grades[subject.name]?.[semesterKey];
@@ -208,19 +209,40 @@ export function GradeCalculatorPage() {
           totalCoefficients += subject.coefficient;
 
           if (grade < 5) {
-            hasGradeBelow5 = true;
-            warnings.push(`Rattrapage requis pour ${subject.name}`);
+            if (
+              (semesterKey === "sem1" &&
+                (subject.name === "Embryologie" || subject.name === "SSH")) ||
+              (semesterKey === "sem2" &&
+                (subject.name === "Physiologie" ||
+                  subject.name === "Histologie"))
+            ) {
+              hasDirectRattrapage = true;
+              warnings.push(`Rattrapage direct requis pour ${subject.name}`);
+            } else {
+              hasCompensationNeeded = true;
+              warnings.push(
+                `⚠️ Danger Rattrapage pour ${
+                  subject.name
+                }, compensation requise en Semestre ${
+                  semesterKey === "sem1" ? "2" : "1"
+                }`
+              );
+            }
           }
         }
       });
 
       const average =
         totalCoefficients > 0 ? totalWeightedGrade / totalCoefficients : 0;
-      const status = hasGradeBelow5
+      const status = hasDirectRattrapage
         ? "Rattrapage"
+        : hasCompensationNeeded
+        ? `⚠️ Danger Rattrapage, compensation requise en Semestre ${
+            semesterKey === "sem1" ? "2" : "1"
+          }`
         : average >= 10
         ? "Réussite"
-        : "Rattrapage";
+        : "Note insuffisante";
 
       return { average, warnings, status };
     },
@@ -232,7 +254,8 @@ export function GradeCalculatorPage() {
     let totalWeightedGrade = 0;
     let totalCoefficients = 0;
     const warnings: string[] = [];
-    let hasGradeBelow5 = false;
+    const subjectsBelowFive: string[] = [];
+    const subjectsBetweenFiveAndTen: string[] = [];
 
     SUBJECTS.forEach((subject) => {
       const sem1Grade = grades[subject.name]?.sem1;
@@ -257,19 +280,35 @@ export function GradeCalculatorPage() {
         totalCoefficients += subject.coefficient;
 
         if (average < 5) {
-          hasGradeBelow5 = true;
-          warnings.push(`Rattrapage requis pour ${subject.name}`);
+          subjectsBelowFive.push(subject.name);
+        } else if (average < 10) {
+          subjectsBetweenFiveAndTen.push(subject.name);
         }
       }
     });
 
     const average =
       totalCoefficients > 0 ? totalWeightedGrade / totalCoefficients : 0;
-    const status = hasGradeBelow5
-      ? "Rattrapage"
-      : average >= 10
-      ? "Passage en deuxième année"
-      : "Rattrapage";
+
+    let status: string;
+    if (average >= 10) {
+      if (subjectsBelowFive.length > 0) {
+        status = "Rattrapage";
+        subjectsBelowFive.forEach((subject) => {
+          warnings.push(`Rattrapage obligatoire pour ${subject}`);
+        });
+      } else {
+        status = "✅ Pass to the next year";
+      }
+    } else {
+      status = "Rattrapage";
+      subjectsBelowFive.forEach((subject) => {
+        warnings.push(`Rattrapage obligatoire pour ${subject}`);
+      });
+      subjectsBetweenFiveAndTen.forEach((subject) => {
+        warnings.push(`Rattrapage facultatif pour ${subject}`);
+      });
+    }
 
     return { average, warnings, status, subjectAverages };
   }, [grades]);
