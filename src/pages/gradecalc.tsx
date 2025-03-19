@@ -485,7 +485,7 @@ export function GradeCalculatorPage() {
     <body>
       <div class="container">
         <div class="header">
-          <div class="logo-placeholder"><img src="./public/loogo.png" alt="LOGO" style="width: 120px;"></div>
+          <div class="logo-placeholder"><img src="https://tbib.space/loogo.png" alt="LOGO" style="width: 120px;"></div>
           <h1>RELEVÉ DE NOTES</h1>
           <p>Année universitaire ${academicYear}</p>
         </div>

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Search, User, Menu, X, GraduationCap } from "lucide-react";
+import { Search, User, Menu, X, GraduationCap, Calculator } from "lucide-react";
 import { supabase } from "../../lib/supabaseClient";
 import { cn } from "../../lib/utils";
 import logo from "/lgo.svg"; // ✅ يضمن تحميل الصورة بشكل صحيح
@@ -52,6 +52,13 @@ export function Header() {
       name: "Sixth Year Medicine",
       icon: GraduationCap,
       href: "/year/6",
+      color: "text-indigo-600",
+      bgColor: "bg-indigo-50",
+    },
+    {
+      name: "Calc grades",
+      icon: Calculator,
+      href: "/calc",
       color: "text-indigo-600",
       bgColor: "bg-indigo-50",
     },
