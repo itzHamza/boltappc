@@ -580,7 +580,7 @@ export function GradeCalculatorPage() {
         }
         
         <div class="footer">
-          <p>Ce document est un relevé de notes n'est pas officiel</p>
+          <p>Ce document est un relevé de notes non officiel</p>
           <p>Généré le ${formatDate(today)} à ${today.toLocaleTimeString(
       "fr-FR"
     )}</p>
