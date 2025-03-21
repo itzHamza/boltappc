@@ -1,6 +1,17 @@
 import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Search, User, Menu, X, GraduationCap, Calculator } from "lucide-react";
+import {
+  Search,
+  User,
+  Menu,
+  X,
+  GraduationCap,
+  Calculator,
+  Briefcase,
+  HeartPulse,
+  Dna,
+  Stethoscope,
+} from "lucide-react";
 import { supabase } from "../../lib/supabaseClient";
 import { cn } from "../../lib/utils";
 import logo from "/lgo.svg"; // ✅ يضمن تحميل الصورة بشكل صحيح
@@ -14,32 +25,32 @@ export function Header() {
 
   const navigationItems = [
     {
-      name: "First Year Medicine",
-      icon: GraduationCap,
+      name: "Première Année",
+      icon: Dna,
       href: "/year/1",
       color: "text-blue-600",
       bgColor: "bg-blue-50",
     },
     {
-      name: "Second Year Medicine",
-      icon: GraduationCap,
+      name: "Deuxième Année",
+      icon: HeartPulse,
       href: "/year/2",
+      color: "text-red-600",
+      bgColor: "bg-red-50",
+    },
+    {
+      name: "Troisième Année",
+      icon: Stethoscope,
+      href: "/year/3",
       color: "text-purple-600",
       bgColor: "bg-purple-50",
     },
     {
-      name: "Third Year Medicine",
-      icon: GraduationCap,
-      href: "/year/3",
+      name: "Quatrième Année",
+      icon: Briefcase,
+      href: "/year/4",
       color: "text-green-600",
       bgColor: "bg-green-50",
-    },
-    {
-      name: "Fourth Year Medicine",
-      icon: GraduationCap,
-      href: "/year/4",
-      color: "text-red-600",
-      bgColor: "bg-red-50",
     },
     // {
     //   name: "Fifth Year Medicine",
@@ -89,7 +100,7 @@ export function Header() {
 
   return (
     <>
-            <Analytics />
+      <Analytics />
       {/* زر فتح القائمة الجانبية في الجوال */}
       <button
         onClick={() => setIsSidebarOpen(!isSidebarOpen)}
