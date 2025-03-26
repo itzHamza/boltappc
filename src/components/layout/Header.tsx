@@ -14,7 +14,9 @@ import {
 } from "lucide-react";
 import { supabase } from "../../lib/supabaseClient";
 import { cn } from "../../lib/utils";
-import logo from "/lgo.svg"; // ✅ يضمن تحميل الصورة بشكل صحيح
+import logo from "/lgo.svg";
+
+
 import { Analytics } from "@vercel/analytics/react";
 
 export function Header() {
