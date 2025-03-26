@@ -197,7 +197,16 @@ export default function Flashcards({ lessonId }) {
   };
 
   // Navigation Methods
-  const goToNextCard = () => {
+const goToNextCard = () => {
+  if (!flipped) {
+    // If already not flipped, directly update the index
+    setCurrentIndex((i) => {
+      const newIndex = i < flashcards.length - 1 ? i + 1 : i;
+      setInputValue(String(newIndex + 1)); // Update inputValue
+      return newIndex;
+    });
+  } else {
+    // If flipped, turn it false and wait 200ms
     setFlipped(false);
     setTimeout(() => {
       setCurrentIndex((i) => {
@@ -206,9 +215,19 @@ export default function Flashcards({ lessonId }) {
         return newIndex;
       });
     }, 200);
-  };
+  }
+};
 
-  const goToPreviousCard = () => {
+const goToPreviousCard = () => {
+  if (!flipped) {
+    // If already not flipped, directly update the index
+    setCurrentIndex((i) => {
+      const newIndex = i > 0 ? i - 1 : i;
+      setInputValue(String(newIndex + 1)); // Update inputValue
+      return newIndex;
+    });
+  } else {
+    // If flipped, turn it false and wait 200ms
     setFlipped(false);
     setTimeout(() => {
       setCurrentIndex((i) => {
@@ -217,7 +236,8 @@ export default function Flashcards({ lessonId }) {
         return newIndex;
       });
     }, 200);
-  };
+  }
+};
 
   const resetFlashcards = () => {
     setCurrentIndex(0);
