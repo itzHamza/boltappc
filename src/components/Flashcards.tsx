@@ -17,8 +17,8 @@ export default function Flashcards({ lessonId }) {
   const [flipped, setFlipped] = useState(false);
   const [inputValue, setInputValue] = useState("1");
   const [shuffleMode, setShuffleMode] = useState(false);
-  const [difficultCards, setDifficultCards] = useState<number[]>([]);
-  const [reviewingDifficultCards, setReviewingDifficultCards] = useState(false);
+  const [favoriteCards, setFavoriteCards] = useState<number[]>([]);
+  const [reviewingFavoriteCards, setReviewingFavoriteCards] = useState(false);
   const speechSynthesisRef = useRef<SpeechSynthesisUtterance | null>(null);
 
   // Fetch Flashcards
@@ -35,11 +35,11 @@ export default function Flashcards({ lessonId }) {
         setOriginalFlashcards(data);
         setFlashcards(data);
 
-        // Load difficult cards from localStorage
-        const savedDifficultCards = JSON.parse(
-          localStorage.getItem(`difficultCards_${lessonId}`) || "[]"
+        // Load favorite cards from localStorage
+        const savedFavoriteCards = JSON.parse(
+          localStorage.getItem(`favoriteCards_${lessonId}`) || "[]"
         );
-        setDifficultCards(savedDifficultCards);
+        setFavoriteCards(savedFavoriteCards);
       }
     }
 
@@ -62,8 +62,8 @@ export default function Flashcards({ lessonId }) {
           e.preventDefault();
           setFlipped(!flipped);
           break;
-        case "d":
-          markAsDifficult();
+        case "f":
+          toggleFavorite();
           break;
         case "s":
           toggleShuffleMode();
@@ -100,57 +100,40 @@ export default function Flashcards({ lessonId }) {
     setShuffleMode(!shuffleMode);
   };
 
-  // Difficult Cards Management
-  const markAsDifficult = () => {
+  // Favorite Cards Management
+  const toggleFavorite = () => {
     const currentCardId = flashcards[currentIndex].id;
-    const newDifficultCards = difficultCards.includes(currentCardId)
-      ? difficultCards.filter((id) => id !== currentCardId)
-      : [...difficultCards, currentCardId];
+    const newFavoriteCards = favoriteCards.includes(currentCardId)
+      ? favoriteCards.filter((id) => id !== currentCardId)
+      : [...favoriteCards, currentCardId];
 
-    setDifficultCards(newDifficultCards);
+    setFavoriteCards(newFavoriteCards);
     localStorage.setItem(
-      `difficultCards_${lessonId}`,
-      JSON.stringify(newDifficultCards)
+      `favoriteCards_${lessonId}`,
+      JSON.stringify(newFavoriteCards)
     );
   };
 
-  const toggleDifficultCardsReview = () => {
-    if (reviewingDifficultCards) {
+  const toggleFavoriteCardsReview = () => {
+    if (reviewingFavoriteCards) {
       // Return to all cards
       setFlashcards(originalFlashcards);
       setCurrentIndex(0);
     } else {
-      // Filter and show only difficult cards
-      const difficultCardsToReview = originalFlashcards.filter((card) =>
-        difficultCards.includes(card.id)
+      // Filter and show only favorite cards
+      const favoriteCardsToReview = originalFlashcards.filter((card) =>
+        favoriteCards.includes(card.id)
       );
-      setFlashcards(difficultCardsToReview);
-      setCurrentIndex(0);
+
+      if (favoriteCardsToReview.length > 0) {
+        setFlashcards(favoriteCardsToReview);
+        setCurrentIndex(0);
+      }
     }
-    setReviewingDifficultCards(!reviewingDifficultCards);
+    setReviewingFavoriteCards(!reviewingFavoriteCards);
   };
 
-  // PDF Export
-  const exportToPDF = () => {
-    const doc = new jsPDF();
-    const cardsToExport = reviewingDifficultCards
-      ? flashcards
-      : originalFlashcards;
-
-    doc.setFontSize(16);
-    doc.text("Flashcards", 10, 10);
-
-    cardsToExport.forEach((card, index) => {
-      doc.setFontSize(12);
-      doc.text(`Card ${index + 1}:`, 10, 20 + index * 50);
-      doc.text(`Question: ${card.question}`, 10, 30 + index * 50);
-      doc.text(`Answer: ${card.answer}`, 10, 40 + index * 50);
-    });
-
-    doc.save("flashcards.pdf");
-  };
-
-  // Text-to-Speech
+  // Text-to-Speech with French preference
   const speakFlashcard = () => {
     const currentCard = flashcards[currentIndex];
     const text = flipped ? currentCard.answer : currentCard.question;
@@ -161,6 +144,19 @@ export default function Flashcards({ lessonId }) {
     }
 
     const utterance = new SpeechSynthesisUtterance(text);
+
+    // Attempt to find a French voice
+    const voices = window.speechSynthesis.getVoices();
+    const frenchVoice = voices.find(
+      (voice) => voice.lang.startsWith("fr") || voice.name.includes("French")
+    );
+
+    if (frenchVoice) {
+      utterance.voice = frenchVoice;
+    } else {
+      console.warn("No French voice found. Using default voice.");
+    }
+
     window.speechSynthesis.speak(utterance);
     speechSynthesisRef.current = utterance;
   };
@@ -188,7 +184,7 @@ export default function Flashcards({ lessonId }) {
     }
   };
 
-  // Existing Input Navigation Logic...
+  // Input Navigation Logic
   const handleInputChange = (e) => {
     const value = e.target.value;
     if (value === "" || /^\d+$/.test(value)) {
@@ -242,17 +238,17 @@ export default function Flashcards({ lessonId }) {
         <button className="prev-next-button" onClick={toggleShuffleMode}>
           {shuffleMode ? "Unshuffle" : "Shuffle"}
         </button>
-        <button
-          className="prev-next-button"
-          onClick={toggleDifficultCardsReview}
-        >
-          {reviewingDifficultCards
-            ? "All Cards"
-            : `Review Difficult (${difficultCards.length})`}
-        </button>
-        <button className="prev-next-button" onClick={exportToPDF}>
-          Export PDF
-        </button>
+
+        {favoriteCards.length > 0 && (
+          <button
+            className="prev-next-button"
+            onClick={toggleFavoriteCardsReview}
+          >
+            {reviewingFavoriteCards
+              ? "All Cards"
+              : `Review Favorites (${favoriteCards.length})`}
+          </button>
+        )}
       </div>
 
       <div className="flashcard-container" onClick={() => setFlipped(!flipped)}>
@@ -270,16 +266,16 @@ export default function Flashcards({ lessonId }) {
             </button>
             <button
               className={`absolute top-2 left-2 ${
-                difficultCards.includes(flashcards[currentIndex].id)
-                  ? "text-red-500"
-                  : "text-white"
-              }`}
+                favoriteCards.includes(flashcards[currentIndex].id)
+                  ? "bg-yellow-500 text-white"
+                  : "text-gray-300 border border-gray-300"
+              } rounded-full p-1`}
               onClick={(e) => {
                 e.stopPropagation();
-                markAsDifficult();
+                toggleFavorite();
               }}
             >
-              ⭐
+              ★
             </button>
           </div>
           <div className="side back">
