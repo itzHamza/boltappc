@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import { supabase } from "../lib/supabaseClient";
+import { Star, Volume2 } from "lucide-react";
 import jsPDF from "jspdf";
 import "./Flashcards.css";
 
@@ -307,38 +308,38 @@ export default function Flashcards({ lessonId }) {
           <div className="side front">
             {flashcards[currentIndex]?.question}
             <button
-              className="absolute top-2 right-2 text-white"
+              className="absolute top-2 right-2 pr-2 p-1 text-black"
               onClick={(e) => {
                 e.stopPropagation();
                 speakFlashcard();
               }}
             >
-              🔊
+              <Volume2 />
             </button>
             <button
-              className={`absolute top-2 left-2 ${
-                favoriteCards.includes(flashcards[currentIndex].id)
-                  ? "bg-yellow-500 text-white"
-                  : "text-gray-300 border border-gray-300"
-              } rounded-full p-1`}
+              className="absolute top-2 left-2 pr-2 rounded-full p-1"
               onClick={(e) => {
                 e.stopPropagation();
                 toggleFavorite();
               }}
             >
-              ★
+              {favoriteCards.includes(flashcards[currentIndex].id) ? (
+                <Star fill="yellow" strokeWidth={0} />
+              ) : (
+                <Star className="text-grey-300" fill="none" strokeWidth={2} />
+              )}
             </button>
           </div>
           <div className="side back">
             {flashcards[currentIndex]?.answer}
             <button
-              className="absolute top-2 right-2 text-white"
+              className="absolute top-3 right-2 text-black pr-2"
               onClick={(e) => {
                 e.stopPropagation();
                 speakFlashcard();
               }}
             >
-              🔊
+              <Volume2 />
             </button>
           </div>
         </div>
