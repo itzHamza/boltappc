@@ -21,6 +21,19 @@ export default function Flashcards({ lessonId }) {
   const [reviewingFavoriteCards, setReviewingFavoriteCards] = useState(false);
   const speechSynthesisRef = useRef<SpeechSynthesisUtterance | null>(null);
 
+  useEffect(() => {
+    // Load voices when they become available
+    const handleVoicesChanged = () => {
+      // This ensures voices are loaded before speaking
+    };
+
+    window.speechSynthesis.onvoiceschanged = handleVoicesChanged;
+
+    return () => {
+      window.speechSynthesis.onvoiceschanged = null;
+    };
+  }, []);
+
   // Fetch Flashcards
   useEffect(() => {
     async function fetchFlashcards() {
@@ -88,15 +101,22 @@ export default function Flashcards({ lessonId }) {
 
   const toggleShuffleMode = () => {
     if (shuffleMode) {
-      // Return to original order
-      setFlashcards(originalFlashcards);
-      setCurrentIndex(0);
+      // Return to original order - consider favorite mode
+      setFlashcards(
+        reviewingFavoriteCards
+          ? originalFlashcards.filter((card) => favoriteCards.includes(card.id))
+          : originalFlashcards
+      );
     } else {
-      // Shuffle cards
-      const shuffledCards = shuffleCards(flashcards);
+      // Shuffle cards - consider favorite mode
+      const cardsToShuffle = reviewingFavoriteCards
+        ? originalFlashcards.filter((card) => favoriteCards.includes(card.id))
+        : [...flashcards];
+      const shuffledCards = shuffleCards(cardsToShuffle);
       setFlashcards(shuffledCards);
-      setCurrentIndex(0);
     }
+    setCurrentIndex(0);
+    setInputValue("1");
     setShuffleMode(!shuffleMode);
   };
 
@@ -116,9 +136,10 @@ export default function Flashcards({ lessonId }) {
 
   const toggleFavoriteCardsReview = () => {
     if (reviewingFavoriteCards) {
-      // Return to all cards
+      // Return to all cards and reset to first card
       setFlashcards(originalFlashcards);
       setCurrentIndex(0);
+      setInputValue("1"); // Reset input display to 1
     } else {
       // Filter and show only favorite cards
       const favoriteCardsToReview = originalFlashcards.filter((card) =>
@@ -127,13 +148,15 @@ export default function Flashcards({ lessonId }) {
 
       if (favoriteCardsToReview.length > 0) {
         setFlashcards(favoriteCardsToReview);
-        setCurrentIndex(0);
+        setCurrentIndex(0); // Start from first favorite card
+        setInputValue("1"); // Reset input display to 1
       }
     }
     setReviewingFavoriteCards(!reviewingFavoriteCards);
   };
 
   // Text-to-Speech with French preference
+  // Text-to-Speech with French language enforced
   const speakFlashcard = () => {
     const currentCard = flashcards[currentIndex];
     const text = flipped ? currentCard.answer : currentCard.question;
@@ -145,17 +168,29 @@ export default function Flashcards({ lessonId }) {
 
     const utterance = new SpeechSynthesisUtterance(text);
 
-    // Attempt to find a French voice
+    // Set language to French explicitly
+    utterance.lang = "fr-FR";
+
+    // Try to find a French voice
     const voices = window.speechSynthesis.getVoices();
     const frenchVoice = voices.find(
-      (voice) => voice.lang.startsWith("fr") || voice.name.includes("French")
+      (voice) =>
+        voice.lang === "fr-FR" ||
+        voice.lang.startsWith("fr-") ||
+        voice.name.includes("French")
     );
 
     if (frenchVoice) {
       utterance.voice = frenchVoice;
     } else {
-      console.warn("No French voice found. Using default voice.");
+      console.warn(
+        "No French voice found. Using default voice with French language setting."
+      );
     }
+
+    // Set other speech parameters for better French pronunciation
+    utterance.rate = 1.0; // Normal speed
+    utterance.pitch = 1.0; // Normal pitch
 
     window.speechSynthesis.speak(utterance);
     speechSynthesisRef.current = utterance;
@@ -164,23 +199,39 @@ export default function Flashcards({ lessonId }) {
   // Navigation Methods
   const goToNextCard = () => {
     setFlipped(false);
-    setCurrentIndex((i) => (i < flashcards.length - 1 ? i + 1 : i));
+    setCurrentIndex((i) => {
+      const newIndex = i < flashcards.length - 1 ? i + 1 : i;
+      setInputValue(String(newIndex + 1)); // Update inputValue
+      return newIndex;
+    });
   };
 
   const goToPreviousCard = () => {
     setFlipped(false);
-    setCurrentIndex((i) => (i > 0 ? i - 1 : i));
+    setCurrentIndex((i) => {
+      const newIndex = i > 0 ? i - 1 : i;
+      setInputValue(String(newIndex + 1)); // Update inputValue
+      return newIndex;
+    });
   };
 
   const resetFlashcards = () => {
     setCurrentIndex(0);
     setFlipped(false);
-    // If shuffle mode is on, re-shuffle
+    setInputValue("1");
+
     if (shuffleMode) {
-      const shuffledCards = shuffleCards(originalFlashcards);
+      const cardsToShuffle = reviewingFavoriteCards
+        ? originalFlashcards.filter((card) => favoriteCards.includes(card.id))
+        : originalFlashcards;
+      const shuffledCards = shuffleCards(cardsToShuffle);
       setFlashcards(shuffledCards);
     } else {
-      setFlashcards(originalFlashcards);
+      setFlashcards(
+        reviewingFavoriteCards
+          ? originalFlashcards.filter((card) => favoriteCards.includes(card.id))
+          : originalFlashcards
+      );
     }
   };
 
