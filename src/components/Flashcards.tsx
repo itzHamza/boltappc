@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import { supabase } from "../lib/supabaseClient";
 import { Star, Volume2 } from "lucide-react";
-import jsPDF from "jspdf";
 import "./Flashcards.css";
 
 interface Flashcard {
