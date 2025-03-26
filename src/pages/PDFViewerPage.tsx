@@ -52,7 +52,7 @@ export default function PDFViewerPage() {
 
   return (
     <div className="w-screen h-screen fixed top-0 left-0 bg-black">
-      {/* <Chatbot /> */}
+      <Chatbot />
       <div id="adobe-dc-view" className="w-full h-full" />
     </div>
   );

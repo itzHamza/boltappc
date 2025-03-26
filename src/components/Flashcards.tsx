@@ -199,20 +199,24 @@ export default function Flashcards({ lessonId }) {
   // Navigation Methods
   const goToNextCard = () => {
     setFlipped(false);
-    setCurrentIndex((i) => {
-      const newIndex = i < flashcards.length - 1 ? i + 1 : i;
-      setInputValue(String(newIndex + 1)); // Update inputValue
-      return newIndex;
-    });
+    setTimeout(() => {
+      setCurrentIndex((i) => {
+        const newIndex = i < flashcards.length - 1 ? i + 1 : i;
+        setInputValue(String(newIndex + 1)); // Update inputValue
+        return newIndex;
+      });
+    }, 200);
   };
 
   const goToPreviousCard = () => {
     setFlipped(false);
-    setCurrentIndex((i) => {
-      const newIndex = i > 0 ? i - 1 : i;
-      setInputValue(String(newIndex + 1)); // Update inputValue
-      return newIndex;
-    });
+    setTimeout(() => {
+      setCurrentIndex((i) => {
+        const newIndex = i > 0 ? i - 1 : i;
+        setInputValue(String(newIndex + 1)); // Update inputValue
+        return newIndex;
+      });
+    }, 200);
   };
 
   const resetFlashcards = () => {
