@@ -310,7 +310,10 @@ export function CoursePage() {
               <div className="h-40 w-full bg-gray-100 animate-pulse rounded-lg"></div>
             }
           >
-            <Flashcards lessonId={courseData.id} />
+            <Flashcards
+              lessonId={courseData.id}
+              courseName={courseData.title}
+            />
           </Suspense>
         </div>
       </div>
