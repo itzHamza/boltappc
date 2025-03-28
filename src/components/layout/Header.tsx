@@ -193,7 +193,7 @@ export function Header() {
                 </Link>
               ))}
           </div>
-          <div className="position-fixed bottom-0 left-0 w-[100%] px-4 py-3">
+            <div className="fixed bottom-0 left-0 w-[100%] px-4 py-3">
             <Link
               to="/about"
               className={cn(
