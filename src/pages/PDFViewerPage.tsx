@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import Chatbot from "../components/Chatbot";
+import { Helmet } from "react-helmet-async";
 
 export default function PDFViewerPage() {
   const { pdfUrl } = useParams();
@@ -52,6 +53,10 @@ export default function PDFViewerPage() {
 
   return (
     <div className="w-screen h-screen fixed top-0 left-0 bg-black">
+      <Helmet>
+        <title>PDFviewer - TBiB Cours</title>
+      </Helmet>
+
       {/* <Chatbot /> */}
       <div id="adobe-dc-view" className="w-full h-full" />
     </div>

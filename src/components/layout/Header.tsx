@@ -11,11 +11,11 @@ import {
   HeartPulse,
   Dna,
   Stethoscope,
+  Info,
 } from "lucide-react";
 import { supabase } from "../../lib/supabaseClient";
 import { cn } from "../../lib/utils";
 import logo from "/lgo.svg";
-
 
 import { Analytics } from "@vercel/analytics/react";
 
@@ -69,11 +69,18 @@ export function Header() {
     //   bgColor: "bg-indigo-50",
     // },
     {
-      name: "Calc grades",
+      name: "calculatrice",
       icon: Calculator,
       href: "/calc",
       color: "text-indigo-600",
       bgColor: "bg-indigo-50",
+    },
+    {
+      name: "À Propos",
+      icon: Info,
+      href: "/about",
+      color: "text-orange-600",
+      bgColor: "bg-orange-50",
     },
   ];
 
@@ -164,25 +171,43 @@ export function Header() {
         </div>
 
         {/* القائمة الجانبية */}
-        <nav className="px-4 py-4">
+        <nav className="px-4 py-4 flex flex-col h-[75vh]">
           <div className="space-y-2">
-            {navigationItems.map((item) => (
-              <Link
-                key={item.href}
-                to={item.href}
-                className={cn(
-                  "flex items-center space-x-2 px-4 py-3 rounded-lg transition-colors",
-                  location.pathname === item.href
-                    ? "bg-blue-50 text-blue-600"
-                    : "text-gray-600 hover:bg-gray-50"
-                )}
-              >
-                <div className={cn("p-2 rounded-lg", item.bgColor)}>
-                  <item.icon className={cn("w-5 h-5", item.color)} />
-                </div>
-                <span>{item.name}</span>
-              </Link>
-            ))}
+            {navigationItems
+              .filter((item) => item.name !== "À Propos")
+              .map((item) => (
+                <Link
+                  key={item.href}
+                  to={item.href}
+                  className={cn(
+                    "flex items-center space-x-2 px-4 py-3 rounded-lg transition-colors",
+                    location.pathname === item.href
+                      ? "bg-blue-50 text-blue-600"
+                      : "text-gray-600 hover:bg-gray-50"
+                  )}
+                >
+                  <div className={cn("p-2 rounded-lg", item.bgColor)}>
+                    <item.icon className={cn("w-5 h-5", item.color)} />
+                  </div>
+                  <span>{item.name}</span>
+                </Link>
+              ))}
+          </div>
+          <div className="mt-auto">
+            <Link
+              to="/about"
+              className={cn(
+                "flex items-center space-x-2 px-4 py-3 rounded-lg transition-colors",
+                location.pathname === "/about"
+                  ? "bg-orange-50 text-orange-600"
+                  : "text-orange-600 hover:bg-orange-50"
+              )}
+            >
+              <div className="p-2 rounded-lg bg-orange-100">
+                <Info className="w-5 h-5 text-orange-600" />
+              </div>
+              <span>À Propos</span>
+            </Link>
           </div>
         </nav>
       </div>

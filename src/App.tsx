@@ -22,12 +22,9 @@ import { ModulePage } from "./pages/ModulePage";
 import { UnitePage } from "./pages/UnitePage";
 import { CoursePage } from "./pages/CoursePage";
 import PDFViewerPage from "./pages/PDFViewerPage";
-import {GradeCalculatorPage} from "./pages/gradecalc";
-
-
-
-
-
+import { GradeCalculatorPage } from "./pages/gradecalc";
+import { HelmetProvider } from "react-helmet-async";
+import { AboutPage } from "./pages/AboutPage";
 
 function App() {
   const [adminUser, setAdminUser] = useState(null);
@@ -56,90 +53,99 @@ function App() {
   }, []);
 
   return (
-    <Router>
-      <Routes>
-        {/* <Route
-          path="/admin/login"
-          element={<AdminLoginPage onLogin={setAdminUser} />}
-        />
+    <HelmetProvider>
+      <Router>
+        <Routes>
+          {/* <Route
+            path="/admin/login"
+            element={<AdminLoginPage onLogin={setAdminUser} />}
+          />
 
-        <Route
-          path="/admin/*"
-          element={
-            adminUser ? (
-              <div className="min-h-screen bg-gray-100">
-                <AdminHeader />
-                <main className="lg:ml-64">
-                  <div className="container mx-auto">
+          <Route
+            path="/admin/*"
+            element={
+              adminUser ? (
+                <div className="min-h-screen bg-gray-100">
+                  <AdminHeader />
+                  <main className="lg:ml-64">
+                    <div className="container mx-auto">
+                      <Routes>
+                        <Route path="/" element={<AdminAddModuleUnite />} />
+                        <Route path="/lessons" element={<AdminLessons />} />
+                        <Route path="/edit" element={<EditCourse />} />
+                        <Route
+                          path="/flashcards"
+                          element={<FlashcardsManager />}
+                        />
+                        <Route
+                          path="/editflashcards"
+                          element={<EditDeleteFlashcards />}
+                        />
+                        <Route
+                          path="/editcourseorder"
+                          element={<EditCourseOrder />}
+                        />
+                        <Route
+                          path="/editunitemodules"
+                          element={<ManageUniteModules />}
+                        />
+                      </Routes>
+                    </div>
+                  </main>
+                </div>
+              ) : (
+                <Navigate to="/admin/login" />
+              )
+            }
+          /> */}
+
+          {/* 🔹 Public Routes */}
+          <Route path="/pdf-viewer/:pdfUrl" element={<PDFViewerPage />} />
+          <Route
+            path="/*"
+            element={
+              <div className="min-h-screen bg-gray-50">
+                <Header />
+                <main className="lg:ml-64 pt-14 p-0 m:p-8 ">
+                  <div className="w-full mx-auto max-w-full sm:max-w-screen-lg sm:px-0">
                     <Routes>
-                      <Route path="/" element={<AdminAddModuleUnite />} />
-                      <Route path="/lessons" element={<AdminLessons />} />
-                      <Route path="/edit" element={<EditCourse />} />
+                      {/* الصفحة الرئيسية */}
+                      <Route path="/" element={<HomePage />} />
+                      <Route path="/about" element={<AboutPage />} />
+                      <Route path="/calc" element={<GradeCalculatorPage />} />
+
+                      {/* صفحة السنة الدراسية */}
+                      <Route path="/year/:yearId" element={<YearPage />} />
+
+                      {/* صفحة الوحدة */}
+                      <Route path="/unite/:uniteId" element={<UnitePage />} />
+
+                      {/* صفحة المقياس */}
                       <Route
-                        path="/flashcards"
-                        element={<FlashcardsManager />}
+                        path="/module/:moduleId"
+                        element={<ModulePage />}
                       />
+
+                      {/* صفحة الدرس */}
                       <Route
-                        path="/editflashcards"
-                        element={<EditDeleteFlashcards />}
+                        path="/course/:courseId"
+                        element={<CoursePage />}
                       />
+
+                      {/* صفحة عرض PDF */}
                       <Route
-                        path="/editcourseorder"
-                        element={<EditCourseOrder />}
-                      />
-                      <Route
-                        path="/editunitemodules"
-                        element={<ManageUniteModules />}
+                        path="/pdf-viewer/:pdfUrl"
+                        element={<PDFViewerPage />}
                       />
                     </Routes>
                   </div>
                 </main>
               </div>
-            ) : (
-              <Navigate to="/admin/login" />
-            )
-          }
-        /> */}
-
-        {/* 🔹 Public Routes */}
-        <Route path="/pdf-viewer/:pdfUrl" element={<PDFViewerPage />} />
-        <Route
-          path="/*"
-          element={
-            <div className="min-h-screen bg-gray-50">
-              <Header />
-              <main className="lg:ml-64 pt-14 p-0 m:p-8 ">
-                <div className="w-full mx-auto max-w-full sm:max-w-screen-lg sm:px-0">
-                  <Routes>
-                    {/* الصفحة الرئيسية */}
-                    <Route path="/" element={<HomePage />} />
-                    <Route path="/calc" element={<GradeCalculatorPage />} />
-
-                    {/* صفحة السنة الدراسية */}
-                    <Route path="/year/:yearId" element={<YearPage />} />
-
-                    {/* صفحة الوحدة */}
-                    <Route path="/unite/:uniteId" element={<UnitePage />} />
-
-                    {/* صفحة المقياس */}
-                    <Route path="/module/:moduleId" element={<ModulePage />} />
-
-                    {/* صفحة الدرس */}
-                    <Route path="/course/:courseId" element={<CoursePage />} />
-
-                    {/* صفحة عرض PDF */}
-                    <Route
-                      path="/pdf-viewer/:pdfUrl"
-                      element={<PDFViewerPage />}
-                    />
-                  </Routes>
-                </div>
-              </main>
-            </div>
-          }
-        />
-      </Routes>
-    </Router>
+            }
+          />
+        </Routes>
+      </Router>
+    </HelmetProvider>
   );
 }
 

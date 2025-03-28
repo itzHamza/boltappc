@@ -2,6 +2,7 @@ import React, { useState, useCallback, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, AlertTriangle, Save, Printer, RefreshCw } from "lucide-react";
 import { cn } from "../lib/utils";
+import { Helmet } from "react-helmet-async";
 
 type Subject = {
   name: string;
@@ -605,6 +606,13 @@ export function GradeCalculatorPage() {
 
   return (
     <div className="max-w-4xl mx-auto py-8 px-4">
+      <Helmet>
+        <title>TBiB - Calculator</title>
+        <meta
+          name="keywords"
+          content="calculatrice médicale, calcul médical, outil médical en ligne, médecine, étudiants en médecine, TBiB, TBiB Cours, TBiB Academy, tbib calculator, tbib calculatrice, calculatrice santé, formules médicales, formules physiologiques, convertisseur médical, calculs cliniques, médecine Algérie, études médicales, tbib space, study with tbib, outils étudiants médecine"
+        />
+      </Helmet>
       <h1 className="text-3xl font-bold text-gray-900 mb-8">
         Calculateur de Notes
       </h1>

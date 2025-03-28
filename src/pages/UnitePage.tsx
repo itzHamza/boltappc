@@ -4,6 +4,7 @@ import { supabase } from "../lib/supabaseClient";
 import { motion } from "framer-motion";
 import { BookOpen, ChevronRight } from "lucide-react";
 import Loader from "../components/Loader";
+import { Helmet } from "react-helmet-async";
 
 export function UnitePage() {
   const { uniteId } = useParams();
@@ -64,6 +65,14 @@ export function UnitePage() {
   if (error) {
     return (
       <div className="text-center py-12">
+        <Helmet>
+          <title>{uniteTitle} - TBiB Cours</title>
+          <meta
+            name="keywords"
+            content={`${uniteTitle}, ${uniteTitle} médecine, ${uniteTitle} cours, ${uniteTitle} tbib, études médicales, cours de médecine, طب, دروس طب, TBiB, TBiB Cours, طب الجزائر, ملخصات طبية, امتحانات طب, QCM, TBiB Academy, TBiiBe, tbib space, study with tbib, médecine algérie, support médical, cours médical en ligne`}
+          />
+        </Helmet>
+
         <h1 className="text-2xl font-bold text-red-600">{error}</h1>
       </div>
     );

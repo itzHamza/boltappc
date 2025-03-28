@@ -11,6 +11,7 @@ import {
   NotebookText,
 } from "lucide-react";
 import Loader from "../components/Loader";
+import { Helmet } from "react-helmet-async";
 
 export function ModulePage() {
   const { moduleId } = useParams();
@@ -83,6 +84,13 @@ export function ModulePage() {
 
   return (
     <div>
+      <Helmet>
+        <title>{moduleTitle} - TBiB Cours</title>
+        <meta
+          name="keywords"
+          content={`${moduleTitle}, ${moduleTitle} médecine, ${moduleTitle} cours, ${moduleTitle} tbib, études médicales, cours de médecine, طب, دروس طب, TBiB, TBiB Cours, طب الجزائر, ملخصات طبية, امتحانات طب, QCM, TBiB Academy, TBiiBe, tbib space, study with tbib, médecine algérie, support médical, cours médical en ligne`}
+        />
+      </Helmet>
       <h1 className="text-3xl font-bold text-gray-900 mb-2 text-center">
         {moduleTitle}
       </h1>

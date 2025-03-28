@@ -6,6 +6,7 @@ import {
   Dna,
   Stethoscope,
 } from "lucide-react";
+import { Helmet } from 'react-helmet-async';
 
 const MEDICAL_YEARS = [
   {
@@ -61,6 +62,14 @@ const MEDICAL_YEARS = [
 export function HomePage() {
   return (
     <div>
+      <Helmet>
+        <title>TBiB - Home</title>
+        <meta
+          name="keywords"
+          content="طب, دروس طبية, TBiB, TBiB Cours, طب الجزائر, ملخصات طبية, امتحانات طب, QCM , TBiB Academy, TBiiBe, tbib space, study with tbib"
+        />
+      </Helmet>
+
       <div className="max-w-3xl mx-auto text-center mb-12">
         <h1 className="text-4xl font-bold text-gray-900 mb-4">
           Votre Parcours Médical Commence avec TBiB

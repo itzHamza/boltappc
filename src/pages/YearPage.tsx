@@ -4,6 +4,7 @@ import { supabase } from "../lib/supabaseClient";
 import { motion } from "framer-motion";
 import { BookOpen, ChevronRight, FolderClosed } from "lucide-react";
 import Loader from "../components/Loader";
+import { Helmet } from "react-helmet-async";
 
 export function YearPage() {
   const { yearId } = useParams();
@@ -86,6 +87,13 @@ export function YearPage() {
 
   return (
     <div>
+      <Helmet>
+        <title>{yearTitle} - TBiB Cours</title>
+        <meta
+          name="keywords"
+          content={`${yearTitle}, ${yearTitle} médecine, ${yearTitle} cours, ${yearTitle} tbib, études médicales, cours de médecine, طب, دروس طب, TBiB, TBiB Cours, طب الجزائر, ملخصات طبية, امتحانات طب, QCM, TBiB Academy, TBiiBe, tbib space, study with tbib, médecine algérie, support médical, cours médical en ligne`}
+        />
+      </Helmet>
       <h1 className="text-3xl font-bold text-gray-900 mb-2 text-center">
         {yearTitle}
       </h1>

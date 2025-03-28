@@ -1,4 +1,5 @@
 import React, { useState, useEffect, Suspense, lazy } from "react";
+import { Helmet } from "react-helmet-async";
 import { useParams, useNavigate } from "react-router-dom";
 import { supabase } from "../lib/supabaseClient";
 import {
@@ -130,8 +131,15 @@ export function CoursePage() {
 
   return (
     <div className="w-full space-y-8 lg:px-8">
+      <Helmet>
+        <title>{courseData.title} - TBiB Cours</title>
+        <meta
+          name="keywords"
+          content={`${courseData.title}, ${courseData.title} cours, ${courseData.title} tbib cours, tbib cours ${courseData.title}, ${courseData.title} tbib, ${courseData.title} PDF, ${courseData.title} vidéo, ${courseData.title} cours médecine, apprendre ${courseData.title}, ${courseData.title} en ligne, cours ${courseData.module}, ${courseData.module} médecine, formation ${courseData.module}, éducation médicale, plateforme d'apprentissage médecine, Tbib, Tbib Cours, Tbib Academy, Tbib QCM, Tbib Series, cours médecine Algérie, faculté de médecine Algérie, cours gratuits médecine, cours en ligne médecine, meilleure plateforme pour étudiants en médecine`}
+        />
+      </Helmet>
+
       <div className="px-4 lg:px-0">
-        {/* Lazy load Chatbot component */}
         <Suspense
           fallback={
             <div className="h-10 w-full bg-gray-100 animate-pulse rounded-lg"></div>
