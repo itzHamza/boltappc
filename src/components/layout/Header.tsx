@@ -125,7 +125,7 @@ export function Header() {
       {/* الشريط الجانبي */}
       <div
         className={cn(
-          "fixed inset-y-0 left-0 z-40 w-64 bg-white border-r border-gray-200 transform transition-transform duration-200 ease-in-out lg:translate-x-0",
+          "fixed inset-y-0 left-0 z-40 w-64 h-[100%] bg-white border-r border-gray-200 transform transition-transform duration-200 ease-in-out lg:translate-x-0",
           isSidebarOpen ? "translate-x-0" : "-translate-x-full"
         )}
       >
@@ -171,7 +171,7 @@ export function Header() {
         </div>
 
         {/* القائمة الجانبية */}
-        <nav className="px-4 py-4 flex flex-col h-[75vh]">
+        <nav className="px-4 py-4 flex flex-col h-[100%]">
           <div className="space-y-2">
             {navigationItems
               .filter((item) => item.name !== "À Propos")
@@ -193,7 +193,7 @@ export function Header() {
                 </Link>
               ))}
           </div>
-          <div className="mt-auto">
+          <div className="position-fixed bottom-0 left-0 w-[100%] px-4 py-3">
             <Link
               to="/about"
               className={cn(

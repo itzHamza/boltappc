@@ -7,6 +7,7 @@ import {
   ArrowBigLeft,
   RotateCcw,
   Shuffle,
+  Printer
 } from "lucide-react";
 import "./Flashcards.css";
 import jsPDF from "jspdf"; // استيراد مكتبة jsPDF
@@ -511,8 +512,8 @@ export default function Flashcards({ lessonId, courseName }) {
         </span>
       </div>
       <div className="pt-4">
-        <button className="prev-next-button" onClick={PrintCards}>
-          Print Cards
+        <button className="prev-next-button flex items-center gap-2" onClick={PrintCards}>
+          Imprimer <Printer />
         </button>
       </div>
     </div>
