@@ -609,8 +609,12 @@ export function GradeCalculatorPage() {
       <Helmet>
         <title>TBiB - Calculator</title>
         <meta
+          name="description"
+          content="Calculez facilement votre moyenne avec la calculatrice de TBiB. Un outil simple, rapide et précis."
+        />
+        <meta
           name="keywords"
-          content="calculatrice médicale, calcul médical, outil médical en ligne, médecine, étudiants en médecine, TBiB, TBiB Cours, TBiB Academy, tbib calculator, tbib calculatrice, calculatrice santé, formules médicales, formules physiologiques, convertisseur médical, calculs cliniques, médecine Algérie, études médicales, tbib space, study with tbib, outils étudiants médecine"
+          content="calculatrice médicale, calculatrice médicale tbib, calculatrice médicale tbib cours, tbib cours calculatrice médicale, tbib calculatrice médicale, calculatrice tbib, calculatrice tbib cours, tbib cours calculatrice, tbib calculatrice, calcul médical, outil médical en ligne, médecine, étudiants en médecine, TBiB, TBiB Cours, TBiB Academy, tbib calculator, tbib calculatrice, calculatrice santé, formules médicales, formules physiologiques, convertisseur médical, calculs cliniques, médecine Algérie, études médicales, tbib space, study with tbib, outils étudiants médecine"
         />
       </Helmet>
       <h1 className="text-3xl font-bold text-gray-900 mb-8">

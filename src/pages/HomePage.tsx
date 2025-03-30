@@ -65,6 +65,10 @@ export function HomePage() {
       <Helmet>
         <title>TBiB - Home</title>
         <meta
+          name="description"
+          content="Votre parcours médical commence avec TBiB, la meilleure plateforme pour les étudiants en médecine en Algérie. Accédez facilement aux cours, résumés et flashcards pour exceller dans vos études médicales."
+        />
+        <meta
           name="keywords"
           content="طب, دروس طبية, TBiB, TBiB Cours, طب الجزائر, ملخصات طبية, امتحانات طب, QCM , TBiB Academy, TBiiBe, tbib space, study with tbib"
         />

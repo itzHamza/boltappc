@@ -134,8 +134,12 @@ export function CoursePage() {
       <Helmet>
         <title>{courseData.title} - TBiB Cours</title>
         <meta
+          name="description"
+          content={`Accédez au cours "${courseData.title}" sur TBiB Cours. Retrouvez des supports complets : vidéos, résumés, PDF et flashcards pour mieux comprendre et réussir vos études.`}
+        />
+        <meta
           name="keywords"
-          content={`${courseData.title}, ${courseData.title} cours, ${courseData.title} tbib cours, tbib cours ${courseData.title}, ${courseData.title} tbib, ${courseData.title} PDF, ${courseData.title} vidéo, ${courseData.title} cours médecine, apprendre ${courseData.title}, ${courseData.title} en ligne, cours ${courseData.module}, ${courseData.module} médecine, formation ${courseData.module}, éducation médicale, plateforme d'apprentissage médecine, Tbib, Tbib Cours, Tbib Academy, Tbib QCM, Tbib Series, cours médecine Algérie, faculté de médecine Algérie, cours gratuits médecine, cours en ligne médecine, meilleure plateforme pour étudiants en médecine`}
+          content={`${courseData.title}, ${courseData.title} cours, ${courseData.title} tbib cours, tbib cours ${courseData.title}, ${courseData.title} tbib, tbib ${courseData.title}, ${courseData.title} PDF, ${courseData.title} vidéo, ${courseData.title} cours médecine, apprendre ${courseData.title}, ${courseData.title} en ligne, cours ${courseData.module}, ${courseData.module} médecine, formation ${courseData.module}, éducation médicale, plateforme d'apprentissage médecine, Tbib, Tbib Cours, Tbib Academy, Tbib QCM, Tbib Series, cours médecine Algérie, faculté de médecine Algérie, cours gratuits médecine, cours en ligne médecine, meilleure plateforme pour étudiants en médecine`}
         />
       </Helmet>
 

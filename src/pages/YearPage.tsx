@@ -90,8 +90,12 @@ export function YearPage() {
       <Helmet>
         <title>{yearTitle} - TBiB Cours</title>
         <meta
+          name="description"
+          content={`Accédez aux cours, résumés, flashcards et ressources pédagogiques essentielles pour les étudiants en médecine en ${yearTitle}. Tout ce dont vous avez besoin pour réussir votre année universitaire.`}
+        />
+        <meta
           name="keywords"
-          content={`${yearTitle}, ${yearTitle} médecine, ${yearTitle} cours, ${yearTitle} tbib, études médicales, cours de médecine, طب, دروس طب, TBiB, TBiB Cours, طب الجزائر, ملخصات طبية, امتحانات طب, QCM, TBiB Academy, TBiiBe, tbib space, study with tbib, médecine algérie, support médical, cours médical en ligne`}
+          content={`${yearTitle}, ${yearTitle} médecine, ${yearTitle} cours, ${yearTitle} tbib, ${yearTitle} tbib cours, tbib ${yearTitle}, tbib cours ${yearTitle} études médicales, cours de médecine, طب, دروس طب, TBiB, TBiB Cours, طب الجزائر, ملخصات طبية, امتحانات طب, QCM, TBiB Academy, TBiiBe, tbib space, study with tbib, médecine algérie, support médical, cours médical en ligne`}
         />
       </Helmet>
       <h1 className="text-3xl font-bold text-gray-900 mb-2 text-center">

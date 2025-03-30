@@ -185,9 +185,13 @@ useEffect(() => {
 
   return (
     <div className="max-w-6xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
-            <Helmet>
-              <title>About - TBiB Cours</title>
-            </Helmet>
+      <Helmet>
+        <title>About - TBiB Cours</title>
+        <meta
+          name="description"
+          content="Découvrez TBiB Cours, la plateforme dédiée aux étudiants en médecine en Algérie. Accédez à des cours, résumés et flashcards pour exceller dans vos études médicales."
+        />
+      </Helmet>
       {/* Hero Section */}
       <div className="text-center mb-16">
         <motion.h1

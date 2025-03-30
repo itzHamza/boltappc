@@ -87,8 +87,12 @@ export function ModulePage() {
       <Helmet>
         <title>{moduleTitle} - TBiB Cours</title>
         <meta
+          name="description"
+          content={`Accédez aux cours du module "${moduleTitle}". Retrouvez toutes les ressources essentielles pour le comprendre, le maîtriser et réussir vos examens.`}
+        />
+        <meta
           name="keywords"
-          content={`${moduleTitle}, ${moduleTitle} médecine, ${moduleTitle} cours, ${moduleTitle} tbib, études médicales, cours de médecine, طب, دروس طب, TBiB, TBiB Cours, طب الجزائر, ملخصات طبية, امتحانات طب, QCM, TBiB Academy, TBiiBe, tbib space, study with tbib, médecine algérie, support médical, cours médical en ligne`}
+          content={`${moduleTitle}, ${moduleTitle} médecine, ${moduleTitle} cours, ${moduleTitle} tbib, ${moduleTitle} tbib cours, tbib ${moduleTitle}, tbib cours ${moduleTitle}, études médicales, cours de médecine, طب, دروس طب, TBiB, TBiB Cours, طب الجزائر, ملخصات طبية, امتحانات طب, QCM, TBiB Academy, TBiiBe, tbib space, study with tbib, médecine algérie, support médical, cours médical en ligne`}
         />
       </Helmet>
       <h1 className="text-3xl font-bold text-gray-900 mb-2 text-center">
