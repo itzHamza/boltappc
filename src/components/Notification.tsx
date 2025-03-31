@@ -289,7 +289,7 @@ const IslamicNotification = () => {
       // Auto close after 15 seconds
       const timeout = setTimeout(() => {
         handleClose();
-      }, 15000);
+      }, 20000);
       return () => clearTimeout(timeout);
     }
   }, [shouldShow]);
@@ -322,7 +322,6 @@ const IslamicNotification = () => {
             backdropFilter: "blur(2px)",
           }}
           aria-hidden="true"
-          onClick={handleClose}
         ></div>
 
         {/* Modal panel with fade-in and subtle rise animation */}
