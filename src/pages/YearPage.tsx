@@ -91,7 +91,7 @@ export function YearPage() {
         <title>{yearTitle} - TBiB Cours</title>
         <meta
           name="description"
-          content={`Accédez aux cours, résumés, flashcards et ressources pédagogiques essentielles pour les étudiants en médecine en ${yearTitle}. Tout ce dont vous avez besoin pour réussir votre année universitaire.`}
+          content={`Accédez aux cours, résumés, flashcards et ressources pédagogiques essentielles pour les étudiants en ${yearTitle} médecine. Tout ce dont vous avez besoin pour réussir votre année universitaire.`}
         />
         <meta
           name="keywords"

@@ -15,6 +15,9 @@ export default {
 
   theme: {
     extend: {
+      fontFamily: {
+        rubik: ["Rubik", "sans-serif"],
+      },
       container: {
         center: true,
         padding: "2rem",

@@ -25,6 +25,7 @@ import PDFViewerPage from "./pages/PDFViewerPage";
 import { GradeCalculatorPage } from "./pages/gradecalc";
 import { HelmetProvider } from "react-helmet-async";
 import { AboutPage } from "./pages/AboutPage";
+import IslamicNotification from "./components/Notification";
 
 function App() {
   const [adminUser, setAdminUser] = useState(null);
@@ -54,6 +55,7 @@ function App() {
 
   return (
     <HelmetProvider>
+      <IslamicNotification />
       <Router>
         <Routes>
           {/* <Route
