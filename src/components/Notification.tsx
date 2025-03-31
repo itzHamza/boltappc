@@ -232,7 +232,6 @@ const islamicContent = [
   },
 ];
 
-// Utility to get random content
 const getRandomContent = () => {
   const randomIndex = Math.floor(Math.random() * islamicContent.length);
   return islamicContent[randomIndex];
@@ -282,7 +281,11 @@ const IslamicNotification = () => {
   // Animation effect
   useEffect(() => {
     if (shouldShow) {
-      setIsVisible(true);
+      // Small delay before showing to ensure animation runs
+      setTimeout(() => {
+        setIsVisible(true);
+      }, 10);
+
       // Auto close after 15 seconds
       const timeout = setTimeout(() => {
         handleClose();
@@ -304,23 +307,34 @@ const IslamicNotification = () => {
 
   return (
     <div
-      className={`fixed z-50 inset-0 overflow-y-auto ${
-        isVisible ? "opacity-100" : "opacity-0"
-      } transition-opacity duration-300`}
+      className="fixed z-50 inset-0 overflow-y-auto transition-opacity duration-500 ease-in-out"
+      style={{ opacity: isVisible ? 1 : 0 }}
       aria-labelledby="modal-title"
       role="dialog"
       aria-modal="true"
     >
       <div className="flex items-center justify-center min-h-screen px-4 text-center">
-        {/* Background overlay */}
+        {/* Background overlay with fade */}
         <div
-          className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
+          className="fixed inset-0 bg-gray-500 transition-opacity duration-500 ease-in-out"
+          style={{
+            opacity: isVisible ? 0.75 : 0,
+            backdropFilter: "blur(2px)",
+          }}
           aria-hidden="true"
           onClick={handleClose}
         ></div>
 
-        {/* Modal panel */}
-        <div className="inline-block align-middle bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:max-w-lg sm:w-full">
+        {/* Modal panel with fade-in and subtle rise animation */}
+        <div
+          className="inline-block align-middle bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all duration-500 ease-in-out sm:max-w-lg sm:w-full"
+          style={{
+            opacity: isVisible ? 1 : 0,
+            transform: isVisible
+              ? "translateY(0) scale(1)"
+              : "translateY(20px) scale(0.98)",
+          }}
+        >
           <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
             <div className="sm:flex sm:items-start">
               <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
@@ -345,7 +359,7 @@ const IslamicNotification = () => {
                   </h3>
                   <button
                     onClick={handleClose}
-                    className="bg-white rounded-md text-gray-400 hover:text-gray-500 focus:outline-none"
+                    className="bg-white rounded-md text-gray-400 hover:text-gray-500 focus:outline-none transform transition-transform duration-150 hover:scale-110"
                   >
                     <svg
                       className="h-6 w-6"
@@ -385,7 +399,7 @@ const IslamicNotification = () => {
           <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse justify-center">
             <button
               type="button"
-              className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 text-base font-medium text-white hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm"
+              className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 text-base font-medium text-white hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm transition-all duration-150 hover:shadow-lg"
               style={{ backgroundColor: "#1e40af" }}
               onClick={handleClose}
             >
