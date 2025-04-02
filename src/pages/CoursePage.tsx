@@ -149,7 +149,7 @@ export function CoursePage() {
             <div className="h-10 w-full bg-gray-100 animate-pulse rounded-lg"></div>
           }
         >
-          {/* <Chatbot /> */}
+          <Chatbot />
         </Suspense>
 
         <div className="flex items-center justify-between mb-6">

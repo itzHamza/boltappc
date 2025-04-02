@@ -57,7 +57,7 @@ export default function PDFViewerPage() {
         <title>PDFviewer - TBiB Cours</title>
       </Helmet>
 
-      {/* <Chatbot /> */}
+      <Chatbot />
       <div id="adobe-dc-view" className="w-full h-full" />
     </div>
   );
