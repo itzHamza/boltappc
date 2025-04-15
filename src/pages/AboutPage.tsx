@@ -18,6 +18,7 @@ import {
   Twitter,
   BookText,
   Send,
+  Airplay,
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { cn } from "../lib/utils";
@@ -80,16 +81,23 @@ export function AboutPage() {
     {
       name: "Instagram",
       icon: Instagram,
-      href: "https://instagram.com/study.with_tbib",
+      href: "https://instagram.com/tbib.platforms",
       color: "text-pink-600",
       bgColor: "bg-pink-50",
     },
     {
-      name: "NAFAS Books",
-      icon: BookText,
-      href: "https://www.instagram.com/nafas__med",
+      name: "Books",
+      icon: Instagram,
+      href: "https://www.instagram.com/tbib.series",
       color: "text-red-600",
       bgColor: "bg-red-50",
+    },
+    {
+      name: "Book Store",
+      icon: Airplay,
+      href: "https://book.tbib.space",
+      color: "text-blue-800",
+      bgColor: "bg-blue-50",
     },
     {
       name: "Twitter",

@@ -1,5 +1,5 @@
 import React from "react";
-import "../index.css"; // تأكد أن لديك استيراد لـ `loaders.css` هنا
+import "../index.css";
 
 export default function Loader() {
   return (
