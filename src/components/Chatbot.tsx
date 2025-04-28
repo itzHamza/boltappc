@@ -51,7 +51,7 @@ const sendMessage = async () => {
   setCurrentResponse("");
 
   try {
-    const { data } = await axios.post("/api/chat", { message: input });
+    const { data } = await axios.post("/api/chatmodel", { message: input });
 
     let responseText = "";
     for (const char of data.reply) {
@@ -80,7 +80,7 @@ const sendMessage = async () => {
       {!isOpen && (
         <motion.button
           onClick={() => setIsOpen(true)}
-          className="fixed bottom-6 right-7 bg-green-500 p-4 rounded-full shadow-lg hover:shadow-xl transition duration-300"
+          className="fixed bottom-6 right-7 z-20 bg-green-500 p-4 rounded-full shadow-lg hover:shadow-xl transition duration-300"
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.9 }}
         >

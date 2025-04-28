@@ -5,7 +5,6 @@ import {
   BookOpen,
   Video,
   FileText,
-  Brain,
   Users,
   GraduationCap,
   Search,
@@ -16,7 +15,6 @@ import {
   Zap,
   Instagram,
   Twitter,
-  BookText,
   Send,
   Airplay,
 } from "lucide-react";
@@ -93,7 +91,7 @@ export function AboutPage() {
       bgColor: "bg-red-50",
     },
     {
-      name: "Book Store",
+      name: "Store",
       icon: Airplay,
       href: "https://book.tbib.space",
       color: "text-blue-800",
