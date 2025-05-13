@@ -102,10 +102,7 @@ export default function Flashcards({ lessonId, courseName }) {
           case "ArrowLeft":
             goToPreviousCard();
             break;
-          case " ":
-            e.preventDefault();
-            setFlipped(!flipped);
-            break;
+
           case "f":
             toggleFavorite();
             break;
