@@ -3,7 +3,138 @@ import { supabase } from "../../lib/supabaseClient";
 import Loader from "../../components/Loader";
 import { useDropzone } from "react-dropzone";
 import { v4 as uuidv4 } from "uuid";
-import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
+import {
+  S3Client,
+  PutObjectCommand,
+  DeleteObjectCommand,
+} from "@aws-sdk/client-s3";
+import {
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  DragOverlay,
+} from "@dnd-kit/core";
+import {
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  verticalListSortingStrategy,
+  useSortable,
+} from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
+import { toast } from "sonner";
+import { table } from "console";
+
+
+// Sortable Item Components
+const SortableVideoItem = ({ video, index, onRemove, onUpdate }) => {
+  const { attributes, listeners, setNodeRef, transform, transition } =
+    useSortable({
+      id: video.id,
+    });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+  };
+
+  return (
+    <div
+      ref={setNodeRef}
+      style={style}
+      className="bg-gray-50 p-3 rounded border border-gray-200 shadow-sm mb-2"
+    >
+      <div className="flex items-center mb-2">
+        <div
+          {...attributes}
+          {...listeners}
+          className="mr-2 text-gray-500 cursor-move px-2 py-1 hover:bg-gray-200 rounded"
+        >
+          ⋮⋮
+        </div>
+        <div className="font-medium">فيديو {index + 1}</div>
+        <button
+          onClick={() => onRemove(index)}
+          className="ml-auto px-3 py-1 bg-red-500 text-white rounded-lg"
+        >
+          حذف
+        </button>
+      </div>
+      <div className="space-y-2">
+        <input
+          type="text"
+          placeholder="عنوان الفيديو"
+          value={video.title}
+          onChange={(e) => onUpdate(index, "title", e.target.value)}
+          className="p-2 border w-full"
+        />
+        <input
+          type="text"
+          placeholder="رابط الفيديو"
+          value={video.url}
+          onChange={(e) => onUpdate(index, "url", e.target.value)}
+          className="p-2 border w-full"
+        />
+      </div>
+    </div>
+  );
+};
+
+const SortablePdfItem = ({ pdf, index, onRemove, onUpdate }) => {
+  const { attributes, listeners, setNodeRef, transform, transition } =
+    useSortable({
+      id: pdf.id,
+    });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+  };
+
+  return (
+    <div
+      ref={setNodeRef}
+      style={style}
+      className="bg-gray-50 p-3 rounded border border-gray-200 shadow-sm mb-2"
+    >
+      <div className="flex items-center mb-2">
+        <div
+          {...attributes}
+          {...listeners}
+          className="mr-2 text-gray-500 cursor-move px-2 py-1 hover:bg-gray-200 rounded"
+        >
+          ⋮⋮
+        </div>
+        <div className="font-medium">PDF {index + 1}</div>
+        <button
+          onClick={() => onRemove(index)}
+          className="ml-auto px-3 py-1 bg-red-500 text-white rounded-lg"
+        >
+          حذف
+        </button>
+      </div>
+      <div className="space-y-2">
+        <input
+          type="text"
+          placeholder="عنوان الملف"
+          value={pdf.title}
+          onChange={(e) => onUpdate(index, "title", e.target.value)}
+          className="p-2 border w-full"
+        />
+        <input
+          type="text"
+          placeholder="رابط الملف"
+          value={pdf.url}
+          onChange={(e) => onUpdate(index, "url", e.target.value)}
+          className="p-2 border w-full"
+        />
+      </div>
+    </div>
+  );
+};
 
 export default function EditCourse() {
   const [years, setYears] = useState([]);
@@ -17,16 +148,25 @@ export default function EditCourse() {
   const [courseData, setCourseData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [activeId, setActiveId] = useState(null);
 
   // تكوين عميل Cloudflare R2
   const r2Client = new S3Client({
     region: "auto", // Cloudflare R2 يتطلب region = 'auto'
     endpoint: import.meta.env.VITE_CLOUDFLARE_R2_ENDPOINT, // استيراد endpoint من متغيرات البيئة
     credentials: {
-      accessKeyId: import.meta.env.VITE_CLOUDFLARE_R2_ACCESS_KEY , // استبدل بـ access key الخاص بك
-      secretAccessKey: import.meta.env.VITE_CLOUDFLARE_R2_SECRET_KEY, // استبدل بـ secret key الخاص بك, // استبدل بـ secret key الخاص بك
+      accessKeyId: import.meta.env.VITE_CLOUDFLARE_R2_ACCESS_KEY, // استبدل بـ access key الخاص بك
+      secretAccessKey: import.meta.env.VITE_CLOUDFLARE_R2_SECRET_KEY, // استبدل بـ secret key الخاص بك
     },
   });
+
+  // Configure sensors for dnd-kit
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  );
 
   useEffect(() => {
     fetchYears();
@@ -111,8 +251,23 @@ export default function EditCourse() {
       .eq("id", courseId)
       .single();
 
-    if (error) console.error("Error fetching course details:", error);
-    else setCourseData(data);
+    if (error) {
+      console.error("Error fetching course details:", error);
+    } else {
+      // Make sure videos and pdfs have string IDs and properly formatted data
+      const formattedData = {
+        ...data,
+        videos: data.videos.map((video) => ({
+          ...video,
+          id: video.id ? String(video.id) : uuidv4(),
+        })),
+        pdfs: data.pdfs.map((pdf) => ({
+          ...pdf,
+          id: pdf.id ? String(pdf.id) : uuidv4(),
+        })),
+      };
+      setCourseData(formattedData);
+    }
 
     setLoading(false);
   }
@@ -128,7 +283,7 @@ export default function EditCourse() {
     const hasEmptyPdfs = courseData.pdfs.some((pdf) => !pdf.title || !pdf.url);
 
     if (hasEmptyVideos || hasEmptyPdfs) {
-      return alert("يرجى ملء جميع حقول الفيديوهات وملفات PDF!");
+      return toast.warning("يرجى ملء جميع حقول الفيديوهات وملفات PDF!");
     }
 
     const { error } = await supabase
@@ -143,9 +298,9 @@ export default function EditCourse() {
 
     if (error) {
       console.error("Error updating course:", error.message);
-      alert(`Error updating course: ${error.message}`);
+      toast.error(`Error updating course: ${error.message}`);
     } else {
-      alert("تم تحديث الدرس بنجاح!");
+      toast.success("تم تحديث الدرس بنجاح!");
       fetchCourses(selectedModuleId);
     }
   }
@@ -169,9 +324,9 @@ export default function EditCourse() {
 
     if (error) {
       console.error("Error deleting course:", error.message);
-      alert(`خطأ في حذف الدرس: ${error.message}`);
+      toast.error(`خطأ في حذف الدرس: ${error.message}`);
     } else {
-      alert("تم حذف الدرس بنجاح!");
+      toast.success("تم حذف الدرس بنجاح!");
       setCourseData(null);
       setSelectedCourseId("");
       fetchCourses(selectedModuleId);
@@ -182,24 +337,26 @@ export default function EditCourse() {
 
   // إضافة فيديو جديد
   function addVideo() {
+    if (!courseData) return;
     setCourseData({
       ...courseData,
-      videos: [
-        ...courseData.videos,
-        { id: courseData.videos.length + 1, url: "", title: "" },
-      ],
+      videos: [...courseData.videos, { id: uuidv4(), url: "", title: "" }],
     });
   }
 
   // إضافة PDF يدويًا
   function addManualPdf() {
+    if (!courseData) return;
     setCourseData({
       ...courseData,
-      pdfs: [
-        ...courseData.pdfs,
-        { id: courseData.pdfs.length + 1, url: "", title: "" },
-      ],
+      pdfs: [...courseData.pdfs, { id: uuidv4(), url: "", title: "" }],
     });
+  }
+
+  // استخراج اسم الملف من رابط R2
+  function extractKeyFromUrl(url) {
+    if (!url || !url.includes("r2.dev/")) return null;
+    return url.split("r2.dev/")[1];
   }
 
   // حذف فيديو
@@ -208,139 +365,242 @@ export default function EditCourse() {
     setCourseData({ ...courseData, videos: updatedVideos });
   }
 
-  // حذف PDF
-  function removePdf(index) {
-    const updatedPdfs = courseData.pdfs.filter((_, i) => i !== index);
-    setCourseData({ ...courseData, pdfs: updatedPdfs });
+  // حذف PDF مع حذف الملف من R2
+  async function removePdf(index) {
+    try {
+      const pdfToRemove = courseData.pdfs[index];
+
+      // التحقق من وجود رابط للملف
+      if (pdfToRemove.url && pdfToRemove.url.includes("r2.dev")) {
+        const fileKey = extractKeyFromUrl(pdfToRemove.url);
+
+        if (fileKey) {
+          // حذف الملف من Cloudflare R2
+          const command = new DeleteObjectCommand({
+            Bucket: "tbibcours",
+            Key: fileKey,
+          });
+
+          await r2Client.send(command);
+          toast.success(`✅ تم حذف الملف ${fileKey} من R2 بنجاح`);
+        }
+      }
+
+      // حذف الملف من القائمة
+      const updatedPdfs = courseData.pdfs.filter((_, i) => i !== index);
+      setCourseData({ ...courseData, pdfs: updatedPdfs });
+    } catch (error) {
+      console.error("❌ خطأ أثناء حذف الملف من R2:", error);
+      toast.error("❌ حدث خطأ أثناء حذف الملف من Cloudflare R2!");
+
+      // نحذف من القائمة على أي حال
+      const updatedPdfs = courseData.pdfs.filter((_, i) => i !== index);
+      setCourseData({ ...courseData, pdfs: updatedPdfs });
+    }
   }
 
   // تحميل ملف PDF إلى Cloudflare R2
-async function uploadPdf(file, index) {
-  setUploading(true);
+  async function uploadPdf(file, index) {
+    setUploading(true);
 
-  try {
-    // ✅ التحقق من أن الملف PDF
-    if (file.type !== "application/pdf") {
-      alert("❌ يرجى تحميل ملف PDF فقط!");
+    try {
+      // ✅ التحقق من أن الملف PDF
+      if (file.type !== "application/pdf") {
+        toast.warning("❌ يرجى تحميل ملف PDF فقط!");
+        setUploading(false);
+        return;
+      }
+
+      // ✅ التحقق من أن `years` غير فارغ
+      if (years.length === 0) {
+        toast.warning("❌ يرجى الانتظار حتى يتم تحميل السنوات!");
+        setUploading(false);
+        return;
+      }
+
+      // ✅ تحويل `selectedYearId` إلى نفس نوع `id` في `years`
+      const selectedYearIdNumber = Number(selectedYearId); // إذا كانت `id` في `years` أرقام
+      const selectedYear = years.find(
+        (year) => year.id === selectedYearIdNumber
+      );
+
+      if (!selectedYear) {
+        toast.warning("❌ حدث خطأ: لم يتم العثور على السنة!");
+        console.error(
+          "Selected Year ID:",
+          selectedYearId,
+          typeof selectedYearId
+        );
+        console.error("Years Array:", years);
+        setUploading(false);
+        return;
+      }
+
+      // ✅ البحث عن الوحدة المختارة (إذا كانت موجودة)
+      const selectedUnite = unites.find(
+        (unite) => unite.id === selectedUniteId
+      );
+
+      // ✅ البحث عن الموديل المختار
+      const selectedModule = modules.find(
+        (module) => module.id === selectedModuleId
+      );
+      if (!selectedModule) {
+        toast.warning("❌ حدث خطأ: لم يتم العثور على الموديل!");
+        setUploading(false);
+        return;
+      }
+
+      // ✅ تنظيف الأسماء (إزالة الرموز غير المسموح بها)
+      const sanitizeName = (name) => {
+        return name
+          .normalize("NFD") // تحويل الأحرف المركبة إلى الأساسية
+          .replace(/[\u0300-\u036f]/g, "") // إزالة التشكيل
+          .replace(/\s+/g, "_") // استبدال المسافات بـ "_"
+          .replace(/[^a-zA-Z0-9_-]/g, "") // إزالة الرموز غير المسموح بها
+          .toLowerCase(); // تحويل إلى أحرف صغيرة
+      };
+
+      // ✅ إنشاء المسار بناءً على وجود الوحدة
+      const yearFolder = sanitizeName(selectedYear.title);
+      const uniteFolder = selectedUnite
+        ? sanitizeName(selectedUnite.title)
+        : null;
+      const moduleFolder = sanitizeName(selectedModule.title);
+
+      // ✅ إنشاء المسار الكامل
+      const path = selectedUnite
+        ? `${yearFolder}/${uniteFolder}/${moduleFolder}`
+        : `${yearFolder}/${moduleFolder}`;
+
+      // ✅ تنظيف اسم الملف
+      const sanitizeFileName = (name) => {
+        return name
+          .normalize("NFD")
+          .replace(/[\u0300-\u036f]/g, "")
+          .replace(/\s+/g, "_")
+          .replace(/[^a-zA-Z0-9_.-]/g, "") // يسمح فقط بالأحرف، الأرقام، `_`، `.` و `-`
+          .toLowerCase();
+      };
+
+      const cleanFileName = sanitizeFileName(file.name);
+      const uniqueFileName = `${path}/${uuidv4()}-${cleanFileName}`;
+
+      // ✅ تحويل ملف PDF إلى ArrayBuffer
+      const arrayBuffer = await file.arrayBuffer();
+
+      // ✅ رفع الملف إلى Cloudflare R2 باستخدام `PutObjectCommand`
+      const command = new PutObjectCommand({
+        Bucket: "tbibcours",
+        Key: uniqueFileName, // 🚀 تخزين الملف داخل المسار المناسب
+        Body: arrayBuffer,
+        ContentType: "application/pdf",
+      });
+
+      await r2Client.send(command);
+
+      // ✅ إنشاء الرابط النهائي للملف
+      const fileUrl = `${
+        import.meta.env.VITE_CLOUDFLARE_R2_PUBLIC_URL
+      }/${uniqueFileName}`;
+
+      // ✅ تحديث قائمة ملفات PDF بالرابط الصحيح
+      setCourseData((prevState) => {
+        const updatedPdfs = [...prevState.pdfs];
+        updatedPdfs[index] = { ...updatedPdfs[index], url: fileUrl };
+        return { ...prevState, pdfs: updatedPdfs };
+      });
+
+      toast.success("✅ تم تحميل الملف بنجاح!");
+    } catch (error) {
+      console.error("❌ خطأ أثناء رفع الملف إلى R2:", error);
+      toast.error("❌ حدث خطأ أثناء رفع الملف إلى Cloudflare R2!");
+    } finally {
       setUploading(false);
-      return;
     }
-
-    // ✅ التحقق من أن `years` غير فارغ
-    if (years.length === 0) {
-      alert("❌ يرجى الانتظار حتى يتم تحميل السنوات!");
-      setUploading(false);
-      return;
-    }
-
-    // ✅ تحويل `selectedYearId` إلى نفس نوع `id` في `years`
-    const selectedYearIdNumber = Number(selectedYearId); // إذا كانت `id` في `years` أرقام
-    const selectedYear = years.find((year) => year.id === selectedYearIdNumber);
-
-    if (!selectedYear) {
-      alert("❌ حدث خطأ: لم يتم العثور على السنة!");
-      console.error("Selected Year ID:", selectedYearId, typeof selectedYearId);
-      console.error("Years Array:", years);
-      setUploading(false);
-      return;
-    }
-
-    // ✅ البحث عن الوحدة المختارة (إذا كانت موجودة)
-    const selectedUnite = unites.find((unite) => unite.id === selectedUniteId);
-
-    // ✅ البحث عن الموديل المختار
-    const selectedModule = modules.find(
-      (module) => module.id === selectedModuleId
-    );
-    if (!selectedModule) {
-      alert("❌ حدث خطأ: لم يتم العثور على الموديل!");
-      setUploading(false);
-      return;
-    }
-
-    // ✅ تنظيف الأسماء (إزالة الرموز غير المسموح بها)
-    const sanitizeName = (name) => {
-      return name
-        .normalize("NFD") // تحويل الأحرف المركبة إلى الأساسية
-        .replace(/[\u0300-\u036f]/g, "") // إزالة التشكيل
-        .replace(/\s+/g, "_") // استبدال المسافات بـ "_"
-        .replace(/[^a-zA-Z0-9_-]/g, "") // إزالة الرموز غير المسموح بها
-        .toLowerCase(); // تحويل إلى أحرف صغيرة
-    };
-
-    // ✅ إنشاء المسار بناءً على وجود الوحدة
-    const yearFolder = sanitizeName(selectedYear.title);
-    const uniteFolder = selectedUnite
-      ? sanitizeName(selectedUnite.title)
-      : null;
-    const moduleFolder = sanitizeName(selectedModule.title);
-
-    // ✅ إنشاء المسار الكامل
-    const path = selectedUnite
-      ? `${yearFolder}/${uniteFolder}/${moduleFolder}`
-      : `${yearFolder}/${moduleFolder}`;
-
-    // ✅ تنظيف اسم الملف
-    const sanitizeFileName = (name) => {
-      return name
-        .normalize("NFD")
-        .replace(/[\u0300-\u036f]/g, "")
-        .replace(/\s+/g, "_")
-        .replace(/[^a-zA-Z0-9_.-]/g, "") // يسمح فقط بالأحرف، الأرقام، `_`، `.` و `-`
-        .toLowerCase();
-    };
-
-    const cleanFileName = sanitizeFileName(file.name);
-    const uniqueFileName = `${path}/${uuidv4()}-${cleanFileName}`;
-
-    // ✅ تحويل ملف PDF إلى ArrayBuffer
-    const arrayBuffer = await file.arrayBuffer();
-
-    // ✅ رفع الملف إلى Cloudflare R2 باستخدام `PutObjectCommand`
-    const command = new PutObjectCommand({
-      Bucket: "tbibcours",
-      Key: uniqueFileName, // 🚀 تخزين الملف داخل المسار المناسب
-      Body: arrayBuffer,
-      ContentType: "application/pdf",
-    });
-
-    await r2Client.send(command);
-
-    // ✅ إنشاء الرابط النهائي للملف
-    const fileUrl = `${import.meta.env.VITE_CLOUDFLARE_R2_PUBLIC_URL}/${uniqueFileName}`;
-
-    // ✅ تحديث قائمة ملفات PDF بالرابط الصحيح
-    setCourseData((prevState) => {
-      const updatedPdfs = [...prevState.pdfs];
-      updatedPdfs[index] = { ...updatedPdfs[index], url: fileUrl };
-      return { ...prevState, pdfs: updatedPdfs };
-    });
-
-    alert("✅ تم تحميل الملف بنجاح!");
-  } catch (error) {
-    console.error("❌ خطأ أثناء رفع الملف إلى R2:", error);
-    alert("❌ حدث خطأ أثناء رفع الملف إلى Cloudflare R2!");
-  } finally {
-    setUploading(false);
   }
-}
+
+  // Update video field
+  const updateVideoField = (index, field, value) => {
+    const updatedVideos = [...courseData.videos];
+    updatedVideos[index] = { ...updatedVideos[index], [field]: value };
+    setCourseData({ ...courseData, videos: updatedVideos });
+  };
+
+  // Update PDF field
+  const updatePdfField = (index, field, value) => {
+    const updatedPdfs = [...courseData.pdfs];
+    updatedPdfs[index] = { ...updatedPdfs[index], [field]: value };
+    setCourseData({ ...courseData, pdfs: updatedPdfs });
+  };
+
+  // Handle drag end for videos
+  const handleVideoDragEnd = (event) => {
+    const { active, over } = event;
+
+    if (active.id !== over.id) {
+      setCourseData((currentData) => {
+        const oldIndex = currentData.videos.findIndex(
+          (item) => item.id === active.id
+        );
+        const newIndex = currentData.videos.findIndex(
+          (item) => item.id === over.id
+        );
+
+        return {
+          ...currentData,
+          videos: arrayMove(currentData.videos, oldIndex, newIndex),
+        };
+      });
+    }
+
+    setActiveId(null);
+  };
+
+  // Handle drag end for PDFs
+  const handlePdfDragEnd = (event) => {
+    const { active, over } = event;
+
+    if (active.id !== over.id) {
+      setCourseData((currentData) => {
+        const oldIndex = currentData.pdfs.findIndex(
+          (item) => item.id === active.id
+        );
+        const newIndex = currentData.pdfs.findIndex(
+          (item) => item.id === over.id
+        );
+
+        return {
+          ...currentData,
+          pdfs: arrayMove(currentData.pdfs, oldIndex, newIndex),
+        };
+      });
+    }
+
+    setActiveId(null);
+  };
 
   // Dropzone لرفع ملفات PDF
   const { getRootProps, getInputProps } = useDropzone({
-    accept: "application/pdf", // قبول ملفات PDF فقط
+    accept: { "application/pdf": [".pdf"] },
     onDrop: (acceptedFiles) => {
-      if (acceptedFiles.length > 0) {
+      if (acceptedFiles.length > 0 && courseData) {
         const file = acceptedFiles[0];
         const newPdf = {
-          id: courseData.pdfs.length + 1,
+          id: uuidv4(), // Always generate a string ID
           title: file.name,
           url: "",
         };
+
         setCourseData((prevState) => ({
           ...prevState,
           pdfs: [...prevState.pdfs, newPdf],
         }));
-        uploadPdf(file, courseData.pdfs.length); // تحميل الملف إلى Cloudflare R2
+
+        // Use the new length after adding the PDF
+        setTimeout(() => {
+          uploadPdf(file, courseData.pdfs.length);
+        }, 0);
       }
     },
   });
@@ -357,7 +617,7 @@ async function uploadPdf(file, index) {
       >
         <option value="">اختر السنة</option>
         {years.map((year) => (
-          <option key={year.id} value={year.id}>
+          <option key={String(year.id)} value={year.id}>
             {year.title}
           </option>
         ))}
@@ -372,7 +632,7 @@ async function uploadPdf(file, index) {
         >
           <option value="">🔍 اختر الوحدة</option>
           {unites.map((unite) => (
-            <option key={unite.id} value={unite.id}>
+            <option key={String(unite.id)} value={unite.id}>
               {unite.title}
             </option>
           ))}
@@ -388,7 +648,7 @@ async function uploadPdf(file, index) {
         >
           <option value="">🔍 اختر الموديل</option>
           {modules.map((module) => (
-            <option key={module.id} value={module.id}>
+            <option key={String(module.id)} value={module.id}>
               {module.title}
             </option>
           ))}
@@ -404,7 +664,7 @@ async function uploadPdf(file, index) {
         >
           <option value="">اختر الدرس</option>
           {courses.map((course) => (
-            <option key={course.id} value={course.id}>
+            <option key={String(course.id)} value={course.id}>
               {course.title}
             </option>
           ))}
@@ -433,97 +693,80 @@ async function uploadPdf(file, index) {
             className="p-2 border w-full mb-2"
           />
 
-          {/* تعديل الفيديوهات */}
-          <h3 className="text-xl font-semibold mt-4 mb-2">الفيديوهات</h3>
-          {courseData.videos.map((video, index) => (
-            <div key={index} className="flex space-x-2 mb-2">
-              <input
-                type="text"
-                placeholder="عنوان الفيديو"
-                value={video.title}
-                onChange={(e) => {
-                  const videos = [...courseData.videos];
-                  videos[index].title = e.target.value;
-                  setCourseData({ ...courseData, videos });
-                }}
-                className="p-2 border flex-1"
-              />
-              <input
-                type="text"
-                placeholder="رابط الفيديو"
-                value={video.url}
-                onChange={(e) => {
-                  const videos = [...courseData.videos];
-                  videos[index].url = e.target.value;
-                  setCourseData({ ...courseData, videos });
-                }}
-                className="p-2 border flex-1"
-              />
-              <button
-                onClick={() => removeVideo(index)}
-                className="px-4 py-2 bg-red-500 text-white rounded-lg"
+          {/* Videos Section with dnd-kit */}
+          <div className="mb-6">
+            <h3 className="text-xl font-semibold mt-4 mb-2">الفيديوهات</h3>
+            <button
+              onClick={addVideo}
+              className="px-4 py-2 bg-blue-500 text-white rounded-lg mb-4"
+            >
+              + أضف فيديو
+            </button>
+
+            <DndContext
+              sensors={sensors}
+              collisionDetection={closestCenter}
+              onDragStart={(event) => setActiveId(event.active.id)}
+              onDragEnd={handleVideoDragEnd}
+            >
+              <SortableContext
+                items={courseData.videos.map((video) => video.id)}
+                strategy={verticalListSortingStrategy}
               >
-                حذف
-              </button>
-            </div>
-          ))}
-          <button
-            onClick={addVideo}
-            className="px-4 py-2 bg-blue-500 text-white rounded-lg m-2"
-          >
-            + أضف فيديو
-          </button>
+                {courseData.videos.map((video, index) => (
+                  <SortableVideoItem
+                    key={video.id}
+                    video={video}
+                    index={index}
+                    onRemove={removeVideo}
+                    onUpdate={updateVideoField}
+                  />
+                ))}
+              </SortableContext>
+            </DndContext>
+          </div>
 
-          {/* تعديل ملفات PDF */}
-          <h3 className="text-xl font-semibold mt-4 mb-2">ملفات PDF</h3>
-          {courseData.pdfs.map((pdf, index) => (
-            <div key={index} className="flex space-x-2 mb-2">
-              <input
-                type="text"
-                placeholder="عنوان الملف"
-                value={pdf.title}
-                onChange={(e) => {
-                  const pdfs = [...courseData.pdfs];
-                  pdfs[index].title = e.target.value;
-                  setCourseData({ ...courseData, pdfs });
-                }}
-                className="p-2 border flex-1"
-              />
-              <input
-                type="text"
-                placeholder="رابط الملف"
-                value={pdf.url}
-                onChange={(e) => {
-                  const pdfs = [...courseData.pdfs];
-                  pdfs[index].url = e.target.value;
-                  setCourseData({ ...courseData, pdfs });
-                }}
-                className="p-2 border flex-1"
-              />
-              <button
-                onClick={() => removePdf(index)}
-                className="px-4 py-2 bg-red-500 text-white rounded-lg"
+          {/* PDFs Section with dnd-kit */}
+          <div className="mb-6">
+            <h3 className="text-xl font-semibold mt-4 mb-2">ملفات PDF</h3>
+
+            <DndContext
+              sensors={sensors}
+              collisionDetection={closestCenter}
+              onDragStart={(event) => setActiveId(event.active.id)}
+              onDragEnd={handlePdfDragEnd}
+            >
+              <SortableContext
+                items={courseData.pdfs.map((pdf) => pdf.id)}
+                strategy={verticalListSortingStrategy}
               >
-                حذف
-              </button>
+                {courseData.pdfs.map((pdf, index) => (
+                  <SortablePdfItem
+                    key={pdf.id}
+                    pdf={pdf}
+                    index={index}
+                    onRemove={removePdf}
+                    onUpdate={updatePdfField}
+                  />
+                ))}
+              </SortableContext>
+            </DndContext>
+
+            <div className="flex flex-col space-y-2 mb-4">
+              <div
+                {...getRootProps()}
+                className="p-4 border-2 mt-5 border-dashed border-gray-300 rounded-lg text-center cursor-pointer"
+              >
+                <input {...getInputProps()} />
+                <p>اسحب وأسقط ملف PDF هنا، أو انقر لتحديد ملف</p>
+              </div>
             </div>
-          ))}
-
-          {/* زر إضافة PDF يدويًا */}
-          <button
-            onClick={addManualPdf}
-            className="px-4 py-2 bg-green-500 text-white rounded-lg m-2"
-          >
-            + أضف PDF يدويًا
-          </button>
-
-          {/* Dropzone لرفع ملفات PDF */}
-          <div
-            {...getRootProps()}
-            className="p-4 border-2 border-dashed border-gray-300 rounded-lg text-center cursor-pointer"
-          >
-            <input {...getInputProps()} />
-            <p>اسحب وأسقط ملف PDF هنا، أو انقر لتحديد ملف</p>
+            <button
+              onClick={addManualPdf}
+              className="px-4 py-2 mt-5 w-full bg-green-500 text-white rounded-lg"
+            >
+              + أضف PDF يدويًا
+            </button>
           </div>
 
           <div className="flex space-x-4 mt-4">

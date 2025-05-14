@@ -26,6 +26,7 @@ import { GradeCalculatorPage } from "./pages/gradecalc";
 import { HelmetProvider } from "react-helmet-async";
 import { AboutPage } from "./pages/AboutPage";
 import IslamicNotification from "./components/Notification";
+import { Toaster } from "sonner";
 
 function App() {
   const [adminUser, setAdminUser] = useState(null);
@@ -56,9 +57,18 @@ function App() {
   return (
     <HelmetProvider>
       <IslamicNotification />
+      <Toaster
+        position="top-right"
+        toastOptions={{
+          className: "bg-slate-800 text-white",
+          style: {
+            fontFamily: "system-ui, sans-serif",
+          },
+        }}
+      />
       <Router>
         <Routes>
-          {/* <Route
+          <Route
             path="/admin/login"
             element={<AdminLoginPage onLogin={setAdminUser} />}
           />
@@ -99,7 +109,7 @@ function App() {
                 <Navigate to="/admin/login" />
               )
             }
-          /> */}
+          />
 
           {/* 🔹 Public Routes */}
           <Route path="/pdf-viewer/:pdfUrl" element={<PDFViewerPage />} />
