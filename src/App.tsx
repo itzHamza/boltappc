@@ -10,23 +10,28 @@ import { Header } from "./components/layout/Header";
 import { AdminHeader } from "./components/layout/AdminHeader";
 import { HomePage } from "./pages/HomePage";
 import AdminAddModuleUnite from "./pages/admin/AdminDashboard";
-import AdminLessons from "./pages/admin/AdminLessons";
+import AddCourse from "./pages/admin/AddCourse";
 import EditCourse from "./pages/admin/EditCourse";
 import FlashcardsManager from "./pages/admin/AdminFlashcards";
 import EditDeleteFlashcards from "./pages/admin/EditDeleteFlashcards";
 import EditCourseOrder from "./pages/admin/EditCourseOrder";
 import ManageUniteModules from "./pages/admin/ManageUniteModules";
-import { AdminLoginPage } from "./pages/admin/AdminLoginPage"; // ✅ Correct Import
+import { AdminLoginPage } from "./pages/admin/AdminLoginPage";
 import { YearPage } from "./pages/YearPage";
 import { ModulePage } from "./pages/ModulePage";
 import { UnitePage } from "./pages/UnitePage";
 import { CoursePage } from "./pages/CoursePage";
+import { CalcHomePage } from "./pages/calcHome";
 import PDFViewerPage from "./pages/PDFViewerPage";
-import { GradeCalculatorPage } from "./pages/gradecalc";
-import { HelmetProvider } from "react-helmet-async";
 import { AboutPage } from "./pages/AboutPage";
 import IslamicNotification from "./components/Notification";
+import { HelmetProvider } from "react-helmet-async";
 import { Toaster } from "sonner";
+
+// Import calculator pages for different wilayas
+import { AlgerFirstYearCalculator } from "./pages/calculator/alger/firstyear/firstyear";
+import { AlgerSecondYearCalculator } from "./pages/calculator/alger/secondyear/secondyear";
+
 
 function App() {
   const [adminUser, setAdminUser] = useState(null);
@@ -60,15 +65,12 @@ function App() {
       <Toaster
         position="top-right"
         toastOptions={{
-          className: "bg-slate-800 text-white",
-          style: {
-            fontFamily: "system-ui, sans-serif",
-          },
+          className: "bg-slate-800 text-white font-(family-name:--my-font)",
         }}
       />
       <Router>
         <Routes>
-          <Route
+          {/* <Route
             path="/admin/login"
             element={<AdminLoginPage onLogin={setAdminUser} />}
           />
@@ -83,7 +85,7 @@ function App() {
                     <div className="container mx-auto">
                       <Routes>
                         <Route path="/" element={<AdminAddModuleUnite />} />
-                        <Route path="/lessons" element={<AdminLessons />} />
+                        <Route path="/lessons" element={<AddCourse />} />
                         <Route path="/edit" element={<EditCourse />} />
                         <Route
                           path="/flashcards"
@@ -109,9 +111,9 @@ function App() {
                 <Navigate to="/admin/login" />
               )
             }
-          />
+          /> */}
 
-          {/* 🔹 Public Routes */}
+          {/* Public Routes */}
           <Route path="/pdf-viewer/:pdfUrl" element={<PDFViewerPage />} />
           <Route
             path="/*"
@@ -121,30 +123,34 @@ function App() {
                 <main className="lg:ml-64 pt-14 p-0 m:p-8 ">
                   <div className="w-full mx-auto max-w-full sm:max-w-screen-lg sm:px-0">
                     <Routes>
-                      {/* الصفحة الرئيسية */}
+                      {/* Home Page */}
                       <Route path="/" element={<HomePage />} />
                       <Route path="/about" element={<AboutPage />} />
-                      <Route path="/calc" element={<GradeCalculatorPage />} />
 
-                      {/* صفحة السنة الدراسية */}
+                      {/* Calculator Routes */}
+                      <Route path="/calc" element={<CalcHomePage />} />
+
+                      {/* Alger Routes */}
+                      <Route
+                        path="/calc/alger/firstyear"
+                        element={<AlgerFirstYearCalculator />}
+                      />
+                      <Route
+                        path="/calc/alger/secondyear"
+                        element={<AlgerSecondYearCalculator />}
+                      />
+
+                      {/* Study Content Routes */}
                       <Route path="/year/:yearId" element={<YearPage />} />
-
-                      {/* صفحة الوحدة */}
                       <Route path="/unite/:uniteId" element={<UnitePage />} />
-
-                      {/* صفحة المقياس */}
                       <Route
                         path="/module/:moduleId"
                         element={<ModulePage />}
                       />
-
-                      {/* صفحة الدرس */}
                       <Route
                         path="/course/:courseId"
                         element={<CoursePage />}
                       />
-
-                      {/* صفحة عرض PDF */}
                       <Route
                         path="/pdf-viewer/:pdfUrl"
                         element={<PDFViewerPage />}

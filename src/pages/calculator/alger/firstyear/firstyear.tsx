@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, AlertTriangle, Save, Printer, RefreshCw } from "lucide-react";
-import { cn } from "../lib/utils";
+import { cn } from "../../../../lib/utils";
 import { Helmet } from "react-helmet-async";
 
 type Subject = {
@@ -44,7 +44,7 @@ type StoredData = {
   calculationType: CalculationType;
 };
 
-export function GradeCalculatorPage() {
+export function AlgerFirstYearCalculator() {
   const [calculationType, setCalculationType] =
     useState<CalculationType>("semester1");
   const [grades, setGrades] = useState<
@@ -618,7 +618,7 @@ export function GradeCalculatorPage() {
         />
       </Helmet>
       <h1 className="text-3xl font-bold text-gray-900 mb-8">
-        Calculateur de Notes
+        Calculateur de Notes - 1ère Année
       </h1>
 
       {validationErrors.length > 0 && (

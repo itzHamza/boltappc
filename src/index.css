@@ -4,6 +4,11 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@theme {
+  --font-display: "Rubik", "sans-serif"; 
+}
+
+
 *{font-family: "Lexend Deca", serif;}  
 .marginleftandright{margin: 0 15px; min-width: 335px;}
 

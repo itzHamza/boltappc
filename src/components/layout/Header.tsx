@@ -125,19 +125,19 @@ export function Header() {
       {/* الشريط الجانبي */}
       <div
         className={cn(
-          "fixed inset-y-0 left-0 z-40 w-64 h-[100%] bg-white border-r border-gray-200 transform transition-transform duration-200 ease-in-out lg:translate-x-0",
+          "fixed inset-y-0 left-0 z-40 overflow-auto w-64 h-[100%] bg-white border-r border-gray-200 transform transition-transform duration-200 ease-in-out lg:translate-x-0",
           isSidebarOpen ? "translate-x-0" : "-translate-x-full"
         )}
       >
         {/* الشعار */}
         <div className="flex justify-center items-center py-4">
-          <Link className="w-full flex justify-center" to="/">
+          <div className="w-full flex justify-center">
             <img
               src={logo}
               alt="TBIB"
               className="w-40 md:w-56 lg:w-72 h-auto"
             />
-          </Link>
+          </div>
         </div>
 
         {/* البحث */}
@@ -171,10 +171,9 @@ export function Header() {
         </div>
 
         {/* القائمة الجانبية */}
-        <nav className="px-4 py-4 flex flex-col h-[100%]">
+        <nav className="px-4 py-4 flex flex-col">
           <div className="space-y-2">
             {navigationItems
-              .filter((item) => item.name !== "À Propos")
               .map((item) => (
                 <Link
                   key={item.href}
@@ -193,7 +192,7 @@ export function Header() {
                 </Link>
               ))}
           </div>
-            <div className="fixed bottom-0 left-0 w-[100%] px-4 py-3">
+            {/* <div className="bottom-0 left-0 w-[100%] px-4 py-3">
             <Link
               to="/about"
               className={cn(
@@ -208,7 +207,7 @@ export function Header() {
               </div>
               <span>À Propos</span>
             </Link>
-          </div>
+          </div> */}
         </nav>
       </div>
 
