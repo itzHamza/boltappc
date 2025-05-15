@@ -696,7 +696,7 @@ export function AlgerSecondYearCalculator() {
                       Hôpitaux Disponibles:
                     </h4>
                     <p className="text-sm text-green-700 mb-2">
-                      (acording to last year) Selon votre moyenne, vous êtes éligible pour: 
+                      (according to last year) Selon votre moyenne, vous êtes éligible pour: 
                     </p>
                     <ul className="list-disc list-inside text-sm text-green-700">
                       {result.eligibleHospitals.map((hospital, index) => (
