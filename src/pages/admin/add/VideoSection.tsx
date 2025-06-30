@@ -49,12 +49,6 @@ export function VideoSection({
   return (
     <div className="mb-6">
       <h3 className="text-xl font-semibold mt-4 mb-2">الفيديوهات</h3>
-      <button
-        onClick={onAddVideo}
-        className="px-4 py-2 bg-blue-500 text-white rounded-lg mb-4"
-      >
-        + أضف فيديو
-      </button>
 
       <DndContext
         sensors={sensors}
@@ -77,6 +71,13 @@ export function VideoSection({
           ))}
         </SortableContext>
       </DndContext>
+
+      <button
+        onClick={onAddVideo}
+        className="px-4 py-2 bg-blue-500 text-white rounded-lg mb-4"
+      >
+        + أضف فيديو
+      </button>
     </div>
   );
 }

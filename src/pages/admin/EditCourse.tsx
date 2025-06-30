@@ -696,12 +696,6 @@ export default function EditCourse() {
           {/* Videos Section with dnd-kit */}
           <div className="mb-6">
             <h3 className="text-xl font-semibold mt-4 mb-2">الفيديوهات</h3>
-            <button
-              onClick={addVideo}
-              className="px-4 py-2 bg-blue-500 text-white rounded-lg mb-4"
-            >
-              + أضف فيديو
-            </button>
 
             <DndContext
               sensors={sensors}
@@ -724,6 +718,12 @@ export default function EditCourse() {
                 ))}
               </SortableContext>
             </DndContext>
+            <button
+              onClick={addVideo}
+              className="px-4 py-2 bg-blue-500 text-white rounded-lg mb-4"
+            >
+              + أضف فيديو
+            </button>
           </div>
 
           {/* PDFs Section with dnd-kit */}

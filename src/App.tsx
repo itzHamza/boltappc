@@ -70,7 +70,7 @@ function App() {
       />
       <Router>
         <Routes>
-          {/* <Route
+          <Route
             path="/admin/login"
             element={<AdminLoginPage onLogin={setAdminUser} />}
           />
@@ -111,7 +111,7 @@ function App() {
                 <Navigate to="/admin/login" />
               )
             }
-          /> */}
+          />
 
           {/* Public Routes */}
           <Route path="/pdf-viewer/:pdfUrl" element={<PDFViewerPage />} />

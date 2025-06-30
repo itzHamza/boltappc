@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, AlertTriangle, Save, Printer, RefreshCw } from "lucide-react";
+import { X, AlertTriangle, Printer, RefreshCw } from "lucide-react";
 import { cn } from "../../../../lib/utils";
 import { Helmet } from "react-helmet-async";
 
@@ -351,7 +351,9 @@ export function AlgerSecondYearCalculator() {
           color: #16a34a;
           margin-top: 0;
         }
-        .hospitals ul {
+        .hospitals ul {                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  
+
+        
           margin: 10px 0;
           padding-left: 20px;
         }

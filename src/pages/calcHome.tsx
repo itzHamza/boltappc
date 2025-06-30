@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { ChevronRight, Compass, School, GraduationCap } from "lucide-react";
@@ -45,7 +45,7 @@ export function CalcHomePage() {
   const [selectedWilaya, setSelectedWilaya] = useState<Wilaya | null>(null);
 
   return (
-    <div className="max-w-4xl mx-auto py-8 px-4">
+    <div className="max-w-4xl px-4 py-8 mx-auto">
       <Helmet>
         <title>TBiB - Calculateur de Notes</title>
         <meta
@@ -58,17 +58,17 @@ export function CalcHomePage() {
         />
       </Helmet>
 
-      <h1 className="text-3xl font-bold text-gray-900 mb-8 text-center">
+      <h1 className="mb-8 text-3xl font-bold text-center text-gray-900">
         Calculateur de Notes Universitaires
       </h1>
 
-      <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
-        <h2 className="text-xl font-bold text-gray-800 mb-6 flex items-center">
+      <div className="p-6 mb-6 bg-white rounded-lg shadow-sm">
+        <h2 className="flex items-center mb-6 text-xl font-bold text-gray-800">
           <Compass className="w-5 h-5 mr-2 text-blue-600" />
           Sélectionnez votre université
         </h2>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
           {WILAYAS.map((wilaya) => (
             <motion.div
               key={wilaya.id}
@@ -81,7 +81,7 @@ export function CalcHomePage() {
               }`}
               onClick={() => setSelectedWilaya(wilaya)}
             >
-              <div className="font-medium text-lg">{wilaya.name}</div>
+              <div className="text-lg font-medium">{wilaya.name}</div>
             </motion.div>
           ))}
         </div>
@@ -92,7 +92,7 @@ export function CalcHomePage() {
             animate={{ opacity: 1, y: 0 }}
             className="mt-8"
           >
-            <h3 className="text-lg font-bold text-gray-800 mb-4 flex items-center">
+            <h3 className="flex items-center mb-4 text-lg font-bold text-gray-800">
               <School className="w-5 h-5 mr-2 text-blue-600" />
               Sélectionnez votre année d'études pour {selectedWilaya.name}
             </h3>
@@ -102,7 +102,7 @@ export function CalcHomePage() {
                 <Link
                   key={year.id}
                   to={year.path}
-                  className="block w-full p-4 bg-white border border-gray-200 rounded-lg hover:bg-blue-50 hover:border-blue-200 transition-colors flex justify-between items-center"
+                  className="items-center justify-between block w-full p-4 transition-colors bg-white border border-gray-200 rounded-lg  hover:bg-blue-50 hover:border-blue-200"
                 >
                   <span className="flex items-center">
                     <GraduationCap className="w-5 h-5 mr-3 text-blue-600" />
@@ -116,7 +116,7 @@ export function CalcHomePage() {
         )}
       </div>
 
-      <div className="text-center text-sm text-gray-500 mt-8">
+      <div className="mt-8 text-sm text-center text-gray-500">
         <p>
           Cette calculatrice est adaptée aux spécificités de chaque université.
           Veuillez sélectionner l'option correspondante à votre établissement.

@@ -1,4 +1,4 @@
-import React from 'react';
+
 import { YearCard } from '../components/YearCard';
 import {
   Briefcase,
@@ -62,6 +62,7 @@ const MEDICAL_YEARS = [
 export function HomePage() {
   return (
     <div>
+      
       <Helmet>
         <title>TBiB - Home</title>
         <meta
@@ -74,8 +75,8 @@ export function HomePage() {
         />
       </Helmet>
 
-      <div className="max-w-3xl mx-auto text-center mb-12">
-        <h1 className="text-4xl font-bold text-gray-900 mb-4">
+      <div className="max-w-3xl mx-auto mb-12 text-center">
+        <h1 className="mb-4 text-4xl font-bold text-gray-900">
           Votre Parcours Médical Commence avec TBiB
         </h1>
         <p className="text-lg text-gray-600">
@@ -84,7 +85,7 @@ export function HomePage() {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 marginleftandright">
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 marginleftandright">
         {MEDICAL_YEARS.map((year) => (
           <YearCard
             key={year.year}

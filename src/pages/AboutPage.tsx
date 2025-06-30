@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { supabase } from "../lib/supabaseClient";
 import {
@@ -190,7 +190,7 @@ useEffect(() => {
 }, []);
 
   return (
-    <div className="max-w-6xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+    <div className="max-w-6xl px-4 py-12 mx-auto sm:px-6 lg:px-8">
       <Helmet>
         <title>About - TBiB Cours</title>
         <meta
@@ -199,12 +199,12 @@ useEffect(() => {
         />
       </Helmet>
       {/* Hero Section */}
-      <div className="text-center mb-16">
+      <div className="mb-16 text-center">
         <motion.h1
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="text-4xl font-bold text-gray-900 mb-6"
+          className="mb-6 text-4xl font-bold text-gray-900"
         >
           Bienvenue sur TBiB Cours
         </motion.h1>
@@ -212,7 +212,7 @@ useEffect(() => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.2 }}
-          className="text-xl text-gray-600 max-w-3xl mx-auto"
+          className="max-w-3xl mx-auto text-xl text-gray-600"
         >
           Votre plateforme d'apprentissage dédiée aux étudiants en médecine en
           Algérie. Notre mission est de rendre l'éducation médicale accessible,
@@ -221,14 +221,14 @@ useEffect(() => {
       </div>
 
       {/* Statistics */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
+      <div className="grid grid-cols-1 gap-6 mb-16 md:grid-cols-2 lg:grid-cols-4">
         {statistics.map((stat, index) => (
           <motion.div
             key={stat.label}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: index * 0.1 }}
-            className="bg-white rounded-lg shadow-sm p-6"
+            className="p-6 bg-white rounded-lg shadow-sm"
           >
             <div className="flex items-center space-x-4">
               <div className={cn("p-3 rounded-lg", stat.bgColor)}>
@@ -251,17 +251,17 @@ useEffect(() => {
       </div>
 
       {/* Features */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
+      <div className="grid grid-cols-1 gap-8 mb-16 md:grid-cols-3">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="bg-white rounded-lg shadow-sm p-6"
+          className="p-6 bg-white rounded-lg shadow-sm"
         >
-          <div className="p-3 bg-blue-50 rounded-lg w-fit mb-4">
+          <div className="p-3 mb-4 rounded-lg bg-blue-50 w-fit">
             <GraduationCap className="w-6 h-6 text-blue-600" />
           </div>
-          <h3 className="text-lg font-semibold text-gray-900 mb-2">
+          <h3 className="mb-2 text-lg font-semibold text-gray-900">
             Contenu Structuré
           </h3>
           <p className="text-gray-600">
@@ -274,12 +274,12 @@ useEffect(() => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.2 }}
-          className="bg-white rounded-lg shadow-sm p-6"
+          className="p-6 bg-white rounded-lg shadow-sm"
         >
-          <div className="p-3 bg-purple-50 rounded-lg w-fit mb-4">
+          <div className="p-3 mb-4 rounded-lg bg-purple-50 w-fit">
             <Users className="w-6 h-6 text-purple-600" />
           </div>
-          <h3 className="text-lg font-semibold text-gray-900 mb-2">
+          <h3 className="mb-2 text-lg font-semibold text-gray-900">
             Apprentissage Interactif
           </h3>
           <p className="text-gray-600">
@@ -292,12 +292,12 @@ useEffect(() => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.4 }}
-          className="bg-white rounded-lg shadow-sm p-6"
+          className="p-6 bg-white rounded-lg shadow-sm"
         >
-          <div className="p-3 bg-green-50 rounded-lg w-fit mb-4">
+          <div className="p-3 mb-4 rounded-lg bg-green-50 w-fit">
             <Search className="w-6 h-6 text-green-600" />
           </div>
-          <h3 className="text-lg font-semibold text-gray-900 mb-2">
+          <h3 className="mb-2 text-lg font-semibold text-gray-900">
             Recherche Avancée
           </h3>
           <p className="text-gray-600">
@@ -309,12 +309,12 @@ useEffect(() => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.6 }}
-          className="bg-white rounded-lg shadow-sm p-6"
+          className="p-6 bg-white rounded-lg shadow-sm"
         >
-          <div className="p-3 bg-orange-50 rounded-lg w-fit mb-4">
+          <div className="p-3 mb-4 rounded-lg bg-orange-50 w-fit">
             <Layout className="w-6 h-6 text-orange-600" />
           </div>
-          <h3 className="text-lg font-semibold text-gray-900 mb-2">
+          <h3 className="mb-2 text-lg font-semibold text-gray-900">
             Tout-en-un, Zéro Distraction
           </h3>
           <p className="text-gray-600">
@@ -326,12 +326,12 @@ useEffect(() => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.8 }}
-          className="bg-white rounded-lg shadow-sm p-6"
+          className="p-6 bg-white rounded-lg shadow-sm"
         >
-          <div className="p-3 bg-cyan-50 rounded-lg w-fit mb-4">
+          <div className="p-3 mb-4 rounded-lg bg-cyan-50 w-fit">
             <Zap className="w-6 h-6 text-cyan-600" />
           </div>
-          <h3 className="text-lg font-semibold text-gray-900 mb-2">
+          <h3 className="mb-2 text-lg font-semibold text-gray-900">
             Rapidité et Accessibilité
           </h3>
           <p className="text-gray-600">
@@ -343,12 +343,12 @@ useEffect(() => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 1.0 }}
-          className="bg-white rounded-lg shadow-sm p-6"
+          className="p-6 bg-white rounded-lg shadow-sm"
         >
-          <div className="p-3 bg-indigo-50 rounded-lg w-fit mb-4">
+          <div className="p-3 mb-4 rounded-lg bg-indigo-50 w-fit">
             <Globe className="w-6 h-6 text-indigo-600" />
           </div>
-          <h3 className="text-lg font-semibold text-gray-900 mb-2">
+          <h3 className="mb-2 text-lg font-semibold text-gray-900">
             Gratuit et Accessible Partout
           </h3>
           <p className="text-gray-600">
@@ -359,12 +359,12 @@ useEffect(() => {
       </div>
 
       {/* Vision */}
-      <div className="bg-white rounded-lg shadow-sm p-8 mb-16">
+      <div className="p-8 mb-16 bg-white rounded-lg shadow-sm">
         <motion.h2
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="text-2xl font-bold text-gray-900 mb-4"
+          className="mb-4 text-2xl font-bold text-gray-900"
         >
           Notre Vision
         </motion.h2>
@@ -372,7 +372,7 @@ useEffect(() => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.2 }}
-          className="text-gray-600 mb-6"
+          className="mb-6 text-gray-600"
         >
           <strong>TBiB Cours</strong> ambitionne de révolutionner
           l’apprentissage médical en Algérie en offrant une plateforme complète,
@@ -388,7 +388,7 @@ useEffect(() => {
           className="text-gray-600"
         >
           Notre mission est de :
-          <ul className="list-disc list-inside mt-2 space-y-2">
+          <ul className="mt-2 space-y-2 list-disc list-inside">
             <li>
               Faciliter l'accès aux ressources pédagogiques de manière simple et
               efficace
@@ -414,16 +414,16 @@ useEffect(() => {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="bg-white rounded-lg shadow-sm p-8 mb-16"
+        className="p-8 mb-16 bg-white rounded-lg shadow-sm"
       >
-        <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">
+        <h2 className="mb-6 text-2xl font-bold text-center text-gray-900">
           Rejoignez Notre Communauté
         </h2>
-        <p className="text-gray-600 text-center mb-8">
+        <p className="mb-8 text-center text-gray-600">
           Suivez-nous sur les réseaux sociaux pour rester à jour avec les
           derniers cours et ressources
         </p>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
           {socialLinks.map((social, index) => (
             <motion.a
               key={social.name}
@@ -454,19 +454,19 @@ useEffect(() => {
         transition={{ duration: 0.5 }}
         className="text-center"
       >
-        <h2 className="text-2xl font-bold text-gray-900 mb-4">
+        <h2 className="mb-4 text-2xl font-bold text-gray-900">
           Prêt à commencer votre voyage d'apprentissage ?
         </h2>
-        <p className="text-gray-600 mb-8">
+        <p className="mb-8 text-gray-600">
           Rejoignez des milliers d'étudiants qui ont déjà fait confiance à{" "}
           <strong>TBiB Cours</strong> pour leur formation médicale.
         </p>
         <Link
           to="/"
-          className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 transition-colors"
+          className="inline-flex items-center px-6 py-3 text-base font-medium text-white transition-colors bg-blue-600 border border-transparent rounded-md hover:bg-blue-700"
         >
           Commencer Maintenant
-          <GraduationCap className="ml-2 w-5 h-5" />
+          <GraduationCap className="w-5 h-5 ml-2" />
         </Link>
       </motion.div>
     </div>
