@@ -1,9 +1,6 @@
 {
   "rewrites": [
-    {
-      "source": "/((?!.*\\.(?:png|svg|jpg|jpeg|gif|webp|js|css|json|woff2?)$).*)",
-      "destination": "/index.html"
-    }
+    { "source": "/(.*)", "destination": "/index.html" }
   ],
   "headers": [
     {
@@ -24,7 +21,5 @@
         }
       ]
     }
-  ],
-  "cleanUrls": true,
-  "trailingSlash": false
+  ]
 }
