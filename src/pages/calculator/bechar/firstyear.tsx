@@ -611,7 +611,7 @@ export default function BecharFirstYearCalculator() {
                           onChange={(e) =>
                             handleGradeChange(
                               subject.name,
-                              "td",
+                              "tp",
                               e.target.value
                             )
                           }
