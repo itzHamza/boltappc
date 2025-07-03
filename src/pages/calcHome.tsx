@@ -23,14 +23,13 @@ const WILAYAS: Wilaya[] = [
       { id: "second", name: "Deuxième Année", path: "/calc/alger/secondyear" },
     ],
   },
-  // {
-  //   id: "batna",
-  //   name: "Batna",
-  //   years: [
-  //     { id: "first", name: "Première Année", path: "/calc/batna/firstyear" },
-  //     { id: "second", name: "Deuxième Année", path: "/calc/batna/secondyear" },
-  //   ],
-  // },
+  {
+    id: "costantine",
+    name: "costantine",
+    years: [
+      { id: "first", name: "Première Année", path: "/calc/costantine/firstyear" },
+    ],
+  },
   {
     id: "oran",
     name: "Oran",

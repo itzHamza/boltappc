@@ -32,6 +32,7 @@ import { Toaster } from "sonner";
 import { AlgerFirstYearCalculator } from "./pages/calculator/alger/firstyear/firstyear";
 import { AlgerSecondYearCalculator } from "./pages/calculator/alger/secondyear/secondyear";
 import OranFirstYearCalculator from "./pages/calculator/oran/firstyear";
+import ConstantineMedicineCalculator from "./pages/calculator/costantine/firstyear";
 
 
 function App() {
@@ -145,6 +146,11 @@ function App() {
                       <Route
                         path="/calc/oran/firstyear"
                         element={<OranFirstYearCalculator />}
+                      />
+                      {/* costantine Routes */}
+                      <Route
+                        path="/calc/costantine/firstyear"
+                        element={<ConstantineMedicineCalculator />}
                       />
 
                       {/* Study Content Routes */}
