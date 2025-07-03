@@ -19,12 +19,14 @@ type GradeData = {
 };
 
 const SUBJECTS: Subject[] = [
+  // Annual modules (Coefficient 2, with TP)
   { name: "Anatomie", type: "annuelle", coefficient: 2, component: "TP" },
   { name: "Biochimie", type: "annuelle", coefficient: 2, component: "TP" },
   { name: "Cytologie", type: "annuelle", coefficient: 2, component: "TP" },
   { name: "Biostatistique", type: "annuelle", coefficient: 2, component: "TP" },
   { name: "Biophysique", type: "annuelle", coefficient: 2, component: "TP" },
   { name: "Chimie", type: "annuelle", coefficient: 2, component: "TP" },
+  // Semestrial modules (Coefficient 1)
   {
     name: "Embryologie",
     type: "semestrielle",
@@ -58,10 +60,11 @@ export default function BecharFirstYearCalculator() {
   const [showResults, setShowResults] = useState(false);
   const [validationErrors, setValidationErrors] = useState<string[]>([]);
 
-  // Load data from memory on component mount (simulating localStorage)
-  useEffect(() => {
-    // In a real environment, this would use localStorage
-    // For now, we'll just initialize empty state
+  // Store data in state (localStorage not supported in Claude artifacts)
+  const saveData = useCallback((data: StoredData) => {
+    // In a real implementation, this would save to localStorage
+    // For now, we'll just keep it in memory
+    console.log("Data would be saved to localStorage:", data);
   }, []);
 
   const handleGradeChange = useCallback(
@@ -108,10 +111,10 @@ export default function BecharFirstYearCalculator() {
   const calculateModuleAverage = useCallback(
     (subject: Subject, gradeData: GradeData): number | null => {
       if (subject.type === "annuelle") {
-        // For annual modules with TP: Average = ((S1 + S2) × 4 + TP) / 5
+        // For annual modules with TP: Average = ([(S1 + S2)/2] × 4 + TP) / 5
         const { s1, s2, tp } = gradeData;
         if (s1 !== undefined && s2 !== undefined && tp !== undefined) {
-          return ((s1 + s2) * 4 + tp) / 5;
+          return (((s1 + s2) / 2) * 4 + tp) / 5;
         }
       } else {
         // semestrielle
@@ -205,7 +208,7 @@ export default function BecharFirstYearCalculator() {
       if (modulesBelow5.length === 0) {
         status = "✅ Passage en 2ème année";
       } else {
-        status = "Rattrapage obligatoire";
+        status = "Rattrapage nécessaire";
         modulesBelow5.forEach((subject) => {
           warnings.push(`Rattrapage obligatoire pour ${subject}`);
         });
@@ -230,7 +233,10 @@ export default function BecharFirstYearCalculator() {
     setResult(calculationResult);
     setShowResults(true);
     setShowModal(true);
-  }, [grades, validateInputs, calculateModuleAverage]);
+
+    // Save data
+    saveData({ grades, result: calculationResult });
+  }, [grades, validateInputs, calculateModuleAverage, saveData]);
 
   const resetGrades = useCallback(() => {
     setGrades({});
@@ -282,8 +288,7 @@ export default function BecharFirstYearCalculator() {
       <title>Relevé de Notes - ${studentName}</title>
       <style>
         @page { margin: 2cm; }
-        *{font-family: "Lexend Deca", serif;}  
-
+        * { font-family: "Lexend Deca", serif; }
         body { 
           font-family: Arial, sans-serif;
           line-height: 1.6;
@@ -374,7 +379,6 @@ export default function BecharFirstYearCalculator() {
     <body>
       <div class="container">
         <div class="header">
-          <div class="logo-placeholder"><img src="https://tbib.space/loogo.png" alt="LOGO" style="width: 120px;"></div>
           <div class="logo-placeholder">UNIVERSITÉ DE BÉCHAR</div>
           <h1>RELEVÉ DE NOTES</h1>
           <p>Première Année Médecine - Année universitaire ${academicYear}</p>
@@ -505,7 +509,7 @@ export default function BecharFirstYearCalculator() {
             >
               <h3 className="mb-4 text-lg font-semibold text-gray-900">
                 {subject.name} ({subject.type}, Coefficient:{" "}
-                {subject.coefficient})
+                {subject.coefficient}
               </h3>
 
               <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
@@ -547,30 +551,24 @@ export default function BecharFirstYearCalculator() {
                         className="w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500"
                       />
                     </div>
-                    {subject.component === "TP" && (
-                      <div>
-                        <label className="block mb-1 text-sm font-medium text-gray-700">
-                          Note TP
-                        </label>
-                        <input
-                          type="number"
-                          min="0"
-                          max="20"
-                          step="0.25"
-                          placeholder="Note TP"
-                          value={grades[subject.name]?.tp ?? ""}
-                          onChange={(e) =>
-                            handleGradeChange(
-                              subject.name,
-                              "tp",
-                              e.target.value
-                            )
-                          }
-                          onBlur={() => handleBlur(subject.name, "tp")}
-                          className="w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                        />
-                      </div>
-                    )}
+                    <div>
+                      <label className="block mb-1 text-sm font-medium text-gray-700">
+                        Note TP
+                      </label>
+                      <input
+                        type="number"
+                        min="0"
+                        max="20"
+                        step="0.25"
+                        placeholder="Note TP"
+                        value={grades[subject.name]?.tp ?? ""}
+                        onChange={(e) =>
+                          handleGradeChange(subject.name, "tp", e.target.value)
+                        }
+                        onBlur={() => handleBlur(subject.name, "tp")}
+                        className="w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                      />
+                    </div>
                   </>
                 ) : (
                   <>
