@@ -6,7 +6,6 @@ import {
   ArrowBigRight,
   ArrowBigLeft,
   RotateCcw,
-  Shuffle,
   Printer,
 } from "lucide-react";
 import "./Flashcards.css";
@@ -401,7 +400,7 @@ export default function Flashcards({ lessonId, courseName }) {
         <title>Flashcards</title>
         <style>
           @page { margin: 1cm; }
-          * { font-family: Arial, sans-serif; }  
+          *{font-family: "Lexend Deca", serif;}  
           body { text-align: center; color: #333; margin: 0; padding: 0; }
           .container { width: 100%; margin: auto; padding: 10px; }
           .header { text-align: center; margin-bottom: 5px; }
@@ -479,8 +478,8 @@ export default function Flashcards({ lessonId, courseName }) {
 
   if (flashcards.length === 0) {
     return (
-      <div className="bg-white shadow-sm p-4 lg:mx-0 rounded-lg mb-3">
-        <h3 className="text-lg font-semibold text-gray-900 flex items-center">
+      <div className="p-4 mb-3 bg-white rounded-lg shadow-sm lg:mx-0">
+        <h3 className="flex items-center text-lg font-semibold text-gray-900">
           No Flashcards For This Lesson :(
         </h3>
       </div>
@@ -512,7 +511,7 @@ export default function Flashcards({ lessonId, courseName }) {
             {flashcards[currentIndex]?.question}
             {browserSupport.speech && (
               <button
-                className="absolute top-3 right-2 text-black pr-2"
+                className="absolute pr-2 text-black top-3 right-2"
                 onClick={(e) => {
                   e.stopPropagation();
                   speakFlashcard();
@@ -522,7 +521,7 @@ export default function Flashcards({ lessonId, courseName }) {
               </button>
             )}
             <button
-              className="absolute top-2 left-2 pr-2 rounded-full p-1"
+              className="absolute p-1 pr-2 rounded-full top-2 left-2"
               onClick={(e) => {
                 e.stopPropagation();
                 toggleFavorite();
@@ -539,7 +538,7 @@ export default function Flashcards({ lessonId, courseName }) {
             {flashcards[currentIndex]?.answer}
             {browserSupport.speech && (
               <button
-                className="absolute top-3 right-2 text-black pr-2"
+                className="absolute pr-2 text-black top-3 right-2"
                 onClick={(e) => {
                   e.stopPropagation();
                   speakFlashcard();
@@ -573,7 +572,7 @@ export default function Flashcards({ lessonId, courseName }) {
         ></div>
       </div>
 
-      <div className="mt-3 flex items-center justify-center gap-2">
+      <div className="flex items-center justify-center gap-2 mt-3">
         <input
           type="number"
           value={inputValue}
@@ -588,7 +587,7 @@ export default function Flashcards({ lessonId, courseName }) {
       </div>
       <div className="pt-4">
         <button
-          className="prev-next-button flex items-center gap-2"
+          className="flex items-center gap-2 prev-next-button"
           onClick={PrintCards}
         >
           Imprimer <Printer />

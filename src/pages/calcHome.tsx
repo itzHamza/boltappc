@@ -31,14 +31,13 @@ const WILAYAS: Wilaya[] = [
   //     { id: "second", name: "Deuxième Année", path: "/calc/batna/secondyear" },
   //   ],
   // },
-  // {
-  //   id: "oran",
-  //   name: "Oran",
-  //   years: [
-  //     { id: "first", name: "Première Année", path: "/calc/oran/firstyear" },
-  //     { id: "second", name: "Deuxième Année", path: "/calc/oran/secondyear" },
-  //   ],
-  // },
+  {
+    id: "oran",
+    name: "Oran",
+    years: [
+      { id: "first", name: "Première Année", path: "/calc/oran/firstyear" },
+    ],
+  },
 ];
 
 export function CalcHomePage() {
@@ -102,7 +101,7 @@ export function CalcHomePage() {
                 <Link
                   key={year.id}
                   to={year.path}
-                  className="items-center justify-between block w-full p-4 transition-colors bg-white border border-gray-200 rounded-lg  hover:bg-blue-50 hover:border-blue-200"
+                  className="items-center justify-between block w-full p-4 transition-colors bg-white border border-gray-200 rounded-lg hover:bg-blue-50 hover:border-blue-200"
                 >
                   <span className="flex items-center">
                     <GraduationCap className="w-5 h-5 mr-3 text-blue-600" />

@@ -31,6 +31,7 @@ import { Toaster } from "sonner";
 // Import calculator pages for different wilayas
 import { AlgerFirstYearCalculator } from "./pages/calculator/alger/firstyear/firstyear";
 import { AlgerSecondYearCalculator } from "./pages/calculator/alger/secondyear/secondyear";
+import OranFirstYearCalculator from "./pages/calculator/oran/firstyear";
 
 
 function App() {
@@ -120,8 +121,8 @@ function App() {
             element={
               <div className="min-h-screen bg-gray-50">
                 <Header />
-                <main className="lg:ml-64 pt-14 p-0 m:p-8 ">
-                  <div className="w-full mx-auto max-w-full sm:max-w-screen-lg sm:px-0">
+                <main className="p-0 lg:ml-64 pt-14 m:p-8 ">
+                  <div className="w-full max-w-full mx-auto sm:max-w-screen-lg sm:px-0">
                     <Routes>
                       {/* Home Page */}
                       <Route path="/" element={<HomePage />} />
@@ -138,6 +139,12 @@ function App() {
                       <Route
                         path="/calc/alger/secondyear"
                         element={<AlgerSecondYearCalculator />}
+                      />
+
+                      {/* oran Routes */}
+                      <Route
+                        path="/calc/oran/firstyear"
+                        element={<OranFirstYearCalculator />}
                       />
 
                       {/* Study Content Routes */}
