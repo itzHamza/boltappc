@@ -35,6 +35,7 @@ import OranFirstYearCalculator from "./pages/calculator/oran/firstyear";
 import ConstantineMedicineCalculator from "./pages/calculator/costantine/firstyear";
 import { TiziFirstYearCalculator } from "./pages/calculator/tizi/firstyear";
 import { BlidaFirstYearCalculator } from "./pages/calculator/blida/firstyear";
+import BecharFirstYearCalculator from "./pages/calculator/bechar/firstyear";
 
 
 function App() {
@@ -163,6 +164,11 @@ function App() {
                       <Route
                         path="/calc/blida/firstyear"
                         element={<BlidaFirstYearCalculator />}
+                      />
+                      {/* Bechar Routes */}
+                      <Route
+                        path="/calc/bechar/firstyear"
+                        element={<BecharFirstYearCalculator />}
                       />
 
                       {/* Study Content Routes */}
