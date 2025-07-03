@@ -503,8 +503,9 @@ export default function OranFirstYearCalculator() {
   return (
     <div className="max-w-6xl px-4 py-8 mx-auto">
       <h1 className="mb-8 text-3xl font-bold text-gray-900">
-        Calculateur de Notes - 1ère Année Médecine Oran
+        Calculateur de Notes - 1ère Année Médecine
       </h1>
+      <p className="mb-8 text-gray-600">Université Oran</p>
 
       {validationErrors.length > 0 && (
         <div className="p-4 mb-6 border border-red-200 rounded-lg bg-red-50">

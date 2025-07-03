@@ -34,6 +34,7 @@ import { AlgerSecondYearCalculator } from "./pages/calculator/alger/secondyear/s
 import OranFirstYearCalculator from "./pages/calculator/oran/firstyear";
 import ConstantineMedicineCalculator from "./pages/calculator/costantine/firstyear";
 import { TiziFirstYearCalculator } from "./pages/calculator/tizi/firstyear";
+import { BlidaFirstYearCalculator } from "./pages/calculator/blida/firstyear";
 
 
 function App() {
@@ -157,6 +158,11 @@ function App() {
                       <Route
                         path="/calc/tizi/firstyear"
                         element={<TiziFirstYearCalculator />}
+                      />
+                      {/* Blida Routes */}
+                      <Route
+                        path="/calc/blida/firstyear"
+                        element={<BlidaFirstYearCalculator />}
                       />
 
                       {/* Study Content Routes */}

@@ -25,10 +25,10 @@ const SUBJECTS: Subject[] = [
 ];
 
 const SEMESTER1_SUBJECTS = SUBJECTS.filter(
-  (s) => s.name !== "Physiologie" && s.name !== "Embryologie"
+  (s) => s.name !== "Physiologie" && s.name !== "Histologie"
 );
 const SEMESTER2_SUBJECTS = SUBJECTS.filter(
-  (s) => s.name !== "Histologie" && s.name !== "SSH"
+  (s) => s.name !== "Embryologie" && s.name !== "SSH"
 );
 
 type CalculationType = "semester1" | "semester2" | "annual";
@@ -44,7 +44,7 @@ type StoredData = {
   calculationType: CalculationType;
 };
 
-export function TiziFirstYearCalculator() {
+export function BlidaFirstYearCalculator() {
   const [calculationType, setCalculationType] =
     useState<CalculationType>("semester1");
   const [grades, setGrades] = useState<
@@ -134,13 +134,13 @@ export function TiziFirstYearCalculator() {
           if (!grades[subject.name]?.sem2 && grades[subject.name]?.sem2 !== 0) {
             errors.push(`${subject.name} Semestre 2 est requis`);
           }
-        } else if (subject.name === "SSH" || subject.name === "Histologie") {
+        } else if (subject.name === "Embryologie" || subject.name === "SSH") {
           if (!grades[subject.name]?.sem1 && grades[subject.name]?.sem1 !== 0) {
             errors.push(`${subject.name} est requis`);
           }
         } else if (
           subject.name === "Physiologie" ||
-          subject.name === "Embryologie"
+          subject.name === "Histologie"
         ) {
           if (!grades[subject.name]?.sem2 && grades[subject.name]?.sem2 !== 0) {
             errors.push(`${subject.name} est requis`);
@@ -212,10 +212,10 @@ export function TiziFirstYearCalculator() {
           if (grade < 5) {
             if (
               (semesterKey === "sem1" &&
-                (subject.name === "Histologie" || subject.name === "SSH")) ||
+                (subject.name === "Embryologie" || subject.name === "SSH")) ||
               (semesterKey === "sem2" &&
                 (subject.name === "Physiologie" ||
-                  subject.name === "Embryologie"))
+                  subject.name === "Histologie"))
             ) {
               hasDirectRattrapage = true;
               warnings.push(`Rattrapage direct requis pour ${subject.name}`);
@@ -264,11 +264,11 @@ export function TiziFirstYearCalculator() {
 
       let average: number | undefined;
 
-      if (subject.name === "Histologie" || subject.name === "SSH") {
+      if (subject.name === "Embryologie" || subject.name === "SSH") {
         average = sem1Grade;
       } else if (
         subject.name === "Physiologie" ||
-        subject.name === "Embryologie"
+        subject.name === "Histologie"
       ) {
         average = sem2Grade;
       } else if (sem1Grade !== undefined && sem2Grade !== undefined) {
@@ -487,9 +487,8 @@ export function TiziFirstYearCalculator() {
       <div class="container">
         <div class="header">
           <div class="logo-placeholder"><img src="https://tbib.space/loogo.png" alt="LOGO" style="width: 120px;"></div>
-          <div class="logo-placeholder">Université Tizi ouzou</div>
+            <div class="logo-placeholder">Université Blida</div>
           <h1>RELEVÉ DE NOTES</h1>
-          <p>Première Année Médecine</p>
           <p>Année universitaire ${academicYear}</p>
         </div>
         
@@ -622,7 +621,7 @@ export function TiziFirstYearCalculator() {
       <h1 className="mb-4 text-3xl font-bold text-gray-900">
         Calculateur de Notes - 1ère Année Médecine
       </h1>
-      <p className="mb-8 text-gray-600">Université Tizi Ouzou</p>
+      <p className="mb-8 text-gray-600">Université Blida</p>
 
       {validationErrors.length > 0 && (
         <motion.div
@@ -695,19 +694,19 @@ export function TiziFirstYearCalculator() {
               <label className="block text-sm font-medium text-gray-700">
                 {subject.name} (Coefficient: {subject.coefficient})
                 {calculationType === "annual" &&
-                  (subject.name === "Histologie" || subject.name === "SSH"
+                  (subject.name === "Embryologie" || subject.name === "SSH"
                     ? " (Sem 1)"
                     : subject.name === "Physiologie" ||
-                      subject.name === "Embryologie"
+                      subject.name === "Histologie"
                     ? " (Sem 2)"
                     : "")}
               </label>
               <div className="flex space-x-4">
                 {calculationType === "annual" &&
-                subject.name !== "Histologie" &&
+                subject.name !== "Embryologie" &&
                 subject.name !== "SSH" &&
                 subject.name !== "Physiologie" &&
-                subject.name !== "Embryologie" ? (
+                subject.name !== "Histologie" ? (
                   <>
                     <input
                       type="number"
@@ -737,7 +736,7 @@ export function TiziFirstYearCalculator() {
                     />
                   </>
                 ) : calculationType === "annual" &&
-                  (subject.name === "Histologie" || subject.name === "SSH") ? (
+                  (subject.name === "Embryologie" || subject.name === "SSH") ? (
                   <input
                     type="number"
                     min="0"
@@ -753,7 +752,7 @@ export function TiziFirstYearCalculator() {
                   />
                 ) : calculationType === "annual" &&
                   (subject.name === "Physiologie" ||
-                    subject.name === "Embryologie") ? (
+                    subject.name === "Histologie") ? (
                   <input
                     type="number"
                     min="0"
@@ -850,10 +849,10 @@ export function TiziFirstYearCalculator() {
                         <span>
                           {subject}
                           {calculationType === "annual" &&
-                            (subject === "Histologie" || subject === "SSH"
+                            (subject === "Embryologie" || subject === "SSH"
                               ? " (Sem 1)"
                               : subject === "Physiologie" ||
-                                subject === "Embryologie"
+                                subject === "Histologie"
                               ? " (Sem 2)"
                               : "")}
                           :
@@ -956,10 +955,10 @@ export function TiziFirstYearCalculator() {
                         <span>
                           {subject}
                           {calculationType === "annual" &&
-                            (subject === "Histologie" || subject === "SSH"
+                            (subject === "Embryologie" || subject === "SSH"
                               ? " (Sem 1)"
                               : subject === "Physiologie" ||
-                                subject === "Embryologie"
+                                subject === "Histologie"
                               ? " (Sem 2)"
                               : "")}
                           :
