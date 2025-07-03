@@ -27,7 +27,11 @@ const WILAYAS: Wilaya[] = [
     id: "costantine",
     name: "costantine",
     years: [
-      { id: "first", name: "Première Année", path: "/calc/costantine/firstyear" },
+      {
+        id: "first",
+        name: "Première Année",
+        path: "/calc/costantine/firstyear",
+      },
     ],
   },
   {
@@ -35,6 +39,13 @@ const WILAYAS: Wilaya[] = [
     name: "Oran",
     years: [
       { id: "first", name: "Première Année", path: "/calc/oran/firstyear" },
+    ],
+  },
+  {
+    id: "tizi ouzou",
+    name: "Tizi ouzou",
+    years: [
+      { id: "first", name: "Première Année", path: "/calc/tizi/firstyear" },
     ],
   },
 ];

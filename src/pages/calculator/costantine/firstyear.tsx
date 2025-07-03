@@ -357,6 +357,7 @@ export default function ConstantineMedicineCalculator() {
     <body>
       <div class="container">
         <div class="header">
+          <div class="logo-placeholder"><img src="https://tbib.space/loogo.png" alt="LOGO" style="width: 120px;"></div>
           <div class="logo-placeholder">Université Constantine 3</div>
           <h1>RELEVÉ DE NOTES</h1>
           <p>Première Année Médecine</p>

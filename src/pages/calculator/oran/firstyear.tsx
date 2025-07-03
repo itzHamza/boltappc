@@ -409,6 +409,7 @@ export default function OranFirstYearCalculator() {
     <body>
       <div class="container">
         <div class="header">
+          <div class="logo-placeholder"><img src="https://tbib.space/loogo.png" alt="LOGO" style="width: 120px;"></div>
           <div class="logo-placeholder">UNIVERSITÉ D'ORAN</div>
           <h1>RELEVÉ DE NOTES</h1>
           <p>Première Année Médecine - Année universitaire ${academicYear}</p>

@@ -52,11 +52,12 @@ export default function PDFViewerPage() {
   }, [decodedUrl]);
 
   return (
-    <div className="w-screen h-screen fixed top-0 left-0 bg-black">
+    <div className="fixed top-0 left-0 w-screen h-screen bg-black">
       <Helmet>
         <title>PDFviewer - TBiB Cours</title>
       </Helmet>
 
+      
       <Chatbot />
       <div id="adobe-dc-view" className="w-full h-full" />
     </div>

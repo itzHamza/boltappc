@@ -33,6 +33,7 @@ import { AlgerFirstYearCalculator } from "./pages/calculator/alger/firstyear/fir
 import { AlgerSecondYearCalculator } from "./pages/calculator/alger/secondyear/secondyear";
 import OranFirstYearCalculator from "./pages/calculator/oran/firstyear";
 import ConstantineMedicineCalculator from "./pages/calculator/costantine/firstyear";
+import { TiziFirstYearCalculator } from "./pages/calculator/tizi/firstyear";
 
 
 function App() {
@@ -151,6 +152,11 @@ function App() {
                       <Route
                         path="/calc/costantine/firstyear"
                         element={<ConstantineMedicineCalculator />}
+                      />
+                      {/* Tizi Ouzou Routes */}
+                      <Route
+                        path="/calc/tizi/firstyear"
+                        element={<TiziFirstYearCalculator />}
                       />
 
                       {/* Study Content Routes */}
