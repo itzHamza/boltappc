@@ -608,7 +608,7 @@ export function BlidaFirstYearCalculator() {
   return (
     <div className="max-w-4xl px-4 py-8 mx-auto">
       <Helmet>
-        <title>TBiB - Calculator</title>
+        <title>Calculateur de Notes - 1ère Année Médecine Blida</title>
         <meta
           name="description"
           content="Calculez facilement votre moyenne avec la calculatrice de TBiB. Un outil simple, rapide et précis."

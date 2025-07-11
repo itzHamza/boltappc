@@ -1,5 +1,6 @@
 import React, { useState, useCallback, useEffect } from "react";
 import { X, AlertTriangle, Printer, RefreshCw } from "lucide-react";
+import { Helmet } from "react-helmet-async";
 
 type SubjectType = "annuelle" | "semestrielle";
 type ComponentType = "TP" | null;
@@ -471,6 +472,17 @@ export default function BecharFirstYearCalculator() {
 
   return (
     <div className="max-w-6xl px-4 py-8 mx-auto">
+            <Helmet>
+              <title>Calculateur de Notes - 1ère Année Médecine Bechar</title>
+              <meta
+                name="description"
+                content="Calculez facilement votre moyenne avec la calculatrice de TBiB. Un outil simple, rapide et précis."
+              />
+              <meta
+                name="keywords"
+                content="calculatrice médicale, calculatrice médicale tbib, calculatrice médicale tbib cours, tbib cours calculatrice médicale, tbib calculatrice médicale, calculatrice tbib, calculatrice tbib cours, tbib cours calculatrice, tbib calculatrice, calcul médical, outil médical en ligne, médecine, étudiants en médecine, TBiB, TBiB Cours, TBiB Academy, tbib calculator, tbib calculatrice, calculatrice santé, formules médicales, formules physiologiques, convertisseur médical, calculs cliniques, médecine Algérie, études médicales, tbib space, study with tbib, outils étudiants médecine"
+              />
+            </Helmet>
       <h1 className="mb-8 text-3xl font-bold text-gray-900">
         Calculateur de Notes - 1ère Année Médecine
       </h1>

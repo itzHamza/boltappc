@@ -56,6 +56,13 @@ const WILAYAS: Wilaya[] = [
     ],
   },
   {
+    id: "Batna",
+    name: "Batna",
+    years: [
+      { id: "second", name: "Deuxième Année", path: "/calc/batna/secondyear" },
+    ],
+  },
+  {
     id: "tizi ouzou",
     name: "Tizi ouzou",
     years: [

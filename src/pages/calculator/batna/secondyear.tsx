@@ -1,41 +1,32 @@
 import React, { useState, useCallback, useEffect } from "react";
 import { X, AlertTriangle, Printer, RefreshCw } from "lucide-react";
-import { Helmet } from "react-helmet-async";
 
-type SubjectType = "annuelle" | "semestrielle";
+type SubjectType = "unit" | "module";
 type ComponentType = "TP" | "TD" | null;
 
 type Subject = {
   name: string;
   type: SubjectType;
   coefficient: number;
-  component?: ComponentType;
+  components?: ComponentType[];
 };
 
 type GradeData = {
-  s1?: number;
-  s2?: number;
-  tp?: number;
+  exam?: number;
+  tpAnatomy?: number;
+  tpHistology?: number;
+  tdPhysiology?: number;
   td?: number;
-  note?: number; // For semestrielle subjects
 };
 
 const SUBJECTS: Subject[] = [
-  { name: "Anatomie", type: "annuelle", coefficient: 2, component: "TP" },
-  { name: "Biochimie", type: "annuelle", coefficient: 2 },
-  { name: "Cytologie", type: "annuelle", coefficient: 2, component: "TP" },
-  { name: "Biostatistique", type: "annuelle", coefficient: 2 },
-  { name: "Biophysique", type: "annuelle", coefficient: 2 },
-  { name: "Chimie", type: "annuelle", coefficient: 2, component: "TP" },
-  {
-    name: "Embryologie",
-    type: "semestrielle",
-    coefficient: 1,
-    component: "TD",
-  },
-  { name: "Physiologie", type: "semestrielle", coefficient: 1 },
-  { name: "SSH", type: "semestrielle", coefficient: 1 },
-  { name: "Histologie", type: "semestrielle", coefficient: 1, component: "TD" },
+  { name: "Cardio", type: "unit", coefficient: 4, components: ["TP", "TD"] },
+  { name: "Digestive", type: "unit", coefficient: 4, components: ["TP", "TD"] },
+  { name: "Urinary", type: "unit", coefficient: 4, components: ["TP", "TD"] },
+  { name: "Endocrinology", type: "unit", coefficient: 4, components: ["TP", "TD"] },
+  { name: "Neurology", type: "unit", coefficient: 4, components: ["TP", "TD"] },
+  { name: "Genetics", type: "module", coefficient: 2, components: ["TD"] },
+  { name: "Immunology", type: "module", coefficient: 2, components: [] },
 ];
 
 type StoredData = {
@@ -48,7 +39,7 @@ type StoredData = {
   } | null;
 };
 
-export default function OranFirstYearCalculator() {
+export default function BatnaSecondYearCalculator() {
   const [grades, setGrades] = useState<Record<string, GradeData>>({});
   const [result, setResult] = useState<{
     moduleAverages: Record<string, number>;
@@ -60,34 +51,16 @@ export default function OranFirstYearCalculator() {
   const [showResults, setShowResults] = useState(false);
   const [validationErrors, setValidationErrors] = useState<string[]>([]);
 
-  // Load data from localStorage on component mount
+  // Load data from memory on component mount
   useEffect(() => {
-    try {
-      const savedData = localStorage.getItem("oranMedicalGrades");
-      if (savedData) {
-        const parsedData: StoredData = JSON.parse(savedData);
-        if (typeof parsedData === "object" && parsedData !== null) {
-          setGrades(parsedData.grades || {});
-          setResult(parsedData.result);
-          setShowResults(!!parsedData.result);
-        }
-      }
-    } catch (e) {
-      console.error("Failed to load saved data:", e);
-    }
+    // In Claude.ai artifacts, we can't use localStorage, so we'll use component state
+    // This data will persist during the session
   }, []);
 
-  // Save data to localStorage whenever grades or result change
+  // Save data to memory whenever grades or result change
   useEffect(() => {
-    try {
-      const dataToSave: StoredData = {
-        grades,
-        result,
-      };
-      localStorage.setItem("oranMedicalGrades", JSON.stringify(dataToSave));
-    } catch (e) {
-      console.error("Failed to save data:", e);
-    }
+    // In a real environment, this would save to localStorage
+    // For Claude.ai, we'll keep data in memory during the session
   }, [grades, result]);
 
   const handleGradeChange = useCallback(
@@ -133,33 +106,25 @@ export default function OranFirstYearCalculator() {
 
   const calculateModuleAverage = useCallback(
     (subject: Subject, gradeData: GradeData): number | null => {
-      if (subject.type === "annuelle") {
-        if (subject.component === "TP") {
-          // Average = ((S1 + S2) * 2 + TP) / 5
-          const { s1, s2, tp } = gradeData;
-          if (s1 !== undefined && s2 !== undefined && tp !== undefined) {
-            return ((s1 + s2) * 2 + tp) / 5;
-          }
-        } else {
-          // Average = ((S1 + S2) * 2) / 4
-          const { s1, s2 } = gradeData;
-          if (s1 !== undefined && s2 !== undefined) {
-            return ((s1 + s2) * 2) / 4;
-          }
+      if (subject.type === "unit") {
+        // Unit Average Formula: {(Exam Note × 4) + [(TP Anatomy + TP Histology + TD Physiology) / 3]} ÷ 5
+        const { exam, tpAnatomy, tpHistology, tdPhysiology } = gradeData;
+        if (exam !== undefined && tpAnatomy !== undefined && tpHistology !== undefined && tdPhysiology !== undefined) {
+          const practicalAverage = (tpAnatomy + tpHistology + tdPhysiology) / 3;
+          return (exam * 4 + practicalAverage) / 5;
         }
-      } else {
-        // semestrielle
-        if (subject.component === "TD") {
-          // Average = ((Note * 4) + TD) / 5
-          const { note, td } = gradeData;
-          if (note !== undefined && td !== undefined) {
-            return (note * 4 + td) / 5;
+      } else if (subject.type === "module") {
+        if (subject.name === "Genetics") {
+          // Genetics: Average = ((Exam × 2) + TD) / 3
+          const { exam, td } = gradeData;
+          if (exam !== undefined && td !== undefined) {
+            return (exam * 2 + td) / 3;
           }
-        } else {
-          // Average = Single note
-          const { note } = gradeData;
-          if (note !== undefined) {
-            return note;
+        } else if (subject.name === "Immunology") {
+          // Immunology: Average = Exam only
+          const { exam } = gradeData;
+          if (exam !== undefined) {
+            return exam;
           }
         }
       }
@@ -174,22 +139,24 @@ export default function OranFirstYearCalculator() {
     SUBJECTS.forEach((subject) => {
       const gradeData = grades[subject.name] || {};
 
-      if (subject.type === "annuelle") {
-        if (gradeData.s1 === undefined) {
-          errors.push(`${subject.name} - Semestre 1 requis`);
+      if (subject.type === "unit") {
+        if (gradeData.exam === undefined) {
+          errors.push(`${subject.name} - Note d'examen requise`);
         }
-        if (gradeData.s2 === undefined) {
-          errors.push(`${subject.name} - Semestre 2 requis`);
+        if (gradeData.tpAnatomy === undefined) {
+          errors.push(`${subject.name} - Note TP Anatomie requise`);
         }
-        if (subject.component === "TP" && gradeData.tp === undefined) {
-          errors.push(`${subject.name} - Note TP requise`);
+        if (gradeData.tpHistology === undefined) {
+          errors.push(`${subject.name} - Note TP Histologie requise`);
         }
-      } else {
-        // semestrielle
-        if (gradeData.note === undefined) {
-          errors.push(`${subject.name} - Note requise`);
+        if (gradeData.tdPhysiology === undefined) {
+          errors.push(`${subject.name} - Note TD Physiologie requise`);
         }
-        if (subject.component === "TD" && gradeData.td === undefined) {
+      } else if (subject.type === "module") {
+        if (gradeData.exam === undefined) {
+          errors.push(`${subject.name} - Note d'examen requise`);
+        }
+        if (subject.name === "Genetics" && gradeData.td === undefined) {
           errors.push(`${subject.name} - Note TD requise`);
         }
       }
@@ -219,37 +186,43 @@ export default function OranFirstYearCalculator() {
       }
     });
 
-    // Calculate final average
-    const finalAverage =
-      totalCoefficients > 0 ? totalWeightedGrades / totalCoefficients : 0;
+    // Calculate final average (total coefficient should be 24)
+    const finalAverage = totalCoefficients > 0 ? totalWeightedGrades / totalCoefficients : 0;
 
     // Determine status and warnings
     let status = "";
     const modulesBelow5: string[] = [];
     const modulesBetween5And10: string[] = [];
+    let allModulesAbove5 = true;
 
     Object.entries(moduleAverages).forEach(([subjectName, average]) => {
       if (average < 5) {
         modulesBelow5.push(subjectName);
+        allModulesAbove5 = false;
       } else if (average < 10) {
         modulesBetween5And10.push(subjectName);
       }
     });
 
     if (finalAverage >= 10) {
-      if (modulesBelow5.length === 0) {
-        status = "✅ Passage en 2ème année";
+      if (allModulesAbove5) {
+        status = "✅ Passage en 3ème année";
       } else {
-        status = "Rattrapage obligatoire";
+        status = "❌ Rattrapage obligatoire";
         modulesBelow5.forEach((subject) => {
           warnings.push(`Rattrapage obligatoire pour ${subject}`);
         });
       }
     } else {
-      status = "Rattrapage";
-      modulesBelow5.forEach((subject) => {
-        warnings.push(`Rattrapage obligatoire pour ${subject}`);
-      });
+      if (modulesBelow5.length > 0) {
+        status = "❌ Rattrapage obligatoire";
+        modulesBelow5.forEach((subject) => {
+          warnings.push(`Rattrapage obligatoire pour ${subject}`);
+        });
+      } else {
+        status = "📌 Rattrapage facultatif";
+      }
+      
       modulesBetween5And10.forEach((subject) => {
         warnings.push(`Rattrapage facultatif pour ${subject}`);
       });
@@ -272,7 +245,6 @@ export default function OranFirstYearCalculator() {
     setResult(null);
     setShowResults(false);
     setValidationErrors([]);
-    localStorage.removeItem("oranMedicalGrades");
   }, []);
 
   const getEmojiForScore = useCallback((score: number) => {
@@ -314,12 +286,11 @@ export default function OranFirstYearCalculator() {
     <!DOCTYPE html>
     <html>
     <head>
-          <link href="https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@300;400;700&family=Serif:wght@400;700&display=swap" rel="stylesheet">
+      <link href="https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@300;400;700&family=Serif:wght@400;700&display=swap" rel="stylesheet">
       <title>Relevé de Notes - ${studentName}</title>
       <style>
         @page { margin: 2cm; }
-                *{font-family: "Lexend Deca", serif;}  
-
+        * { font-family: "Lexend Deca", serif; }
         body { 
           font-family: Arial, sans-serif;
           line-height: 1.6;
@@ -410,23 +381,22 @@ export default function OranFirstYearCalculator() {
     <body>
       <div class="container">
         <div class="header">
-          <div class="logo-placeholder"><img src="https://tbib.space/loogo.png" alt="LOGO" style="width: 120px;"></div>
-          <div class="logo-placeholder">UNIVERSITÉ D'ORAN</div>
+          <div class="logo-placeholder">UNIVERSITÉ DE BATNA</div>
           <h1>RELEVÉ DE NOTES</h1>
-          <p>Première Année Médecine - Année universitaire ${academicYear}</p>
+          <p>Deuxième Année Médecine - Année universitaire ${academicYear}</p>
         </div>
         
         <div class="student-info">
           <p><strong>Nom et prénom:</strong> ${studentName}</p>
           <p><strong>Spécialisation:</strong> Médecine</p>
-          <p><strong>Niveau:</strong> Première Année</p>
+          <p><strong>Niveau:</strong> Deuxième Année</p>
           <p><strong>Date d'édition:</strong> ${formatDate(today)}</p>
         </div>
         
         <table>
           <thead>
             <tr>
-              <th>Module</th>
+              <th>Matière</th>
               <th>Type</th>
               <th>Coefficient</th>
               <th>Moyenne</th>
@@ -439,11 +409,9 @@ export default function OranFirstYearCalculator() {
               return `
                 <tr>
                   <td>${subject.name}</td>
-                  <td>${subject.type}</td>
+                  <td>${subject.type === "unit" ? "Unité" : "Module"}</td>
                   <td>${subject.coefficient}</td>
-                  <td style="color: ${getGradeColor(
-                    average
-                  )}; font-weight: bold;">
+                  <td style="color: ${getGradeColor(average)}; font-weight: bold;">
                     ${average.toFixed(2)}/20
                   </td>
                   <td style="color: ${getGradeColor(average)};">
@@ -457,38 +425,28 @@ export default function OranFirstYearCalculator() {
         
         <div class="results-summary">
           <h2>Résultats Finaux</h2>
-          <div class="average">Moyenne générale: ${result.finalAverage.toFixed(
-            2
-          )}/20</div>
+          <div class="average">Moyenne générale: ${result.finalAverage.toFixed(2)}/20</div>
           <div class="status" style="background-color: ${
-            result.status.includes("✅")
-              ? "#dcfce7; color: #16a34a;"
-              : "#fee2e2; color: #dc2626;"
+            result.status.includes("✅") ? "#dcfce7; color: #16a34a;" : 
+            result.status.includes("📌") ? "#fef3c7; color: #d97706;" : 
+            "#fee2e2; color: #dc2626;"
           }">
             ${result.status}
           </div>
         </div>
         
-        ${
-          result.warnings.length > 0
-            ? `
+        ${result.warnings.length > 0 ? `
           <div class="warnings">
             <h3>Observations importantes:</h3>
             <ul>
-              ${result.warnings
-                .map((warning) => `<li class="warning">${warning}</li>`)
-                .join("")}
+              ${result.warnings.map((warning) => `<li class="warning">${warning}</li>`).join("")}
             </ul>
           </div>
-        `
-            : ""
-        }
+        ` : ""}
         
         <div class="footer">
           <p>Ce document est un relevé de notes non officiel</p>
-          <p>Généré le ${formatDate(today)} à ${today.toLocaleTimeString(
-      "fr-FR"
-    )}</p>
+          <p>Généré le ${formatDate(today)} à ${today.toLocaleTimeString("fr-FR")}</p>
         </div>
       </div>
     </body>
@@ -503,21 +461,10 @@ export default function OranFirstYearCalculator() {
 
   return (
     <div className="max-w-6xl px-4 py-8 mx-auto">
-            <Helmet>
-              <title>Calculateur de Notes - 1ère Année Médecine Oran</title>
-              <meta
-                name="description"
-                content="Calculez facilement votre moyenne avec la calculatrice de TBiB. Un outil simple, rapide et précis."
-              />
-              <meta
-                name="keywords"
-                content="calculatrice médicale, calculatrice médicale tbib, calculatrice médicale tbib cours, tbib cours calculatrice médicale, tbib calculatrice médicale, calculatrice tbib, calculatrice tbib cours, tbib cours calculatrice, tbib calculatrice, calcul médical, outil médical en ligne, médecine, étudiants en médecine, TBiB, TBiB Cours, TBiB Academy, tbib calculator, tbib calculatrice, calculatrice santé, formules médicales, formules physiologiques, convertisseur médical, calculs cliniques, médecine Algérie, études médicales, tbib space, study with tbib, outils étudiants médecine"
-              />
-            </Helmet>
       <h1 className="mb-8 text-3xl font-bold text-gray-900">
-        Calculateur de Notes - 1ère Année Médecine
+        Calculateur de Notes - 2ème Année Médecine
       </h1>
-      <p className="mb-8 text-gray-600">Université Oran</p>
+      <p className="mb-8 text-gray-600">Université de Batna</p>
 
       {validationErrors.length > 0 && (
         <div className="p-4 mb-6 border border-red-200 rounded-lg bg-red-50">
@@ -551,123 +498,107 @@ export default function OranFirstYearCalculator() {
               className="pb-6 border-b border-gray-200 last:border-b-0"
             >
               <h3 className="mb-4 text-lg font-semibold text-gray-900">
-                {subject.name} ({subject.type}, Coefficient:{" "}
-                {subject.coefficient})
+                {subject.name} ({subject.type === "unit" ? "Unité" : "Module"}, Coefficient: {subject.coefficient})
               </h3>
 
-              <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-                {subject.type === "annuelle" ? (
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
+                <div>
+                  <label className="block mb-1 text-sm font-medium text-gray-700">
+                    Note d'Examen
+                  </label>
+                  <input
+                    type="number"
+                    min="0"
+                    max="20"
+                    step="0.25"
+                    placeholder="Note Examen"
+                    value={grades[subject.name]?.exam ?? ""}
+                    onChange={(e) =>
+                      handleGradeChange(subject.name, "exam", e.target.value)
+                    }
+                    onBlur={() => handleBlur(subject.name, "exam")}
+                    className="w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                  />
+                </div>
+
+                {subject.type === "unit" && (
                   <>
                     <div>
                       <label className="block mb-1 text-sm font-medium text-gray-700">
-                        Semestre 1
+                        TP Anatomie
                       </label>
                       <input
                         type="number"
                         min="0"
                         max="20"
                         step="0.25"
-                        placeholder="Note S1"
-                        value={grades[subject.name]?.s1 ?? ""}
+                        placeholder="Note TP Anatomie"
+                        value={grades[subject.name]?.tpAnatomy ?? ""}
                         onChange={(e) =>
-                          handleGradeChange(subject.name, "s1", e.target.value)
+                          handleGradeChange(subject.name, "tpAnatomy", e.target.value)
                         }
-                        onBlur={() => handleBlur(subject.name, "s1")}
+                        onBlur={() => handleBlur(subject.name, "tpAnatomy")}
                         className="w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500"
                       />
                     </div>
                     <div>
                       <label className="block mb-1 text-sm font-medium text-gray-700">
-                        Semestre 2
+                        TP Histologie
                       </label>
                       <input
                         type="number"
                         min="0"
                         max="20"
                         step="0.25"
-                        placeholder="Note S2"
-                        value={grades[subject.name]?.s2 ?? ""}
+                        placeholder="Note TP Histologie"
+                        value={grades[subject.name]?.tpHistology ?? ""}
                         onChange={(e) =>
-                          handleGradeChange(subject.name, "s2", e.target.value)
+                          handleGradeChange(subject.name, "tpHistology", e.target.value)
                         }
-                        onBlur={() => handleBlur(subject.name, "s2")}
+                        onBlur={() => handleBlur(subject.name, "tpHistology")}
                         className="w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500"
                       />
                     </div>
-                    {subject.component === "TP" && (
-                      <div>
-                        <label className="block mb-1 text-sm font-medium text-gray-700">
-                          Note TP
-                        </label>
-                        <input
-                          type="number"
-                          min="0"
-                          max="20"
-                          step="0.25"
-                          placeholder="Note TP"
-                          value={grades[subject.name]?.tp ?? ""}
-                          onChange={(e) =>
-                            handleGradeChange(
-                              subject.name,
-                              "tp",
-                              e.target.value
-                            )
-                          }
-                          onBlur={() => handleBlur(subject.name, "tp")}
-                          className="w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                        />
-                      </div>
-                    )}
-                  </>
-                ) : (
-                  <>
                     <div>
                       <label className="block mb-1 text-sm font-medium text-gray-700">
-                        Note
+                        TD Physiologie
                       </label>
                       <input
                         type="number"
                         min="0"
                         max="20"
                         step="0.25"
-                        placeholder="Note"
-                        value={grades[subject.name]?.note ?? ""}
+                        placeholder="Note TD Physiologie"
+                        value={grades[subject.name]?.tdPhysiology ?? ""}
                         onChange={(e) =>
-                          handleGradeChange(
-                            subject.name,
-                            "note",
-                            e.target.value
-                          )
+                          handleGradeChange(subject.name, "tdPhysiology", e.target.value)
                         }
-                        onBlur={() => handleBlur(subject.name, "note")}
+                        onBlur={() => handleBlur(subject.name, "tdPhysiology")}
                         className="w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500"
                       />
                     </div>
-                    {subject.component === "TD" && (
-                      <div>
-                        <label className="block mb-1 text-sm font-medium text-gray-700">
-                          Note TD
-                        </label>
-                        <input
-                          type="number"
-                          min="0"
-                          max="20"
-                          step="0.25"
-                          placeholder="Note TD"
-                          value={grades[subject.name]?.td ?? ""}
-                          onChange={(e) =>
-                            handleGradeChange(
-                              subject.name,
-                              "td",
-                              e.target.value
-                            )
-                          }
-                          onBlur={() => handleBlur(subject.name, "td")}
-                          className="w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                        />
-                      </div>
-                    )}
                   </>
+                )}
+
+                {subject.name === "Genetics" && (
+                  <div>
+                    <label className="block mb-1 text-sm font-medium text-gray-700">
+                      Note TD
+                    </label>
+                    <input
+                      type="number"
+                      min="0"
+                      max="20"
+                      step="0.25"
+                      placeholder="Note TD"
+                      value={grades[subject.name]?.td ?? ""}
+                      onChange={(e) =>
+                        handleGradeChange(subject.name, "td", e.target.value)
+                      }
+                      onBlur={() => handleBlur(subject.name, "td")}
+                      className="w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                    />
+                  </div>
                 )}
               </div>
             </div>
@@ -699,7 +630,7 @@ export default function OranFirstYearCalculator() {
 
           <div className="mb-6">
             <h4 className="mb-4 font-medium text-gray-700">
-              Moyennes par module:
+              Moyennes par matière:
             </h4>
             <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
               {Object.entries(result.moduleAverages).map(
@@ -741,7 +672,9 @@ export default function OranFirstYearCalculator() {
             </div>
             <div
               className={`text-lg font-medium ${
-                result.status.includes("✅") ? "text-green-600" : "text-red-600"
+                result.status.includes("✅") ? "text-green-600" : 
+                result.status.includes("📌") ? "text-yellow-600" : 
+                "text-red-600"
               }`}
             >
               {result.status}
@@ -781,7 +714,7 @@ export default function OranFirstYearCalculator() {
 
             <div className="mb-6">
               <h4 className="mb-4 font-medium text-gray-700">
-                Moyennes par module:
+                Moyennes par matière:
               </h4>
               <div className="space-y-2">
                 {Object.entries(result.moduleAverages).map(
@@ -817,9 +750,9 @@ export default function OranFirstYearCalculator() {
               </div>
               <div
                 className={`text-lg font-medium ${
-                  result.status.includes("✅")
-                    ? "text-green-600"
-                    : "text-red-600"
+                  result.status.includes("✅") ? "text-green-600" : 
+                  result.status.includes("📌") ? "text-yellow-600" : 
+                  "text-red-600"
                 }`}
               >
                 {result.status}
@@ -850,13 +783,13 @@ export default function OranFirstYearCalculator() {
               </button>
               <button
                 onClick={() => setShowModal(false)}
-                className="px-4 py-2 font-medium text-white transition-colors bg-blue-600 rounded-lg hover:bg-blue-700"
-              >
-                Fermer
-              </button>
+                  className="px-4 py-2 font-medium text-white transition-colors bg-blue-600 rounded-lg hover:bg-blue-700"
+                >
+                  Fermer
+                </button>
+              </div>
             </div>
           </div>
-        </div>
       )}
     </div>
   );

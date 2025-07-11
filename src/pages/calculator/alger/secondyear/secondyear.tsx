@@ -472,19 +472,19 @@ export function AlgerSecondYearCalculator() {
   }, [result, grades, UNITS]);
 
   return (
-    <div className="max-w-4xl mx-auto py-8 px-4">
+    <div className="max-w-4xl px-4 py-8 mx-auto">
       <Helmet>
-        <title>TBiB - Calculateur 2ème Année</title>
+        <title>Calculateur de Notes - 2ème Année Médecine Alger</title>
         <meta
           name="description"
-          content="Calculez facilement votre moyenne de 2ème année médecine avec la calculatrice de TBiB. Un outil simple, rapide et précis."
+          content="Calculez facilement votre moyenne avec la calculatrice de TBiB. Un outil simple, rapide et précis."
         />
         <meta
           name="keywords"
-          content="calculatrice médicale, calculatrice deuxième année, médecine 2ème année, calculatrice médicale tbib, calculatrice médicale tbib cours, tbib cours calculatrice médicale, tbib calculatrice médicale, calculatrice tbib, calculatrice tbib cours, tbib cours calculatrice, tbib calculatrice, calcul médical, outil médical en ligne, médecine, étudiants en médecine, TBiB, TBiB Cours, TBiB Academy, tbib calculator, tbib calculatrice, calculatrice santé, formules médicales, formules physiologiques, convertisseur médical, calculs cliniques, médecine Algérie, études médicales, tbib space, study with tbib, outils étudiants médecine"
+          content="calculatrice médicale, calculatrice médicale tbib, calculatrice médicale tbib cours, tbib cours calculatrice médicale, tbib calculatrice médicale, calculatrice tbib, calculatrice tbib cours, tbib cours calculatrice, tbib calculatrice, calcul médical, outil médical en ligne, médecine, étudiants en médecine, TBiB, TBiB Cours, TBiB Academy, tbib calculator, tbib calculatrice, calculatrice santé, formules médicales, formules physiologiques, convertisseur médical, calculs cliniques, médecine Algérie, études médicales, tbib space, study with tbib, outils étudiants médecine"
         />
       </Helmet>
-      <h1 className="text-3xl font-bold text-gray-900 mb-8">
+      <h1 className="mb-8 text-3xl font-bold text-gray-900">
         Calculateur de Notes - 2ème Année
       </h1>
 
@@ -492,13 +492,13 @@ export function AlgerSecondYearCalculator() {
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg"
+          className="p-4 mb-6 border border-red-200 rounded-lg bg-red-50"
         >
-          <h4 className="text-red-800 font-medium mb-2 flex items-center">
+          <h4 className="flex items-center mb-2 font-medium text-red-800">
             <AlertTriangle className="w-5 h-5 mr-2" />
             Veuillez corriger les erreurs suivantes:
           </h4>
-          <ul className="list-disc list-inside text-sm text-red-700">
+          <ul className="text-sm text-red-700 list-disc list-inside">
             {validationErrors.map((error, index) => (
               <li key={index}>{error}</li>
             ))}
@@ -509,7 +509,7 @@ export function AlgerSecondYearCalculator() {
       <div className="flex justify-end mb-8">
         <button
           onClick={resetGrades}
-          className="px-4 py-2 rounded-lg font-medium transition-colors bg-red-100 text-red-600 hover:bg-red-200 flex justify-center items-center gap-2"
+          className="flex items-center justify-center gap-2 px-4 py-2 font-medium text-red-600 transition-colors bg-red-100 rounded-lg hover:bg-red-200"
         >
           <RefreshCw className="w-4 h-4" />
           Réinitialiser
@@ -521,9 +521,9 @@ export function AlgerSecondYearCalculator() {
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: -20 }}
         transition={{ duration: 0.3 }}
-        className="bg-white rounded-lg shadow-sm p-6 mb-6"
+        className="p-6 mb-6 bg-white rounded-lg shadow-sm"
       >
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
           {UNITS.map((unit) => (
             <motion.div
               key={unit.name}
@@ -545,17 +545,17 @@ export function AlgerSecondYearCalculator() {
                   value={grades[unit.name] ?? ""}
                   onChange={(e) => handleGradeChange(unit.name, e.target.value)}
                   onBlur={() => handleBlur(unit.name)}
-                  className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+                  className="block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
                 />
               </div>
             </motion.div>
           ))}
         </div>
 
-        <div className="mt-8 flex justify-center">
+        <div className="flex justify-center mt-8">
           <button
             onClick={handleCalculate}
-            className="px-6 py-3 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors"
+            className="px-6 py-3 font-medium text-white transition-colors bg-blue-600 rounded-lg hover:bg-blue-700"
           >
             Calculer la Moyenne
           </button>
@@ -569,14 +569,14 @@ export function AlgerSecondYearCalculator() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.3 }}
-            className="bg-white rounded-lg shadow-sm p-6 mb-8"
+            className="p-6 mb-8 bg-white rounded-lg shadow-sm"
           >
-            <div className="flex justify-between items-center mb-4">
+            <div className="flex items-center justify-between mb-4">
               <h3 className="text-xl font-bold text-gray-900">Résultats</h3>
               <div className="flex space-x-2">
                 <button
                   onClick={handlePrint}
-                  className="p-2 rounded-lg text-gray-600 hover:bg-gray-100"
+                  className="p-2 text-gray-600 rounded-lg hover:bg-gray-100"
                   title="Imprimer les résultats"
                 >
                   <Printer className="w-5 h-5" />
@@ -584,8 +584,8 @@ export function AlgerSecondYearCalculator() {
               </div>
             </div>
 
-            <div className="text-center mb-4">
-              <div className="text-4xl mb-2">
+            <div className="mb-4 text-center">
+              <div className="mb-2 text-4xl">
                 {getEmojiForScore(result.average)}
               </div>
               <div className="text-2xl font-bold text-gray-900">
@@ -607,19 +607,19 @@ export function AlgerSecondYearCalculator() {
 
             {result.eligibleHospitals &&
               result.eligibleHospitals.length > 0 && (
-                <div className="mt-4 p-4 bg-green-50 rounded-lg">
-                  <h4 className="font-medium text-green-800 mb-2">
+                <div className="p-4 mt-4 rounded-lg bg-green-50">
+                  <h4 className="mb-2 font-medium text-green-800">
                     Hôpitaux Disponibles:
                   </h4>
-                  <p className="text-sm text-green-700 mb-2">
+                  <p className="mb-2 text-sm text-green-700">
                     Selon votre moyenne, vous êtes éligible pour les hôpitaux
                     suivants:
                   </p>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                  <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
                     {result.eligibleHospitals.map((hospital, index) => (
                       <div
                         key={index}
-                        className="p-2 bg-green-100 rounded text-green-800 font-medium text-center"
+                        className="p-2 font-medium text-center text-green-800 bg-green-100 rounded"
                       >
                         {hospital}
                       </div>
@@ -629,12 +629,12 @@ export function AlgerSecondYearCalculator() {
               )}
 
             {result.warnings.length > 0 && (
-              <div className="mt-4 p-3 bg-red-50 rounded-lg">
-                <h4 className="font-medium text-red-800 mb-2 flex items-center">
+              <div className="p-3 mt-4 rounded-lg bg-red-50">
+                <h4 className="flex items-center mb-2 font-medium text-red-800">
                   <AlertTriangle className="w-5 h-5 mr-1" />
                   Avertissements:
                 </h4>
-                <ul className="list-disc list-inside text-sm text-red-700">
+                <ul className="text-sm text-red-700 list-disc list-inside">
                   {result.warnings.map((warning, index) => (
                     <li key={index}>{warning}</li>
                   ))}
@@ -651,27 +651,27 @@ export function AlgerSecondYearCalculator() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50"
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-50"
           >
             <motion.div
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.9, opacity: 0 }}
-              className="bg-white rounded-lg shadow-xl max-w-lg w-full p-6 relative"
+              className="relative w-full max-w-lg p-6 bg-white rounded-lg shadow-xl"
             >
               <button
                 onClick={() => setShowModal(false)}
-                className="absolute top-4 right-4 text-gray-400 hover:text-gray-600"
+                className="absolute text-gray-400 top-4 right-4 hover:text-gray-600"
               >
                 <X className="w-6 h-6" />
               </button>
 
-              <h3 className="text-xl font-bold text-gray-900 mb-4">
+              <h3 className="mb-4 text-xl font-bold text-gray-900">
                 Résultats
               </h3>
 
-              <div className="text-center mb-4">
-                <div className="text-4xl mb-2">
+              <div className="mb-4 text-center">
+                <div className="mb-2 text-4xl">
                   {getEmojiForScore(result.average)}
                 </div>
                 <div className="text-2xl font-bold text-gray-900">
@@ -693,14 +693,14 @@ export function AlgerSecondYearCalculator() {
 
               {result.eligibleHospitals &&
                 result.eligibleHospitals.length > 0 && (
-                  <div className="mt-4 p-3 bg-green-50 rounded-lg">
-                    <h4 className="font-medium text-green-800 mb-2">
+                  <div className="p-3 mt-4 rounded-lg bg-green-50">
+                    <h4 className="mb-2 font-medium text-green-800">
                       Hôpitaux Disponibles:
                     </h4>
-                    <p className="text-sm text-green-700 mb-2">
+                    <p className="mb-2 text-sm text-green-700">
                       (according to last year) Selon votre moyenne, vous êtes éligible pour: 
                     </p>
-                    <ul className="list-disc list-inside text-sm text-green-700">
+                    <ul className="text-sm text-green-700 list-disc list-inside">
                       {result.eligibleHospitals.map((hospital, index) => (
                         <li key={index}>{hospital}</li>
                       ))}
@@ -709,12 +709,12 @@ export function AlgerSecondYearCalculator() {
                 )}
 
               {result.warnings.length > 0 && (
-                <div className="mt-4 p-3 bg-red-50 rounded-lg">
-                  <h4 className="font-medium text-red-800 mb-2 flex items-center">
+                <div className="p-3 mt-4 rounded-lg bg-red-50">
+                  <h4 className="flex items-center mb-2 font-medium text-red-800">
                     <AlertTriangle className="w-5 h-5 mr-1" />
                     Avertissements:
                   </h4>
-                  <ul className="list-disc list-inside text-sm text-red-700">
+                  <ul className="text-sm text-red-700 list-disc list-inside">
                     {result.warnings.map((warning, index) => (
                       <li key={index}>{warning}</li>
                     ))}
@@ -722,17 +722,17 @@ export function AlgerSecondYearCalculator() {
                 </div>
               )}
 
-              <div className="mt-6 flex justify-end space-x-3">
+              <div className="flex justify-end mt-6 space-x-3">
                 <button
                   onClick={handlePrint}
-                  className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg font-medium hover:bg-gray-200 transition-colors flex items-center"
+                  className="flex items-center px-4 py-2 font-medium text-gray-700 transition-colors bg-gray-100 rounded-lg hover:bg-gray-200"
                 >
                   <Printer className="w-4 h-4 mr-2" />
                   Imprimer
                 </button>
                 <button
                   onClick={() => setShowModal(false)}
-                  className="px-4 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors"
+                  className="px-4 py-2 font-medium text-white transition-colors bg-blue-600 rounded-lg hover:bg-blue-700"
                 >
                   Fermer
                 </button>
